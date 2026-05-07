@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SoulSync - Find Your Soulmate</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#8c1900",
+                        "tertiary-fixed": "#ffd7ef",
+                        "on-background": "#191c1d",
+                        "outline": "#8d716a",
+                        "on-secondary-fixed": "#400104",
+                        "surface": "#f8f9fa",
+                        "secondary-fixed-dim": "#ffb3ae",
+                        "secondary": "#9a433f",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#ff928b",
+                        "on-secondary-container": "#772926",
+                        "on-secondary-fixed-variant": "#7c2c29",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#ffdad7",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#3a0130",
+                        "tertiary-fixed-dim": "#feade4",
+                        "primary-fixed": "#ffdad2",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#edeeef",
+                        "background": "#f8f9fa",
+                        "on-tertiary-fixed-variant": "#6e305f",
+                        "on-tertiary-container": "#561a49",
+                        "on-primary-container": "#661000",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f0f1f2",
+                        "outline-variant": "#e1bfb8",
+                        "primary-fixed-dim": "#ffb4a3",
+                        "error": "#ba1a1a",
+                        "tertiary": "#8a4778",
+                        "tertiary-container": "#cd82b6",
+                        "inverse-surface": "#2e3132",
+                        "inverse-primary": "#ffb4a3",
+                        "surface-variant": "#e1e3e4",
+                        "surface-dim": "#d9dadb",
+                        "on-surface-variant": "#59413c",
+                        "primary-container": "#ff6b4a",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#ae3115",
+                        "primary": "#ae3115",
+                        "surface-bright": "#f8f9fa",
+                        "on-surface": "#191c1d",
+                        "surface-container-low": "#f3f4f5",
+                        "surface-container-high": "#e7e8e9",
+                        "on-primary-fixed": "#3d0600"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem"
+                    },
+                    "spacing": {
+                        "stack-md": "12px",
+                        "stack-sm": "4px",
+                        "stack-lg": "24px",
+                        "card-gap": "24px",
+                        "container-max": "1280px",
+                        "section-padding": "80px",
+                        "gutter": "24px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "display-xl": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "display-xl": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-sm": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col pb-24">
+<!-- TopNavBar (Web only, hidden on mobile) -->
+<header class="hidden md:flex justify-between items-center px-6 py-4 w-full sticky top-0 bg-white/80 backdrop-blur-xl dark:bg-slate-900/80 text-orange-600 dark:text-orange-400 font-['Plus_Jakarta_Sans'] text-sm font-medium docked full-width top-0 z-50 border-b border-orange-50/50 dark:border-slate-800 shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
+<div class="text-2xl font-black tracking-tighter text-orange-600 dark:text-orange-500">SoulSync</div>
+<nav class="flex gap-6">
+<a class="text-orange-600 dark:text-orange-400 border-b-2 border-orange-500 font-bold pb-1 hover:bg-orange-50/50 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95 transition-transform" href="#">Discover</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-orange-500 hover:bg-orange-50/50 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95 transition-transform" href="#">Matches</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-orange-500 hover:bg-orange-50/50 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95 transition-transform" href="#">Stories</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-orange-500 hover:bg-orange-50/50 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95 transition-transform" href="#">Messages</a>
+</nav>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined hover:bg-orange-50/50 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95 transition-transform cursor-pointer">notifications</span>
+<span class="material-symbols-outlined hover:bg-orange-50/50 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95 transition-transform cursor-pointer">settings</span>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-xl font-label-sm hover:opacity-90 transition-opacity">Sign In</button>
+<img alt="User Profile Avatar" class="w-8 h-8 rounded-full object-cover" data-alt="A close-up headshot of a smiling young woman with natural makeup, looking directly at the camera. The lighting is soft and flattering, suggesting a bright, optimistic modern lifestyle context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBemvK6W7KIFpMZOhE8lvZpWI-_OJF9wQgptG-rfYcD9Uivc4Qy4xwgclGcjtFB7K-yIzd7cL0hEaP0lVDAWqhLPBDhkTDrycn0mfhZf_HaokCDp_zd9d-5DS6z-T7nULF7L3P81IaIn0iqhis_0UGt01G9GvGppp9FMhfEmyOqYqjbG8pC96ZyH2qwJoHXZMoMw2DJX7-xJdLVFYpmI8ZWhiJznjExkbKbYHzgvhQ6dmipJJoMc6PmT_x4rFX8QqIAmob7v6WWm1K3"/>
+</div>
+</header>
+<!-- Mobile Header (Visible only on mobile) -->
+<header class="md:hidden flex justify-between items-center px-4 py-3 bg-surface sticky top-0 z-40">
+<div class="text-2xl font-black tracking-tighter text-primary">SoulSync</div>
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined cursor-pointer" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</div>
+</header>
+<main class="flex-grow flex flex-col w-full max-w-container-max mx-auto px-4 md:px-gutter pt-4 gap-section-padding">
+<!-- Hero Section -->
+<section class="relative w-full rounded-[32px] overflow-hidden shadow-[0_20px_40px_rgba(0,0,0,0.08)] bg-surface-container-highest min-h-[500px] flex flex-col justify-end p-6">
+<!-- Background Image -->
+<img alt="Happy Couple" class="absolute inset-0 w-full h-full object-cover z-0" data-alt="A candid, joyous photo of a young modern couple laughing together outdoors during golden hour. The lighting is warm and sun-drenched, creating an optimistic, romantic mood. They are dressed in casual, stylish clothing suitable for a lifestyle matrimony platform. The image should feel inviting, bright, and full of energy, aligning with a modern minimalist aesthetic featuring vibrant orange accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe5DQmmbLIgTCDNObPqVjalHvWhC8_GbuVZt5OuyNeNcd1mC-pepTKA3VTnvCI0ZSh1CT4JaICExzi3tn6pKaT74glMdnci9ngy6JybtCic9XrKNm4LCtGDoFXbSjFUskqyScRyuBliMRX6808MkWmu2lZItItxxxQJGJUIfylKraip5WO4cfIdwwcuUSTKzgsDKknUkS_ccUF4UnS3sTwcG3YFobdH_l8mTDJez-ODlX-RXlcTdQ_f-1DkLMb8xscstBI-FM8xb0i"/>
+<!-- Gradient Overlay -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent z-10"></div>
+<!-- Content -->
+<div class="relative z-20 flex flex-col gap-stack-md">
+<span class="bg-primary/20 text-on-primary px-3 py-1 rounded-full w-max font-label-sm text-label-sm backdrop-blur-md border border-white/20">The Joy of Connection</span>
+<h1 class="font-display-xl text-display-xl text-on-primary">Find Your Soulmate.</h1>
+<p class="font-body-lg text-body-lg text-white/90">Join thousands who found lasting love on SoulSync.</p>
+</div>
+</section>
+<!-- Touch-Optimized Search Widget -->
+<section class="bg-surface-container-lowest rounded-[24px] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.04)] -mt-16 relative z-30 mx-2 flex flex-col gap-stack-lg border border-surface-container-low">
+<h2 class="font-headline-md text-headline-md text-on-surface">Start Your Search</h2>
+<div class="flex flex-col gap-stack-md">
+<!-- Looking For -->
+<div class="flex flex-col gap-stack-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant">I am a</label>
+<div class="flex gap-2">
+<button class="flex-1 bg-surface-container py-3 rounded-2xl font-label-sm text-on-surface hover:bg-primary-container hover:text-on-primary-container transition-colors focus:bg-primary-container focus:text-on-primary-container outline-none">Woman</button>
+<button class="flex-1 bg-surface-container py-3 rounded-2xl font-label-sm text-on-surface hover:bg-primary-container hover:text-on-primary-container transition-colors focus:bg-primary-container focus:text-on-primary-container outline-none">Man</button>
+</div>
+</div>
+<!-- Age Range -->
+<div class="flex flex-col gap-stack-sm mt-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Age Range</label>
+<div class="flex items-center gap-2">
+<select class="flex-1 bg-surface-container border-none rounded-2xl py-3 px-4 font-body-md text-on-surface focus:ring-2 focus:ring-primary">
+<option>25</option>
+<option>26</option>
+<option>27</option>
+</select>
+<span class="text-on-surface-variant">to</span>
+<select class="flex-1 bg-surface-container border-none rounded-2xl py-3 px-4 font-body-md text-on-surface focus:ring-2 focus:ring-primary">
+<option>35</option>
+<option>36</option>
+<option>37</option>
+</select>
+</div>
+</div>
+<button class="w-full bg-gradient-to-r from-primary to-primary-container text-on-primary py-4 rounded-2xl font-headline-md text-[18px] mt-4 shadow-[0_8px_20px_rgba(174,49,21,0.2)] hover:opacity-95 transition-opacity flex items-center justify-center gap-2">
+<span>Find Matches</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">search</span>
+</button>
+</div>
+</section>
+<!-- Featured Profiles (Bento-ish Grid) -->
+<section class="flex flex-col gap-stack-lg">
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">New Matches</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Discover people who share your vibe.</p>
+</div>
+<button class="text-primary font-label-sm text-label-sm hover:underline">See all</button>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Profile Card 1 -->
+<div class="relative rounded-[24px] overflow-hidden aspect-[3/4] shadow-[0_4px_15px_rgba(0,0,0,0.05)] bg-surface-container">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="A portrait of a stylish young woman looking confidently at the camera. Soft, bright natural lighting highlights her features. The aesthetic is clean, modern, and optimistic, suitable for a premium lifestyle matchmaking app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_fKXChT21st68VzGdMtVtgek7z7bukbbul3Ke8y_9YhTvIuO7_Ad-_CUVCMGXKbQZVrNVEPkoeRvuZRlaTH7dEkazh1xH0X6sBrdk4YMk2TSEZnJNXJL_VrE5RNBCpAkh4xTcBHDdhypAj-Zd37HY57U28vIz5o5UF50d_ZjwHLwQi14NbsgOaM-brjbEQ9g7QB74ZFpd7EY-Wqf0dZa62TCr3yzuVbt2nLuYSiw6DHNsHHnPjJZwKdH346l1HJp2S-6kUi9DtA8Q"/>
+<div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 pt-12 flex flex-col">
+<span class="font-headline-md text-[18px] text-white">Sarah, 28</span>
+<span class="font-body-md text-[14px] text-white/80">Photographer</span>
+</div>
+</div>
+<!-- Profile Card 2 -->
+<div class="relative rounded-[24px] overflow-hidden aspect-[3/4] shadow-[0_4px_15px_rgba(0,0,0,0.05)] bg-surface-container">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="A portrait of a handsome young man smiling gently. The background is slightly blurred to focus on him. The lighting is soft and flattering, suggesting a warm, approachable personality suitable for a modern dating profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFAdzpPMUTT4DGg7VMIkZMiCIGF8Jjn78_2zKwx1vcGmhlntxXrLNdh6EpVfz4ZwuIVoksPagsfiZb2Zhn1GYk6kY4sO90xF5cde705aaBe--Ek4jqEMRQGwQ9XSPt_CJeulEth6XbitkEhEn6KRK_gD3yjOszecTmM8uloXZn7dRwTVYdOkuV22W5jkNt6-ovh3M9BKEqvJvyxn9POouOcS_d57DutvOdN-CJsnLHYjPCdxTDXJZTkdksOHGjYsK4LywgcAhH49YE"/>
+<div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 pt-12 flex flex-col">
+<span class="font-headline-md text-[18px] text-white">James, 30</span>
+<span class="font-body-md text-[14px] text-white/80">Architect</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Horizontal Scroll: Success Stories -->
+<section class="flex flex-col gap-stack-lg -mx-4 px-4 overflow-hidden">
+<div class="flex justify-between items-end pr-4">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Success Stories</h2>
+</div>
+<div class="flex gap-4 overflow-x-auto hide-scrollbar pb-4 snap-x snap-mandatory">
+<!-- Story 1 -->
+<div class="snap-center shrink-0 w-[280px] bg-surface-container-lowest rounded-[24px] p-5 shadow-[0_10px_30px_rgba(0,0,0,0.04)] border border-surface-container-low flex flex-col gap-stack-md">
+<div class="flex items-center gap-3">
+<img alt="Couple" class="w-12 h-12 rounded-full object-cover" data-alt="A small circular headshot showing a happy, diverse couple smiling together. The lighting is bright and cheerful, reflecting a successful love story." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLzj6F9uEQcT3fMhvMniSXItfuGMT1m9u2BEWGYgeXyBfsz5npKM5SwF0_5IA339QgEoz-z6-V-o4VtElrrwlVfs9XLuR3s8WOI4HtHg-OVaXmGx1MfStKDIPU0D1vWWP6MmrjWymM6LT4jIgfpLwZuSfICzaLOyGjyggjl-ppjkv4DEMIPWMLke28RsNefmOcgtXTLBNdIX5T_QAuRHFs0Zcgplc0je6hQ9sJaw35lCyz4VTjuA3AHFOx-lVxjt-P1mjkZhzl5Rk-"/>
+<div>
+<h3 class="font-label-sm text-label-sm text-on-surface">Maya &amp; Alex</h3>
+<p class="font-body-md text-[12px] text-on-surface-variant">Married in 2023</p>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface line-clamp-3">"SoulSync didn't just find me a match; it found me my best friend. The focus on shared values made all the difference."</p>
+</div>
+<!-- Story 2 -->
+<div class="snap-center shrink-0 w-[280px] bg-surface-container-lowest rounded-[24px] p-5 shadow-[0_10px_30px_rgba(0,0,0,0.04)] border border-surface-container-low flex flex-col gap-stack-md">
+<div class="flex items-center gap-3">
+<img alt="Couple" class="w-12 h-12 rounded-full object-cover" data-alt="A small circular headshot of another smiling couple. They look genuinely happy and relaxed. The overall tone is bright, modern, and romantic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYSWGdRNWnGaA3QPb8vFtdkqR-FekbrKzru18lwEtLj-EtPD4Y08LQMqCRnSS_QaVYPAgT7j1yPJmiorZZNvbg6Ykq4WQlHE7I-G7ebTWbAn1rpTeB7mEZ_BVrOipyS8pPBLv8uJYGu4GH3GPjJZzHnL1ka7UQ7_B5tYIqPuBdkgEw7r1mcNVmQ9r9gOggGep0csCR_Yo1KiJc1otWA-Hda7EWTzk1aeZOzoHN758cphAjRFvVX37NGHjaV-mBToG8k0z6MRIgD1Os"/>
+<div>
+<h3 class="font-label-sm text-label-sm text-on-surface">Priya &amp; Rahul</h3>
+<p class="font-body-md text-[12px] text-on-surface-variant">Engaged</p>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface line-clamp-3">"We connected over our mutual love for travel and art. The profile details were so specific, I knew he was the one."</p>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/95 dark:bg-slate-900/95 text-orange-600 dark:text-orange-400 font-['Plus_Jakarta_Sans'] text-[10px] font-semibold docked full-width bottom-0 rounded-t-[32px] border-t border-orange-100/30 dark:border-slate-800 shadow-[0_-10px_40px_rgba(255,107,74,0.1)]">
+<!-- Feed (Active) -->
+<a class="flex flex-col items-center justify-center bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-2xl px-5 py-2 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span>Feed</span>
+</a>
+<!-- Matches (Inactive) -->
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-orange-500 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">favorite</span>
+<span>Matches</span>
+</a>
+<!-- Chat (Inactive) -->
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-orange-500 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">forum</span>
+<span>Chat</span>
+</a>
+<!-- Profile (Inactive) -->
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-orange-500 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person_celebrate</span>
+<span>Profile</span>
+</a>
+</nav>
+</body></html>

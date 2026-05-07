@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SoulSync - Mobile Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed-variant": "#8c1900",
+                    "tertiary-fixed": "#ffd7ef",
+                    "on-background": "#191c1d",
+                    "outline": "#8d716a",
+                    "on-secondary-fixed": "#400104",
+                    "surface": "#f8f9fa",
+                    "secondary-fixed-dim": "#ffb3ae",
+                    "secondary": "#9a433f",
+                    "on-primary": "#ffffff",
+                    "secondary-container": "#ff928b",
+                    "on-secondary-container": "#772926",
+                    "on-secondary-fixed-variant": "#7c2c29",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed": "#ffdad7",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-fixed": "#3a0130",
+                    "tertiary-fixed-dim": "#feade4",
+                    "primary-fixed": "#ffdad2",
+                    "on-error-container": "#93000a",
+                    "surface-container": "#edeeef",
+                    "background": "#f8f9fa",
+                    "on-tertiary-fixed-variant": "#6e305f",
+                    "on-tertiary-container": "#561a49",
+                    "on-primary-container": "#661000",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f0f1f2",
+                    "outline-variant": "#e1bfb8",
+                    "primary-fixed-dim": "#ffb4a3",
+                    "error": "#ba1a1a",
+                    "tertiary": "#8a4778",
+                    "tertiary-container": "#cd82b6",
+                    "inverse-surface": "#2e3132",
+                    "inverse-primary": "#ffb4a3",
+                    "surface-variant": "#e1e3e4",
+                    "surface-dim": "#d9dadb",
+                    "on-surface-variant": "#59413c",
+                    "primary-container": "#ff6b4a",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#ae3115",
+                    "primary": "#ae3115",
+                    "surface-bright": "#f8f9fa",
+                    "on-surface": "#191c1d",
+                    "surface-container-low": "#f3f4f5",
+                    "surface-container-high": "#e7e8e9",
+                    "on-primary-fixed": "#3d0600"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-md": "12px",
+                    "stack-sm": "4px",
+                    "stack-lg": "24px",
+                    "card-gap": "24px",
+                    "container-max": "1280px",
+                    "section-padding": "80px",
+                    "gutter": "24px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "headline-lg": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "display-xl": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "label-sm": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "headline-md": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "body-md": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "body-lg": [
+                            "Plus Jakarta Sans"
+                    ]
+            },
+            "fontSize": {
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "display-xl": [
+                            "48px",
+                            {
+                                    "lineHeight": "1.1",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "label-sm": [
+                            "14px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "0.02em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "1.3",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            /* Hide scrollbar for a cleaner mobile look on desktop browsers during testing */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        body::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .hide-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scroll {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Mobile container restriction for preview purposes if viewed on desktop */
+        @media (min-width: 768px) {
+            body {
+                display: flex;
+                justify-content: center;
+                background-color: theme('colors.surface-container-high');
+            }
+            .mobile-wrapper {
+                width: 390px;
+                height: 844px;
+                background-color: theme('colors.background');
+                overflow-y: auto;
+                position: relative;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                margin-top: 40px;
+                margin-bottom: 40px;
+                border-radius: 40px;
+                border: 8px solid #000;
+            }
+            /* Hide the web TopAppBar in mobile view wrapper */
+            .web-nav {
+                display: none !important;
+            }
+        }
+        @media (max-width: 767px) {
+            .mobile-wrapper {
+                width: 100%;
+                min-height: 100vh;
+                padding-bottom: 100px; /* Space for bottom nav */
+            }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md antialiased">
+<!-- Desktop / Web Navigation (Hidden on Mobile) -->
+<header class="web-nav flex justify-between items-center px-6 py-4 w-full sticky top-0 bg-white/80 backdrop-blur-xl border-b border-orange-50/50 shadow-[0_10px_30px_rgba(0,0,0,0.04)] z-50">
+<div class="text-2xl font-black tracking-tighter text-orange-600">SoulSync</div>
+<nav class="flex gap-6">
+<a class="font-['Plus_Jakarta_Sans'] text-sm font-medium text-slate-600 hover:text-orange-500 hover:bg-orange-50/50 transition-all duration-300 px-3 py-2 rounded-lg" href="#">Discover</a>
+<a class="font-['Plus_Jakarta_Sans'] text-sm font-medium text-slate-600 hover:text-orange-500 hover:bg-orange-50/50 transition-all duration-300 px-3 py-2 rounded-lg" href="#">Matches</a>
+<a class="font-['Plus_Jakarta_Sans'] text-sm font-medium text-slate-600 hover:text-orange-500 hover:bg-orange-50/50 transition-all duration-300 px-3 py-2 rounded-lg" href="#">Stories</a>
+<a class="font-['Plus_Jakarta_Sans'] text-sm font-medium text-slate-600 hover:text-orange-500 hover:bg-orange-50/50 transition-all duration-300 px-3 py-2 rounded-lg" href="#">Messages</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="text-orange-600 active:scale-95 transition-transform"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-orange-600 active:scale-95 transition-transform"><span class="material-symbols-outlined">settings</span></button>
+<button class="font-['Plus_Jakarta_Sans'] text-sm font-medium text-orange-600 hover:bg-orange-50/50 px-4 py-2 rounded-full transition-all duration-300">Sign In</button>
+</div>
+</header>
+<div class="mobile-wrapper overflow-x-hidden">
+<!-- Mobile Header -->
+<div class="flex justify-between items-center px-6 py-6 sticky top-0 z-40 bg-background/90 backdrop-blur-md">
+<div>
+<h1 class="font-headline-md text-headline-md text-on-background">Good morning,</h1>
+<p class="font-body-md text-body-md text-primary font-bold">Sarah</p>
+</div>
+<div class="relative">
+<button class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="absolute top-0 right-0 w-3 h-3 bg-primary rounded-full border-2 border-background"></div>
+</div>
+</div>
+<!-- Premium Banner -->
+<div class="px-6 mb-8">
+<div class="bg-gradient-to-br from-primary-container to-secondary-container rounded-[24px] p-6 text-on-primary-container relative overflow-hidden shadow-[0_10px_30px_rgba(255,107,74,0.15)]">
+<!-- Decorative blur -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-2xl -mr-10 -mt-10"></div>
+<div class="relative z-10 flex flex-col gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">SoulSync Premium</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md mb-1 text-on-primary-container">Unlock your full potential</h2>
+<p class="font-body-md text-body-md text-on-primary-container/80 text-sm">See who liked you and get unlimited matches.</p>
+</div>
+<button class="bg-white text-primary font-label-sm text-label-sm py-3 px-6 rounded-[16px] w-full mt-2 shadow-sm hover:scale-[1.02] transition-transform active:scale-95">
+                    Upgrade Now
+                </button>
+</div>
+</div>
+</div>
+<!-- Top Picks (Horizontal Scroll) -->
+<div class="mb-10">
+<div class="px-6 flex justify-between items-end mb-4">
+<h2 class="font-headline-md text-headline-md text-on-background">Top Picks for You</h2>
+<button class="font-label-sm text-label-sm text-primary hover:text-primary-fixed-dim transition-colors">See all</button>
+</div>
+<div class="flex overflow-x-auto hide-scroll gap-4 px-6 pb-4 snap-x">
+<!-- Card 1 -->
+<div class="snap-start shrink-0 w-[240px] relative rounded-[24px] overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.04)] bg-surface group">
+<div class="h-[320px] w-full bg-surface-container relative">
+<img alt="A vibrant, high-quality portrait of a smiling young woman standing outdoors in soft natural sunlight. The image has a warm, inviting modern aesthetic, fitting for a premium lifestyle app. The lighting is bright and airy, highlighting a sense of optimism and digital hospitality. The background is slightly blurred to keep focus on the joyful subject." class="w-full h-full object-cover" data-alt="A vibrant, high-quality portrait of a smiling young woman standing outdoors in soft natural sunlight. The image has a warm, inviting modern aesthetic, fitting for a premium lifestyle app. The lighting is bright and airy, highlighting a sense of optimism and digital hospitality. The background is slightly blurred to keep focus on the joyful subject." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRS8zAZd1eSeVmX3KEMhNTuSbtm65D6kXa0xPHEhE2uJHvol3EDesU871pVLn3DnAWhKotSxIK11rgJiu1C5C9_gGDCfmHjm0saNT0dBzexYG0vxnAO7deCwc_CCif7lt4sjQoOAsS6jNuHc265FK_4a5O7nPPZzQQq1OZA1l124EBp13lsXlQDN25PWbPE2EcgrbqKQb5-2P8Xb8Lw7osrQk-ds6teAPiYDPL1aPQR1t9SaZjRaSrxc2hVl4mCqyrPiTSssUs_w2B"/>
+<!-- Gradient Overlay -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+</div>
+<div class="absolute bottom-0 left-0 w-full p-5 text-white">
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline-md text-headline-md text-white">Elena, 28</h3>
+<span class="material-symbols-outlined text-primary-fixed text-[20px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="flex items-center gap-1 text-white/80 font-body-md text-sm">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>2 miles away</span>
+</div>
+</div>
+<!-- Like Button -->
+<button class="absolute bottom-5 right-5 w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary shadow-lg hover:scale-110 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[24px]">favorite</span>
+</button>
+</div>
+<!-- Card 2 -->
+<div class="snap-start shrink-0 w-[240px] relative rounded-[24px] overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.04)] bg-surface group">
+<div class="h-[320px] w-full bg-surface-container relative">
+<img alt="A high-quality portrait of a thoughtful young man in a well-lit urban cafe setting. The aesthetic is modern minimalist, with clean lines and soft, diffused natural lighting creating a warm, approachable mood. The image feels authentic and lifestyle-oriented, fitting seamlessly into a sophisticated, welcoming digital interface. The background is beautifully out of focus." class="w-full h-full object-cover" data-alt="A high-quality portrait of a thoughtful young man in a well-lit urban cafe setting. The aesthetic is modern minimalist, with clean lines and soft, diffused natural lighting creating a warm, approachable mood. The image feels authentic and lifestyle-oriented, fitting seamlessly into a sophisticated, welcoming digital interface. The background is beautifully out of focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsBL-v-LBcVcnTiahece3uMdNiTlqvDocX3o5H4v8GcGnNwbHJJKNl0C5T-3LMI0NjvLp6WMeIjo6I6ukNBGjp0VmRlO6_tpbHJo0l7wja2mQydnAP37cMUxsfVx3nCUx3cjw8Nq3DNZ-E9DHWMcGa8K5ykl5NKLjjrXMy9yiFwc_zPC9ocCuzEhn2a-WvTJaxdBMpof_qK1KJn3uAV09MR7i9OClMVicS-Nx0ZOPdop5b9k8PQ3pniVnJS9l_0xqkXFFR769yZnNJ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+</div>
+<div class="absolute bottom-0 left-0 w-full p-5 text-white">
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline-md text-headline-md text-white">David, 31</h3>
+</div>
+<div class="flex items-center gap-1 text-white/80 font-body-md text-sm">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>5 miles away</span>
+</div>
+</div>
+<button class="absolute bottom-5 right-5 w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary shadow-lg hover:scale-110 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[24px]">favorite</span>
+</button>
+</div>
+<!-- Card 3 -->
+<div class="snap-start shrink-0 w-[240px] relative rounded-[24px] overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.04)] bg-surface flex items-center justify-center flex-col gap-4 border border-outline-variant/30">
+<div class="w-16 h-16 rounded-full bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[32px]">manage_search</span>
+</div>
+<div class="text-center px-6">
+<h3 class="font-label-sm text-label-sm text-on-surface mb-1">Refine Search</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Discover more profiles tailored to your vibe.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Interested in You -->
+<div class="px-6 mb-10">
+<h2 class="font-headline-md text-headline-md text-on-background mb-4">Interested in You</h2>
+<div class="bg-surface rounded-[24px] p-4 shadow-[0_10px_30px_rgba(0,0,0,0.02)] border border-surface-container flex items-center gap-4 mb-4">
+<div class="relative">
+<div class="w-16 h-16 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="A close-up profile picture of a stylish individual smiling brightly. The mood is joyful and energetic, aligning with a modern digital hospitality theme. The background is a vibrant, clean gradient of soft pinks and warm tones, ensuring the subject stands out. The image conveys an optimistic, lifestyle-centric vibe perfect for connection." class="w-full h-full object-cover" data-alt="A close-up profile picture of a stylish individual smiling brightly. The mood is joyful and energetic, aligning with a modern digital hospitality theme. The background is a vibrant, clean gradient of soft pinks and warm tones, ensuring the subject stands out. The image conveys an optimistic, lifestyle-centric vibe perfect for connection." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdAWEyK1WXE-jSqs6gFCIMxWZtdf6o3IfgJxG5Yd6YT1j9U7Fp-BR5q7OIFodJRcXXTcu-pf0fBLNge2GZuF9o5pNKYB1csV7uJfgZ8FYtAZ2ep2kYjQy38h4QCoQzC6FLC-Un-x3tpkBhYwBHcGY1gH_-O3eP7gRGWwtf2X_Slrpjnv-o-2t7DQIrau-OeXXJ2bBrxTpQScuwwoPh7x9ybUwVHfPEEYkwWXNycJjDZz6oDQ7DA350nDmKn4MpBmXLiRm0GE8xGDPK"/>
+</div>
+<div class="absolute -bottom-1 -right-1 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white border-2 border-surface">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+</div>
+<div class="flex-1">
+<h3 class="font-label-sm text-label-sm text-on-surface">Maya liked your photo</h3>
+<p class="font-body-md text-sm text-on-surface-variant line-clamp-1">"I love that hiking trail too!"</p>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+</div>
+<div class="bg-surface rounded-[24px] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.02)] border border-surface-container flex flex-col items-center justify-center text-center gap-3 relative overflow-hidden">
+<!-- Blur overlay for premium gate -->
+<div class="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center gap-2">
+<div class="w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">lock</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface">3 more people liked you</span>
+</div>
+<!-- Dummy avatars underneath blur -->
+<div class="flex -space-x-4 mb-2 opacity-50">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest border-2 border-white"></div>
+<div class="w-12 h-12 rounded-full bg-surface-container-high border-2 border-white"></div>
+<div class="w-12 h-12 rounded-full bg-surface-variant border-2 border-white"></div>
+</div>
+</div>
+</div>
+<!-- Recent Conversations -->
+<div class="px-6 mb-24"> <!-- Extra margin for bottom nav -->
+<div class="flex justify-between items-end mb-4">
+<h2 class="font-headline-md text-headline-md text-on-background">Recent Chats</h2>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Chat Item -->
+<div class="flex items-center gap-4 bg-transparent p-2 rounded-[16px] active:bg-surface-container transition-colors cursor-pointer">
+<div class="relative">
+<div class="w-14 h-14 rounded-full overflow-hidden">
+<img alt="A bright, cheerful headshot of a smiling man in casual attire. The background is a clean, minimal white space, emphasizing the modern, airy aesthetic of the application. The lighting is soft and flattering, creating an optimistic and approachable mood characteristic of premium digital interfaces." class="w-full h-full object-cover" data-alt="A bright, cheerful headshot of a smiling man in casual attire. The background is a clean, minimal white space, emphasizing the modern, airy aesthetic of the application. The lighting is soft and flattering, creating an optimistic and approachable mood characteristic of premium digital interfaces." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9_arzIXblfJLnZ_WZjeLelCsfozD-RxT7K4jvobnD2QU6esOY35PscOsfwyqaHoivTjhKbK65IKUD0x-IpidgQ5vjj_tgXeBoy6w6ABTGuIH0Ke5ylMiAlHnzv-qIoGI-ZBUoeDsKdKPhSM12ss7jqUcMwLj1iFOM788d9gDbpqfOlz3qQqaPYNmV28Xxu-R9uW1YFnc9UFXx7SeYMgqEmQ-xjjHWeN-nXxdwTjbKNGILvdkH9CziUVq3qwc_gJ4McxCh-RQxPfXu"/>
+</div>
+<!-- Online Status -->
+<div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-background"></div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-label-sm text-label-sm text-on-surface truncate">Alex</h3>
+<span class="font-body-md text-[12px] text-primary font-bold">2m</span>
+</div>
+<p class="font-body-md text-sm text-on-surface font-medium truncate">Are we still on for coffee later?</p>
+</div>
+<div class="w-5 h-5 bg-primary rounded-full flex items-center justify-center text-white font-label-sm text-[10px]">
+                    1
+                </div>
+</div>
+<!-- Chat Item -->
+<div class="flex items-center gap-4 bg-transparent p-2 rounded-[16px] active:bg-surface-container transition-colors cursor-pointer opacity-80">
+<div class="relative">
+<div class="w-14 h-14 rounded-full overflow-hidden">
+<img alt="A sophisticated portrait of a young woman looking directly at the camera with a gentle smile. The image features a shallow depth of field, blurring out a modern architectural background. The overall tone is calm, welcoming, and elegant, perfectly matching the modern minimalist design system of the UI." class="w-full h-full object-cover" data-alt="A sophisticated portrait of a young woman looking directly at the camera with a gentle smile. The image features a shallow depth of field, blurring out a modern architectural background. The overall tone is calm, welcoming, and elegant, perfectly matching the modern minimalist design system of the UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoyzc3SbM725L_q4jfL2H-ysG56GErFrln29XwclMFXcMCpN6dK3zxN1G60fMWBA_Udz6WnzK9YYKbsHZ93bd0lg2g4hXUmAtWGZeMZ2B1tU6jOOQykJzlGWOaOQ8wfyjoRJ1nxVUYjndCmRBlnXj7sCvM5xrVGsP8X0uchafz7prNO0RlDn18JvI8qMKilcAj_DLP0Ix0LEdjrHE28Jjw9RP4_8IeqJTkkXsbJKocvPMvoQ2sRWFnmknufwEGzmKC6o6hHFUvFEdZ"/>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-0.5">
+<h3 class="font-label-sm text-label-sm text-on-surface truncate">Jessica</h3>
+<span class="font-body-md text-[12px] text-on-surface-variant">Yesterday</span>
+</div>
+<p class="font-body-md text-sm text-on-surface-variant truncate">That sounds like a great idea!</p>
+</div>
+</div>
+</div>
+</div>
+<!-- BottomNavBar Mobile Only -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/95 dark:bg-slate-900/95 rounded-t-[32px] border-t border-orange-100/30 shadow-[0_-10px_40px_rgba(255,107,74,0.1)]">
+<!-- Active Tab: Feed (Dashboard intent) -->
+<a class="flex flex-col items-center justify-center bg-orange-50 text-orange-600 rounded-2xl px-5 py-2 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold mt-1">Feed</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 px-5 py-2 hover:text-orange-500 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold mt-1">Matches</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 px-5 py-2 hover:text-orange-500 active:scale-90 transition-all duration-200 relative" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold mt-1">Chat</span>
+<div class="absolute top-2 right-4 w-2 h-2 bg-primary rounded-full"></div>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 px-5 py-2 hover:text-orange-500 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined">person_celebrate</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold mt-1">Profile</span>
+</a>
+</nav>
+</div>
+</body></html>

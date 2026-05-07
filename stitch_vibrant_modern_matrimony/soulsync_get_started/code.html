@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#ff928b",
+                        "tertiary-fixed": "#ffd7ef",
+                        "on-primary-container": "#661000",
+                        "secondary-fixed-dim": "#ffb3ae",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#e1bfb8",
+                        "secondary-fixed": "#ffdad7",
+                        "on-surface-variant": "#59413c",
+                        "inverse-on-surface": "#f0f1f2",
+                        "background": "#f8f9fa",
+                        "tertiary": "#8a4778",
+                        "surface-dim": "#d9dadb",
+                        "on-primary-fixed": "#3d0600",
+                        "inverse-primary": "#ffb4a3",
+                        "on-tertiary-fixed-variant": "#6e305f",
+                        "on-tertiary-container": "#561a49",
+                        "on-surface": "#191c1d",
+                        "on-secondary-fixed-variant": "#7c2c29",
+                        "on-error": "#ffffff",
+                        "primary-container": "#ff6b4a",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e1e3e4",
+                        "on-secondary": "#ffffff",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container-low": "#f3f4f5",
+                        "inverse-surface": "#2e3132",
+                        "surface-container": "#edeeef",
+                        "tertiary-fixed-dim": "#feade4",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#cd82b6",
+                        "outline": "#8d716a",
+                        "primary-fixed": "#ffdad2",
+                        "secondary": "#9a433f",
+                        "on-primary-fixed-variant": "#8c1900",
+                        "on-error-container": "#93000a",
+                        "primary": "#ae3115",
+                        "on-background": "#191c1d",
+                        "surface-tint": "#ae3115",
+                        "surface": "#f8f9fa",
+                        "on-secondary-fixed": "#400104",
+                        "on-tertiary-fixed": "#3a0130",
+                        "primary-fixed-dim": "#ffb4a3",
+                        "on-secondary-container": "#772926",
+                        "surface-container-high": "#e7e8e9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "card-gap": "24px",
+                        "stack-md": "12px",
+                        "stack-lg": "24px",
+                        "container-max": "1280px",
+                        "stack-sm": "4px",
+                        "section-padding": "80px",
+                        "gutter": "24px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Plus Jakarta Sans"],
+                        "label-sm": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "display-xl": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-sm": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="bg-white/80 backdrop-blur-xl dark:bg-slate-900/80 border-b border-orange-50/50 dark:border-slate-800 shadow-[0_10px_30px_rgba(0,0,0,0.04)] docked full-width top-0 z-50 flex justify-between items-center px-6 py-4 w-full sticky top-0">
+<div class="text-2xl font-black tracking-tighter text-orange-600 dark:text-orange-500">SoulSync</div>
+<nav class="hidden md:flex gap-8 items-center font-['Plus_Jakarta_Sans'] text-sm font-medium">
+<a class="text-slate-600 dark:text-slate-400 hover:text-orange-500 transition-all duration-300" href="#">Discover</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-orange-500 transition-all duration-300" href="#">Matches</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-orange-500 transition-all duration-300" href="#">Stories</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-orange-500 transition-all duration-300" href="#">Messages</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="text-orange-600 dark:text-orange-400 font-bold px-4 py-2 hover:bg-orange-50/50 dark:hover:bg-slate-800 rounded-xl transition-all duration-300 active:scale-95">Sign In</button>
+</div>
+</header>
+<!-- Main Content Area: Conversational Registration -->
+<main class="flex-grow flex items-center justify-center py-20 px-6">
+<div class="max-w-[640px] w-full">
+<!-- Progress Bar Section -->
+<div class="mb-12">
+<div class="flex justify-between items-end mb-4 px-1">
+<span class="font-label-sm text-label-sm text-primary">Step 1 of 4</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant italic">The Journey Begins</span>
+</div>
+<div class="h-3 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full w-1/4 bg-gradient-to-r from-primary-container to-secondary-container rounded-full transition-all duration-700 ease-out"></div>
+</div>
+</div>
+<!-- Conversational Header -->
+<div class="mb-12 text-center md:text-left">
+<h1 class="font-display-xl text-display-xl text-on-surface mb-4">Tell us about yourself</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">Let's start your story. We'll use these details to help you find someone who truly resonates with your soul.</p>
+</div>
+<!-- Form Container -->
+<form class="space-y-10">
+<!-- Name Field -->
+<div class="space-y-4">
+<label class="font-headline-md text-headline-md text-on-surface block" for="full_name">What should we call you?</label>
+<div class="relative group">
+<input class="w-full bg-white border-2 border-transparent focus:border-primary-container focus:ring-0 rounded-[24px] px-8 py-6 text-body-lg font-body-lg shadow-[0_10px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-all placeholder:text-surface-variant text-on-surface" id="full_name" name="full_name" placeholder="Your full name" type="text"/>
+<div class="absolute right-6 top-1/2 -translate-y-1/2 text-primary-container opacity-0 group-focus-within:opacity-100 transition-opacity">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</div>
+</div>
+</div>
+<!-- Gender Field -->
+<div class="space-y-4">
+<label class="font-headline-md text-headline-md text-on-surface block">I identify as...</label>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="gender" type="radio" value="woman"/>
+<div class="bg-white border-2 border-transparent peer-checked:border-primary-container peer-checked:bg-primary-fixed rounded-[20px] p-6 flex flex-col items-center justify-center gap-3 shadow-[0_10px_30px_rgba(0,0,0,0.02)] transition-all group-hover:scale-[1.02] active:scale-95">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant peer-checked:text-primary" data-icon="female">female</span>
+<span class="font-label-sm text-label-sm text-on-surface">Woman</span>
+</div>
+</label>
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="gender" type="radio" value="man"/>
+<div class="bg-white border-2 border-transparent peer-checked:border-primary-container peer-checked:bg-primary-fixed rounded-[20px] p-6 flex flex-col items-center justify-center gap-3 shadow-[0_10px_30_rgba(0,0,0,0.02)] transition-all group-hover:scale-[1.02] active:scale-95">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant peer-checked:text-primary" data-icon="male">male</span>
+<span class="font-label-sm text-label-sm text-on-surface">Man</span>
+</div>
+</label>
+<label class="relative group cursor-pointer">
+<input class="peer sr-only" name="gender" type="radio" value="nonbinary"/>
+<div class="bg-white border-2 border-transparent peer-checked:border-primary-container peer-checked:bg-primary-fixed rounded-[20px] p-6 flex flex-col items-center justify-center gap-3 shadow-[0_10px_30_rgba(0,0,0,0.02)] transition-all group-hover:scale-[1.02] active:scale-95">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant peer-checked:text-primary" data-icon="transgender">transgender</span>
+<span class="font-label-sm text-label-sm text-on-surface">Non-binary</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Birthdate Field -->
+<div class="space-y-4">
+<label class="font-headline-md text-headline-md text-on-surface block" for="birthdate">When were you born?</label>
+<div class="relative group">
+<input class="w-full bg-white border-2 border-transparent focus:border-primary-container focus:ring-0 rounded-[24px] px-8 py-6 text-body-lg font-body-lg shadow-[0_10px_30px_rgba(0,0,0,0.02)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.06)] transition-all text-on-surface appearance-none" id="birthdate" name="birthdate" type="date"/>
+<div class="absolute right-6 top-1/2 -translate-y-1/2 text-primary-container pointer-events-none">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-2 px-2">You must be 18 or older to join SoulSync.</p>
+</div>
+<!-- Form Navigation -->
+<div class="pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="order-2 md:order-1">
+<button class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-lg" data-icon="arrow_back">arrow_back</span>
+                            Back to Welcome
+                        </button>
+</div>
+<div class="order-1 md:order-2 w-full md:w-auto">
+<button class="w-full md:w-64 bg-gradient-to-r from-primary-container to-secondary-container text-on-primary font-headline-md text-headline-md py-5 px-8 rounded-[24px] shadow-[0_15px_35px_rgba(255,107,74,0.3)] hover:shadow-[0_20px_45px_rgba(255,107,74,0.4)] hover:-translate-y-1 transition-all active:scale-95 flex items-center justify-center gap-3" type="submit">
+                            Continue
+                            <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</form>
+</div>
+</main>
+<!-- Side Visual / Hero Background (Decorative) -->
+<div class="fixed top-0 right-0 h-screen w-1/3 z-[-1] overflow-hidden hidden lg:block opacity-40 pointer-events-none">
+<div class="absolute top-[-10%] right-[-10%] w-[120%] h-[120%] bg-gradient-to-bl from-primary-fixed to-background rounded-full blur-[120px]"></div>
+<div class="relative h-full w-full">
+<img class="h-full w-full object-cover grayscale opacity-20" data-alt="A warm and inviting portrait of a smiling young woman in soft sunlight, captured in a modern lifestyle photography style. The image has high-key lighting and a soft, minimalist aesthetic that feels optimistic and celebratory. The color palette is muted with warm skin tones and bright highlights, emphasizing a sense of genuine human connection and digital hospitality. The mood is serene and welcoming, perfectly aligned with a premium matrimonial app's brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcRqZXDjyd2sOA0PE0i8rKWytvOOjgxymBM6CCZSGd-jlg15sgue4SMyPuOfnkhXDgyRPdBKxeXA97cNqgrr6fhCqF3zku6uduv4CdUhYNux-Nyp88O4BAegxlMqynkV7Pt8Txx0fTgWFJr9kDEqe-nn5Me_gA-AHwl1gKrrj7n-JOX2IImyBE0EfVKcBiW7b05um4a54rLTg_0-4nVCWqNYj6-s_NWlOCDQegxpCE4RWFXoufA-IuBuwIi18N9WaA8FeIADtLjFg_"/>
+</div>
+</div>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 w-full py-12 px-8">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex flex-col items-center md:items-start gap-2">
+<div class="text-xl font-bold text-slate-900 dark:text-white">SoulSync</div>
+<p class="font-['Plus_Jakarta_Sans'] text-sm text-slate-500">© 2024 SoulSync Matrimony. Crafted for Connection.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="font-['Plus_Jakarta_Sans'] text-sm text-slate-500 hover:text-orange-500 transition-colors duration-200" href="#">Privacy Policy</a>
+<a class="font-['Plus_Jakarta_Sans'] text-sm text-slate-500 hover:text-orange-500 transition-colors duration-200" href="#">Terms of Service</a>
+<a class="font-['Plus_Jakarta_Sans'] text-sm text-slate-500 hover:text-orange-500 transition-colors duration-200" href="#">Safety Guide</a>
+<a class="font-['Plus_Jakarta_Sans'] text-sm text-slate-500 hover:text-orange-500 transition-colors duration-200" href="#">Success Stories</a>
+<a class="font-['Plus_Jakarta_Sans'] text-sm text-slate-500 hover:text-orange-500 transition-colors duration-200" href="#">Contact Us</a>
+</div>
+</div>
+</footer>
+</body></html>

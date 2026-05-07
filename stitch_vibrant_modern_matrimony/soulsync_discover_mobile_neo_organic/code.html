@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SoulSync - Discover</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@300;600;700;900&amp;family=Be+Vietnam+Pro:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#fff8f6",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "surface-dim": "#edd5cf",
+                        "surface-container-highest": "#f6ddd8",
+                        "tertiary-container": "#9a9a97",
+                        "on-surface": "#261815",
+                        "surface-container-high": "#fce3dd",
+                        "on-surface-variant": "#59413c",
+                        "inverse-primary": "#ffb4a3",
+                        "background": "#fff8f6",
+                        "primary-fixed-dim": "#ffb4a3",
+                        "on-tertiary-container": "#313230",
+                        "tertiary-fixed": "#e3e2df",
+                        "on-error": "#ffffff",
+                        "tertiary": "#5e5f5c",
+                        "primary": "#ae3115",
+                        "surface-container": "#ffe9e5",
+                        "secondary-container": "#8a4cfc",
+                        "tertiary-fixed-dim": "#c7c7c3",
+                        "inverse-surface": "#3c2d29",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#fff8f6",
+                        "on-secondary-fixed": "#25005a",
+                        "secondary-fixed-dim": "#d2bbff",
+                        "on-background": "#261815",
+                        "outline": "#8d716a",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed": "#ffdad2",
+                        "on-tertiary-fixed-variant": "#464744",
+                        "secondary-fixed": "#eaddff",
+                        "on-primary-container": "#661000",
+                        "on-tertiary-fixed": "#1b1c1a",
+                        "secondary": "#712ae2",
+                        "surface-tint": "#ae3115",
+                        "on-secondary-container": "#fffbff",
+                        "on-primary-fixed-variant": "#8c1900",
+                        "on-secondary-fixed-variant": "#5a00c6",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#e1bfb8",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#3d0600",
+                        "primary-container": "#ff6b4a",
+                        "inverse-on-surface": "#ffede9",
+                        "surface-variant": "#f6ddd8",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#fff0ed"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "safe-margin": "64px",
+                        "overlap-negative": "-32px",
+                        "organic-gutter": "40px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Epilogue"],
+                        "display-xl": ["Epilogue"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "label-caps": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "headline-md": ["Epilogue"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-xl": ["84px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.8", "letterSpacing": "0.01em", "fontWeight": "300" }],
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 248, 246, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 0.5px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 20px rgba(38, 24, 21, 0.05), 0 10px 40px rgba(255, 107, 74, 0.1);
+        }
+        .organic-mask {
+            mask-image: radial-gradient(circle at 50% 50%, black 70%, transparent 100%);
+            -webkit-mask-image: radial-gradient(circle at 50% 50%, black 70%, transparent 100%);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased h-screen w-screen overflow-hidden flex flex-col font-body-md text-body-md">
+<!-- TopAppBar (Mobile Hidden, but kept for structure) -->
+<header class="hidden md:flex justify-between items-center px-6 py-4 w-full bg-white/40 dark:bg-black/40 backdrop-blur-2xl fixed top-0 z-50 border-b border-white/20 dark:border-white/10 shadow-[0_4px_30px_rgba(255,107,74,0.05)]">
+<div class="text-2xl font-black italic text-orange-600 dark:text-orange-500 font-epilogue tracking-tight">SoulSync</div>
+<nav class="flex gap-6">
+<a class="text-orange-600 dark:text-orange-400 font-bold border-b-2 border-orange-600 hover:text-orange-500 transition-colors duration-300" href="#">Discover</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-orange-500 transition-colors duration-300" href="#">Matches</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-orange-500 transition-colors duration-300" href="#">Messages</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-orange-500 transition-colors duration-300" href="#">Profile</a>
+</nav>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-stone-500 hover:text-orange-500 cursor-pointer">notifications</span>
+<span class="material-symbols-outlined text-stone-500 hover:text-orange-500 cursor-pointer">settings</span>
+</div>
+</header>
+<!-- Main Canvas: Immersive Vertical Feed -->
+<main class="flex-1 h-full w-full overflow-y-auto snap-y snap-mandatory hide-scrollbar relative pb-24 md:pb-0 pt-0 md:pt-20">
+<!-- Profile 1 -->
+<article class="h-full w-full snap-start relative flex flex-col justify-end bg-surface-container-low">
+<div class="absolute inset-0 z-0 overflow-hidden">
+<img alt="Profile Image" class="w-full h-full object-cover organic-mask scale-105" data-alt="A close-up portrait of a sophisticated young woman bathed in warm, soft-focus golden hour sunlight. She is looking slightly away with a serene expression. The background is a beautifully blurred, neo-organic gradient of deep sunset oranges, soft creams, and hints of violet, creating an elegant and ethereal mood consistent with a high-end dating app aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoVoLWkRfnyCw4zFfSBhLRSQcwHajpyLbYsZxzBLyeVQ-rnzfDdwIybDCBoIYulaqdRI4Cv_tAHA9Qp1Ql2w0uxiXg5UB4RfNBJ9On7uN-UnUPCQEK_e0AfixF7a5GQg5EntlLGtvEjryyHJMbH0qwqIIV05n5zmnIktkHR6eLbEzekhS-WbE92JykwPfydcY1w3t5EPTTD0LrCv74Kkfe_rFvcaShL69aWqYTHZHgxg4Iyl5f6DkdhnIEDovVmZKzLLhYlsdXYxYc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+</div>
+<div class="relative z-10 p-6 pb-12 flex flex-col gap-unit">
+<div class="flex gap-2 mb-2">
+<span class="px-3 py-1 bg-secondary-container/80 text-on-secondary-container rounded-full font-label-caps text-label-caps backdrop-blur-md border border-secondary-fixed/50">98% Match</span>
+<span class="px-3 py-1 bg-surface/80 text-on-surface rounded-full font-label-caps text-label-caps backdrop-blur-md border border-outline-variant">Verified</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-background drop-shadow-md">Elena, 28</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-sm mb-4">Architect &amp; occasional cellist. Seeking someone who appreciates negative space as much as I do.</p>
+<div class="flex flex-wrap gap-2 mb-safe-margin">
+<span class="px-4 py-2 glass-card rounded-lg font-body-md text-on-surface text-sm">Design</span>
+<span class="px-4 py-2 glass-card rounded-lg font-body-md text-on-surface text-sm">Classical Music</span>
+<span class="px-4 py-2 glass-card rounded-lg font-body-md text-on-surface text-sm">Minimalism</span>
+</div>
+<div class="absolute bottom-12 right-6 flex flex-col gap-4">
+<button class="w-16 h-16 rounded-full bg-surface-container shadow-lg flex items-center justify-center text-on-surface hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">close</span>
+</button>
+<button class="w-16 h-16 rounded-full bg-gradient-to-br from-primary-container to-primary shadow-[0_0_30px_rgba(255,107,74,0.5)] flex items-center justify-center text-on-primary hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Profile 2 -->
+<article class="h-full w-full snap-start relative flex flex-col justify-end bg-surface-container-high">
+<div class="absolute inset-0 z-0 overflow-hidden">
+<img alt="Profile Image" class="w-full h-full object-cover organic-mask scale-105" data-alt="A portrait of a thoughtful young man in a minimalist, light-filled gallery space. He wears casual but refined clothing. The lighting is bright and high-key, casting soft shadows. The background features subtle, out-of-focus abstract art pieces with hints of warm coral and cream tones, maintaining a premium, neo-organic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDj_S4taVxQzlVTipdUf5O4P_VYPH7Xqs131OFzf3BYIOPrLdJFw1LqAt899rHOHcYZAl3DOuP_2oVNTEf04lP-oRardEXDuQOxmhc4_-iHnrLep27Bg-pTd9ue9o9qRQwdUxrSZ7kWUPP1gQZoGDAMIH-6cOQxn6GGRXah5TGeU11y_eL3xRJavfyZAEHvC-_W6IAG9UR-2sVCdy2HQ6VuulnvwodCk6UYfwMsxDMw6seqCLjlFjl9Wf_PH7lSYTCwyFmwDR7NO-DA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+</div>
+<div class="relative z-10 p-6 pb-12 flex flex-col gap-unit">
+<div class="flex gap-2 mb-2">
+<span class="px-3 py-1 bg-secondary-container/80 text-on-secondary-container rounded-full font-label-caps text-label-caps backdrop-blur-md border border-secondary-fixed/50">92% Match</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-background drop-shadow-md">Julian, 31</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-sm mb-4">Curator of obscure teas and modern art. Let's wander through a gallery.</p>
+<div class="flex flex-wrap gap-2 mb-safe-margin">
+<span class="px-4 py-2 glass-card rounded-lg font-body-md text-on-surface text-sm">Art History</span>
+<span class="px-4 py-2 glass-card rounded-lg font-body-md text-on-surface text-sm">Botany</span>
+</div>
+<div class="absolute bottom-12 right-6 flex flex-col gap-4">
+<button class="w-16 h-16 rounded-full bg-surface-container shadow-lg flex items-center justify-center text-on-surface hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">close</span>
+</button>
+<button class="w-16 h-16 rounded-full bg-gradient-to-br from-primary-container to-primary shadow-[0_0_30px_rgba(255,107,74,0.5)] flex items-center justify-center text-on-primary hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+</div>
+</div>
+</article>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden flex justify-around items-center p-2 bg-white/60 dark:bg-stone-900/60 backdrop-blur-3xl text-orange-600 dark:text-orange-400 font-epilogue text-[10px] font-semibold uppercase tracking-widest fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-lg rounded-full border border-white/40 dark:border-white/10 shadow-[0_20px_50px_rgba(255,107,74,0.15)] z-50">
+<!-- Active Tab: Discover -->
+<a class="flex flex-col items-center justify-center bg-orange-600 dark:bg-orange-500 text-white rounded-full w-12 h-12 shadow-lg shadow-orange-600/30 scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">auto_awesome</span>
+</a>
+<!-- Inactive Tabs -->
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 w-12 h-12 hover:scale-110 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined">favorite</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 w-12 h-12 hover:scale-110 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 w-12 h-12 hover:scale-110 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined">person</span>
+</a>
+</nav>
+</body></html>

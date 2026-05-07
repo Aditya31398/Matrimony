@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SoulSync - Profile Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@300;600;700;900&amp;family=Be+Vietnam+Pro:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Custom scrollbar for horizontal lists */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#fff8f6",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "surface-dim": "#edd5cf",
+                        "surface-container-highest": "#f6ddd8",
+                        "tertiary-container": "#9a9a97",
+                        "on-surface": "#261815",
+                        "surface-container-high": "#fce3dd",
+                        "on-surface-variant": "#59413c",
+                        "inverse-primary": "#ffb4a3",
+                        "background": "#fff8f6",
+                        "primary-fixed-dim": "#ffb4a3",
+                        "on-tertiary-container": "#313230",
+                        "tertiary-fixed": "#e3e2df",
+                        "on-error": "#ffffff",
+                        "tertiary": "#5e5f5c",
+                        "primary": "#ae3115",
+                        "surface-container": "#ffe9e5",
+                        "secondary-container": "#8a4cfc",
+                        "tertiary-fixed-dim": "#c7c7c3",
+                        "inverse-surface": "#3c2d29",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#fff8f6",
+                        "on-secondary-fixed": "#25005a",
+                        "secondary-fixed-dim": "#d2bbff",
+                        "on-background": "#261815",
+                        "outline": "#8d716a",
+                        "on-secondary": "#ffffff",
+                        "primary-fixed": "#ffdad2",
+                        "on-tertiary-fixed-variant": "#464744",
+                        "secondary-fixed": "#eaddff",
+                        "on-primary-container": "#661000",
+                        "on-tertiary-fixed": "#1b1c1a",
+                        "secondary": "#712ae2",
+                        "surface-tint": "#ae3115",
+                        "on-secondary-container": "#fffbff",
+                        "on-primary-fixed-variant": "#8c1900",
+                        "on-secondary-fixed-variant": "#5a00c6",
+                        "on-error-container": "#93000a",
+                        "outline-variant": "#e1bfb8",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#3d0600",
+                        "primary-container": "#ff6b4a",
+                        "inverse-on-surface": "#ffede9",
+                        "surface-variant": "#f6ddd8",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#fff0ed"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "safe-margin": "64px",
+                        "overlap-negative": "-32px",
+                        "organic-gutter": "40px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Epilogue"],
+                        "display-xl": ["Epilogue"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "label-caps": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "headline-md": ["Epilogue"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-xl": ["84px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.8", "letterSpacing": "0.01em", "fontWeight": "300" }],
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen overflow-x-hidden selection:bg-primary-container selection:text-white">
+<!-- Ambient Background Blobs -->
+<div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
+<div class="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-gradient-to-br from-primary-container/10 to-surface-container-highest/30 blur-[100px] opacity-70"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[70%] h-[70%] rounded-full bg-gradient-to-tr from-secondary-container/10 to-surface-variant/30 blur-[120px] opacity-60"></div>
+</div>
+<!-- Main Navigation (Suppressed on this deep-dive profile detail screen, but showing a 'Back' action instead as per rules) -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-white/40 dark:bg-black/40 backdrop-blur-2xl border-b border-white/20 dark:border-white/10 shadow-[0_4px_30px_rgba(255,107,74,0.05)]">
+<a class="flex items-center justify-center w-12 h-12 rounded-full bg-white/60 backdrop-blur-md shadow-sm text-on-surface hover:text-primary hover:bg-white transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</a>
+<div class="text-2xl font-black italic text-orange-600 font-headline-lg tracking-tight">SoulSync</div>
+<div class="flex gap-4">
+<button class="flex items-center justify-center w-12 h-12 rounded-full bg-white/60 backdrop-blur-md shadow-sm text-on-surface hover:text-primary hover:bg-white transition-colors">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</div>
+</nav>
+<!-- Content Layout: Asymmetrical Split -->
+<main class="w-full flex flex-col md:flex-row min-h-screen pt-[88px] md:pt-0">
+<!-- Left: Full-Bleed Imagery -->
+<section class="w-full md:w-5/12 lg:w-1/2 h-[614px] md:h-screen md:sticky md:top-0 relative overflow-hidden">
+<img alt="Profile portrait" class="absolute inset-0 w-full h-full object-cover" data-alt="A cinematic, high-end portrait of a sophisticated individual in a warmly lit, elegant setting. The composition is artistic and soft-focused, embodying a neo-organic, neo-romantic aesthetic. Lighting mimics a golden hour sunset, casting a soft, flattering glow with subtle deep coral and warm cream undertones. The mood is intimate, serene, and deeply soulful, aligning with a premium matchmaking experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ0KlBchpUdqeIpwHfnwhe-PuPA9Ds5KaPZxxL9YBEdo8lSL5KyzOkcZtfvcApW5x-5SsRjF6LSZpzvVSUmF4wRj88T3-lYmS46gzOBULDYaAqiR8YSqDAVLrNddph0Z2Da9CnUNvFfLKhQw5QmUXIYmK0MdbNCJSf7nyDXR1aChyIGEYhaH-v8YSjAMORMOaXZz5Q_Jjj-ER8SbyseUCCODZSSWmeW2GbZR5kwp89O4vueVeTtvRNIYA0D0ggubTRt7BwnqV2i40r"/>
+<!-- Warm Cream Tint Overlay -->
+<div class="absolute inset-0 bg-gradient-to-b from-surface/20 via-transparent to-surface/90 md:bg-gradient-to-r md:from-surface/10 md:via-transparent md:to-surface/90"></div>
+<!-- Floating Name/Age Badge on Image (Mobile primarily, bleeds into desktop) -->
+<div class="absolute bottom-8 left-8 right-8 md:right-auto z-10">
+<div class="bg-white/40 backdrop-blur-[30px] border border-white/50 p-6 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.1),0_0_20px_rgba(255,107,74,0.05)] inline-block">
+<h1 class="font-display-xl text-display-xl text-on-surface mb-1">Eleanor, 32</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container" data-icon="location_on" style="font-variation-settings: 'FILL' 1;">location_on</span>
+                        Milan, Italy
+                    </p>
+</div>
+</div>
+</section>
+<!-- Right: Overlapping Content Canvas -->
+<section class="w-full md:w-7/12 lg:w-1/2 px-6 py-12 md:py-24 md:px-16 flex flex-col gap-organic-gutter relative z-10 bg-surface md:bg-transparent -mt-8 md:mt-0 rounded-t-xl md:rounded-none">
+<!-- Match Compatibility Chip -->
+<div class="inline-flex items-center gap-3 bg-secondary-container/15 border border-secondary-container/30 rounded-full py-2 px-5 self-start shadow-sm backdrop-blur-md">
+<span class="material-symbols-outlined text-secondary" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="font-label-caps text-label-caps text-on-secondary-fixed-variant uppercase tracking-widest">94% Soul Resonance</span>
+</div>
+<!-- The Story -->
+<div class="mt-4">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-6 relative inline-block">
+                    The Story
+                    <div class="absolute -bottom-2 left-0 w-1/3 h-1 bg-gradient-to-r from-primary-container to-transparent rounded-full"></div>
+</h2>
+<div class="bg-white/60 backdrop-blur-2xl rounded-xl p-8 border border-white shadow-[0_10px_40px_rgba(38,24,21,0.03)] relative overflow-hidden">
+<div class="absolute top-0 left-0 w-2 h-full bg-primary-container opacity-20"></div>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                        I believe in the profound beauty of slow mornings, the scent of old books, and the quiet resonance of a shared glance across a crowded room. My life is a curated collection of meaningful moments—whether that's exploring hidden architectural gems in the city or cultivating a small garden on my balcony.
+                    </p>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed mt-4">
+                        I am seeking a partner who values depth over breadth, someone who understands that true connection is an art form requiring patience, curiosity, and an open heart.
+                    </p>
+</div>
+</div>
+<!-- Lifestyle & Values Bento Grid -->
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-6 relative inline-block">
+                    Lifestyle &amp; Values
+                </h2>
+<div class="grid grid-cols-2 gap-4">
+<!-- Value Card 1 -->
+<div class="bg-surface-container-high/50 backdrop-blur-md rounded-lg p-6 border border-white/50 flex flex-col items-center text-center group hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-primary text-4xl mb-3 group-hover:scale-110 transition-transform" data-icon="menu_book">menu_book</span>
+<h3 class="font-label-caps text-label-caps text-on-surface font-semibold mb-1">Intellectual</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Avid reader &amp; thinker</p>
+</div>
+<!-- Value Card 2 -->
+<div class="bg-surface-container-high/50 backdrop-blur-md rounded-lg p-6 border border-white/50 flex flex-col items-center text-center group hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-primary text-4xl mb-3 group-hover:scale-110 transition-transform" data-icon="travel_explore">travel_explore</span>
+<h3 class="font-label-caps text-label-caps text-on-surface font-semibold mb-1">Explorer</h3>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Culture &amp; hidden gems</p>
+</div>
+<!-- Value Card 3 (Spans 2 columns) -->
+<div class="col-span-2 bg-gradient-to-br from-white/80 to-surface-container-low/80 backdrop-blur-xl rounded-lg p-6 border border-white shadow-[0_4px_20px_rgba(0,0,0,0.02)] flex items-center gap-6">
+<div class="w-16 h-16 rounded-full bg-primary-container/20 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="favorite">favorite</span>
+</div>
+<div>
+<h3 class="font-label-caps text-label-caps text-on-surface font-semibold mb-1">Love Language</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Quality Time &amp; Acts of Service</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Interests Pills -->
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-6 relative inline-block">
+                    Curated Interests
+                </h2>
+<div class="flex flex-wrap gap-3">
+<span class="px-5 py-3 rounded-full bg-white/80 border border-surface-variant text-on-surface font-body-md text-body-md shadow-sm">Contemporary Art</span>
+<span class="px-5 py-3 rounded-full bg-white/80 border border-surface-variant text-on-surface font-body-md text-body-md shadow-sm">Jazz Vinyls</span>
+<span class="px-5 py-3 rounded-full bg-white/80 border border-surface-variant text-on-surface font-body-md text-body-md shadow-sm">Oenology</span>
+<span class="px-5 py-3 rounded-full bg-white/80 border border-surface-variant text-on-surface font-body-md text-body-md shadow-sm">Analog Photography</span>
+<span class="px-5 py-3 rounded-full bg-white/80 border border-surface-variant text-on-surface font-body-md text-body-md shadow-sm">Slow Food</span>
+</div>
+</div>
+<!-- Spacer for bottom action -->
+<div class="h-32"></div>
+</section>
+</main>
+<!-- Floating Action Bar (Sticky Bottom) -->
+<div class="fixed bottom-0 left-0 w-full p-6 md:p-8 bg-gradient-to-t from-background via-background/90 to-transparent z-40 flex justify-center pointer-events-none">
+<div class="w-full max-w-md mx-auto flex gap-4 pointer-events-auto">
+<button class="w-16 h-[64px] rounded-xl bg-white/80 backdrop-blur-xl border border-white shadow-[0_10px_30px_rgba(0,0,0,0.05)] flex items-center justify-center text-on-surface-variant hover:text-primary hover:scale-105 transition-all">
+<span class="material-symbols-outlined text-3xl" data-icon="close">close</span>
+</button>
+<button class="flex-1 h-[64px] rounded-xl bg-gradient-to-r from-primary-container to-primary text-white font-headline-md text-headline-md text-[20px] shadow-[0_10px_30px_rgba(174,49,21,0.2)] hover:shadow-[0_0_30px_rgba(255,107,74,0.4)] flex items-center justify-center gap-3 transition-all hover:-translate-y-1">
+<span class="material-symbols-outlined" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+                Connect
+            </button>
+</div>
+</div>
+</body></html>

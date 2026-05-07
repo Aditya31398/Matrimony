@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#ff928b",
+                    "tertiary-fixed": "#ffd7ef",
+                    "on-primary-container": "#661000",
+                    "secondary-fixed-dim": "#ffb3ae",
+                    "on-primary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "outline-variant": "#e1bfb8",
+                    "secondary-fixed": "#ffdad7",
+                    "on-surface-variant": "#59413c",
+                    "inverse-on-surface": "#f0f1f2",
+                    "background": "#f8f9fa",
+                    "tertiary": "#8a4778",
+                    "surface-dim": "#d9dadb",
+                    "on-primary-fixed": "#3d0600",
+                    "inverse-primary": "#ffb4a3",
+                    "on-tertiary-fixed-variant": "#6e305f",
+                    "on-tertiary-container": "#561a49",
+                    "on-surface": "#191c1d",
+                    "on-secondary-fixed-variant": "#7c2c29",
+                    "on-error": "#ffffff",
+                    "primary-container": "#ff6b4a",
+                    "error-container": "#ffdad6",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-variant": "#e1e3e4",
+                    "on-secondary": "#ffffff",
+                    "surface-bright": "#f8f9fa",
+                    "surface-container-low": "#f3f4f5",
+                    "inverse-surface": "#2e3132",
+                    "surface-container": "#edeeef",
+                    "tertiary-fixed-dim": "#feade4",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-container": "#cd82b6",
+                    "outline": "#8d716a",
+                    "primary-fixed": "#ffdad2",
+                    "secondary": "#9a433f",
+                    "on-primary-fixed-variant": "#8c1900",
+                    "on-error-container": "#93000a",
+                    "primary": "#ae3115",
+                    "on-background": "#191c1d",
+                    "surface-tint": "#ae3115",
+                    "surface": "#f8f9fa",
+                    "on-secondary-fixed": "#400104",
+                    "on-tertiary-fixed": "#3a0130",
+                    "primary-fixed-dim": "#ffb4a3",
+                    "on-secondary-container": "#772926",
+                    "surface-container-high": "#e7e8e9"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "card-gap": "24px",
+                    "stack-md": "12px",
+                    "stack-lg": "24px",
+                    "container-max": "1280px",
+                    "stack-sm": "4px",
+                    "section-padding": "80px",
+                    "gutter": "24px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "body-md": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "display-xl": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-sm": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-background">
+<!-- Top Navigation (Shell Implementation) -->
+<nav class="bg-white/80 backdrop-blur-xl dark:bg-slate-900/80 font-['Plus_Jakarta_Sans'] text-sm font-medium border-b border-orange-50/50 dark:border-slate-800 shadow-[0_10px_30px_rgba(0,0,0,0.04)] flex justify-between items-center px-6 py-4 w-full sticky top-0 z-50">
+<div class="text-2xl font-black tracking-tighter text-orange-600 dark:text-orange-500">SoulSync</div>
+<div class="hidden md:flex gap-8">
+<a class="text-slate-600 dark:text-slate-400 hover:text-orange-500 transition-all duration-300" href="#">Discover</a>
+<a class="text-orange-600 dark:text-orange-400 border-b-2 border-orange-500 font-bold pb-1 transition-all duration-300" href="#">Matches</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-orange-500 transition-all duration-300" href="#">Stories</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-orange-500 transition-all duration-300" href="#">Messages</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer p-2 hover:bg-orange-50/50 rounded-full transition-all">notifications</span>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer p-2 hover:bg-orange-50/50 rounded-full transition-all">settings</span>
+<div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A professional and warm headshot of a smiling young woman with elegant styling, set against a soft, blurred studio background. The lighting is bright and airy, reflecting a modern and sophisticated aesthetic consistent with a high-end lifestyle application. The color palette is composed of natural skin tones and soft neutrals." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAfxaG6-sNlPxi0N4auFX9fteTkowVwNn5-O7qNxsI2JB7qtTKa0vYWynBa86hX14SZtJyKpWyJZpziy35iZGF9Q6CqN4Kj8fHuoTry6bnYA77UuCIbQvC8flFL9nga04h7P9OI4VMUR-dk3f3mIUeneoEFr80uddP9LJwDmbRyJvPijGlVjiem3sUQXerkrSKhGZhqgQZLwElmQhNr2fyWf-7JkmHP2aanlZYcxOGKxplgYO_l-vWK3REqlGoxE3xqiuhOaBAr64q"/>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="max-w-[1280px] mx-auto px-6 py-stack-lg md:py-section-padding pb-32">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Profile Hero & Imagery -->
+<div class="lg:col-span-5 space-y-stack-lg">
+<div class="relative group">
+<div class="aspect-[4/5] rounded-[40px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] transition-transform duration-500 group-hover:scale-[1.02]">
+<img class="w-full h-full object-cover" data-alt="A full-length lifestyle portrait of a radiant woman sitting in a sunlit, modern cafe with large windows and lush indoor plants. She is wearing a chic, coral-colored dress that complements the brand's primary palette. The lighting is warm and golden, creating an optimistic and welcoming atmosphere. The overall style is editorial and high-end, focusing on natural beauty and joyful connection." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBt5P6xI10N4MoO3lnf_bLcs-qTFzrkJZL8dHYk3-xFu9ZJ9rli5gb7rsS2gLW7NrC9GP_I7YivtlTHEJgqoMcqwyX2rMZwctnqCDN6y_gWBB49QGZInaa_CkJi-wPEeD_l9bvilVisARsmup2knfEiUtDbqk0KJGvXAQUYSxWcpRYQKXxh8FWlTSogmYPXFXW3b5eVxTC4GIKvy4tpj75TKQDV5I-WpUkSHZGUKIDFHoDyxFaIQy_-gyph5DWOtrtp4Nl4xWZ5j5m6"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-8 text-white">
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full text-label-sm uppercase tracking-wider">Premium Member</span>
+</div>
+<h1 class="font-display-xl text-white">Ananya Sharma, 28</h1>
+<div class="flex items-center gap-4 mt-2 opacity-90">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+<span class="text-body-md">Mumbai, India</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">work</span>
+<span class="text-body-md">Product Designer</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Basic Info Bento Card -->
+<div class="bg-white rounded-[32px] p-8 shadow-[0_10px_30px_rgba(0,0,0,0.04)] border border-slate-100">
+<h3 class="font-headline-md text-on-surface mb-stack-lg">Basic Info</h3>
+<div class="grid grid-cols-2 gap-y-stack-lg gap-x-4">
+<div class="flex flex-col">
+<span class="text-slate-400 text-label-sm">Religion</span>
+<span class="font-body-md font-semibold">Hindu (Brahmin)</span>
+</div>
+<div class="flex flex-col">
+<span class="text-slate-400 text-label-sm">Height</span>
+<span class="font-body-md font-semibold">5'6" (168cm)</span>
+</div>
+<div class="flex flex-col">
+<span class="text-slate-400 text-label-sm">Mother Tongue</span>
+<span class="font-body-md font-semibold">Hindi, Marathi</span>
+</div>
+<div class="flex flex-col">
+<span class="text-slate-400 text-label-sm">Dietary Pref</span>
+<span class="font-body-md font-semibold">Vegetarian</span>
+</div>
+<div class="flex flex-col">
+<span class="text-slate-400 text-label-sm">Education</span>
+<span class="font-body-md font-semibold">Masters in Design</span>
+</div>
+<div class="flex flex-col">
+<span class="text-slate-400 text-label-sm">Horoscope</span>
+<span class="font-body-md font-semibold">Leo (Sun Sign)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Storytelling & Interests -->
+<div class="lg:col-span-7 space-y-stack-lg">
+<!-- My Story Section -->
+<div class="bg-white rounded-[32px] p-8 md:p-10 shadow-[0_10px_30px_rgba(0,0,0,0.04)] border border-slate-100">
+<div class="flex items-center gap-3 mb-stack-lg">
+<div class="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<h2 class="font-headline-lg text-on-surface">My Story</h2>
+</div>
+<p class="font-body-lg text-on-surface-variant leading-relaxed">
+                        I'm a curious soul who finds joy in the intersection of technology and human emotion. By day, I design digital experiences that make life easier; by night, I'm usually found experimenting with fusion recipes in my kitchen or lost in a classic Murakami novel. 
+                    </p>
+<p class="font-body-lg text-on-surface-variant leading-relaxed mt-4">
+                        Growing up in a household that balanced tradition with modern values, I've learned to appreciate the quiet moments as much as the grand milestones. I'm looking for a partner to share sunset walks, intellectual debates, and the occasional spontaneous weekend getaway.
+                    </p>
+</div>
+<!-- Interests & Hobbies (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="bg-tertiary-fixed rounded-[32px] p-8">
+<h3 class="font-headline-md text-on-tertiary-fixed mb-stack-lg flex items-center gap-2">
+<span class="material-symbols-outlined">palette</span> Interests
+                        </h3>
+<div class="flex flex-wrap gap-2">
+<span class="bg-white/40 backdrop-blur-sm px-4 py-2 rounded-full text-label-sm text-on-tertiary-container">UI/UX Design</span>
+<span class="bg-white/40 backdrop-blur-sm px-4 py-2 rounded-full text-label-sm text-on-tertiary-container">Oil Painting</span>
+<span class="bg-white/40 backdrop-blur-sm px-4 py-2 rounded-full text-label-sm text-on-tertiary-container">Architecture</span>
+<span class="bg-white/40 backdrop-blur-sm px-4 py-2 rounded-full text-label-sm text-on-tertiary-container">Podcasts</span>
+</div>
+</div>
+<div class="bg-secondary-fixed rounded-[32px] p-8">
+<h3 class="font-headline-md text-on-secondary-fixed-variant mb-stack-lg flex items-center gap-2">
+<span class="material-symbols-outlined">fitness_center</span> Lifestyle
+                        </h3>
+<div class="flex flex-wrap gap-2">
+<span class="bg-white/40 backdrop-blur-sm px-4 py-2 rounded-full text-label-sm text-on-secondary-container">Yoga</span>
+<span class="bg-white/40 backdrop-blur-sm px-4 py-2 rounded-full text-label-sm text-on-secondary-container">Trekking</span>
+<span class="bg-white/40 backdrop-blur-sm px-4 py-2 rounded-full text-label-sm text-on-secondary-container">Early Bird</span>
+<span class="bg-white/40 backdrop-blur-sm px-4 py-2 rounded-full text-label-sm text-on-secondary-container">Travel Enthusiast</span>
+</div>
+</div>
+</div>
+<!-- What I'm Looking For -->
+<div class="bg-primary-fixed rounded-[32px] p-8 md:p-10 border border-orange-100/50">
+<div class="flex items-center gap-3 mb-stack-lg">
+<div class="w-12 h-12 rounded-2xl bg-white/60 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<h2 class="font-headline-lg text-on-primary-fixed">What I'm Looking For</h2>
+</div>
+<div class="space-y-4">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary mt-1">check_circle</span>
+<p class="font-body-md text-on-primary-fixed-variant">Someone who values kindness and emotional intelligence as much as professional ambition.</p>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary mt-1">check_circle</span>
+<p class="font-body-md text-on-primary-fixed-variant">A partner who enjoys deep conversations about life, philosophy, and the future.</p>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary mt-1">check_circle</span>
+<p class="font-body-md text-on-primary-fixed-variant">A fellow travel enthusiast who isn't afraid to explore off-the-beaten-path destinations.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Bar (Contextual FAB Suppression Rule: Visible here as it is a Profile detail) -->
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-[60]">
+<div class="bg-white/90 backdrop-blur-2xl rounded-[32px] p-4 shadow-[0_20px_50px_rgba(255,107,74,0.15)] flex items-center gap-4 border border-orange-100/50">
+<button class="flex-1 h-14 rounded-2xl bg-white border-2 border-orange-100 text-orange-600 font-semibold flex items-center justify-center gap-2 hover:bg-orange-50 active:scale-95 transition-all">
+<span class="material-symbols-outlined">bookmark</span>
+                Shortlist
+            </button>
+<button class="flex-[1.5] h-14 rounded-2xl bg-gradient-to-r from-orange-500 to-coral-500 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 active:scale-95 transition-all" style="background: linear-gradient(135deg, #ae3115 0%, #ff6b4a 100%);">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+                Connect Now
+            </button>
+</div>
+</div>
+<!-- Mobile Navigation Shell (Visible only on small screens) -->
+<nav class="md:hidden bg-white/95 dark:bg-slate-900/95 font-['Plus_Jakarta_Sans'] text-[10px] font-semibold border-t border-orange-100/30 dark:border-slate-800 shadow-[0_-10px_40px_rgba(255,107,74,0.1)] fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-orange-500 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mb-1">explore</span>
+            Feed
+        </a>
+<a class="flex flex-col items-center justify-center bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-2xl px-5 py-2 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">favorite</span>
+            Matches
+        </a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-orange-500 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mb-1">forum</span>
+            Chat
+        </a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-orange-500 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mb-1">person_celebrate</span>
+            Profile
+        </a>
+</nav>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 w-full py-12 px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row w-full justify-between items-center gap-8">
+<div class="flex flex-col items-center md:items-start">
+<span class="text-xl font-bold text-slate-900 dark:text-white">SoulSync</span>
+<p class="font-['Plus_Jakarta_Sans'] text-sm text-slate-500 mt-2">© 2024 SoulSync Matrimony. Crafted for Connection.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-slate-500 hover:text-orange-500 transition-colors duration-200 cursor-pointer" href="#">Privacy Policy</a>
+<a class="text-slate-500 hover:text-orange-500 transition-colors duration-200 cursor-pointer" href="#">Terms of Service</a>
+<a class="text-slate-500 hover:text-orange-500 transition-colors duration-200 cursor-pointer" href="#">Safety Guide</a>
+<a class="text-slate-500 hover:text-orange-500 transition-colors duration-200 cursor-pointer" href="#">Success Stories</a>
+<a class="text-slate-500 hover:text-orange-500 transition-colors duration-200 cursor-pointer" href="#">Contact Us</a>
+</div>
+</div>
+</footer>
+</body></html>

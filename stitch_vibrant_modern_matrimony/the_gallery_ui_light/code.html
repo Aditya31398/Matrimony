@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SoulSync - Discovery Gallery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,100..900;1,100..900&amp;family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#8a4cfc",
+                    "inverse-primary": "#ffb4a3",
+                    "primary": "#ae3115",
+                    "outline-variant": "#e1bfb8",
+                    "on-error-container": "#93000a",
+                    "error": "#ba1a1a",
+                    "secondary-fixed": "#eaddff",
+                    "tertiary-fixed": "#e3e2df",
+                    "on-primary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#edd5cf",
+                    "surface-tint": "#ae3115",
+                    "surface-container-low": "#fff0ed",
+                    "secondary": "#712ae2",
+                    "secondary-fixed-dim": "#d2bbff",
+                    "on-primary-fixed-variant": "#8c1900",
+                    "surface-container": "#ffe9e5",
+                    "on-tertiary-fixed": "#1b1c1a",
+                    "on-secondary-container": "#fffbff",
+                    "on-primary-fixed": "#3d0600",
+                    "surface-container-highest": "#f6ddd8",
+                    "primary-container": "#ff6b4a",
+                    "on-surface": "#261815",
+                    "on-primary-container": "#661000",
+                    "tertiary-fixed-dim": "#c7c7c3",
+                    "tertiary-container": "#9a9a97",
+                    "tertiary": "#5e5f5c",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#fce3dd",
+                    "on-surface-variant": "#59413c",
+                    "surface-bright": "#fff8f6",
+                    "outline": "#8d716a",
+                    "on-tertiary": "#ffffff",
+                    "surface": "#fff8f6",
+                    "background": "#fff8f6",
+                    "on-tertiary-fixed-variant": "#464744",
+                    "on-background": "#261815",
+                    "on-secondary-fixed-variant": "#5a00c6",
+                    "primary-fixed": "#ffdad2",
+                    "on-tertiary-container": "#313230",
+                    "inverse-on-surface": "#ffede9",
+                    "surface-variant": "#f6ddd8",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#3c2d29",
+                    "primary-fixed-dim": "#ffb4a3",
+                    "on-secondary-fixed": "#25005a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "8px",
+                    "organic-gutter": "40px",
+                    "safe-margin": "64px",
+                    "overlap-negative": "-32px"
+            },
+            "fontFamily": {
+                    "display-xl": [
+                            "Epilogue"
+                    ],
+                    "body-lg": [
+                            "Be Vietnam Pro"
+                    ],
+                    "headline-lg": [
+                            "Epilogue"
+                    ],
+                    "headline-md": [
+                            "Epilogue"
+                    ],
+                    "label-caps": [
+                            "Be Vietnam Pro"
+                    ],
+                    "body-md": [
+                            "Be Vietnam Pro"
+                    ]
+            },
+            "fontSize": {
+                    "display-xl": [
+                            "84px",
+                            {
+                                    "lineHeight": "1.1",
+                                    "letterSpacing": "-0.04em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "1.8",
+                                    "letterSpacing": "0.01em",
+                                    "fontWeight": "300"
+                            }
+                    ],
+                    "headline-lg": [
+                            "48px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-md": [
+                            "32px",
+                            {
+                                    "lineHeight": "1.3",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-caps": [
+                            "12px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "0.1em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+        },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .masonry {
+            column-count: 1;
+            column-gap: 24px;
+        }
+        @media (min-width: 640px) { .masonry { column-count: 2; } }
+        @media (min-width: 1024px) { .masonry { column-count: 3; } }
+        @media (min-width: 1280px) { .masonry { column-count: 4; } }
+        
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 24px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen overflow-x-hidden font-body-md text-body-md antialiased selection:bg-primary-container selection:text-on-primary-container relative">
+<!-- Atmospheric Background Blobs -->
+<div class="fixed top-[-10%] left-[-5%] w-[40vw] h-[40vw] bg-surface-variant/40 rounded-full blur-[100px] -z-10 pointer-events-none"></div>
+<div class="fixed bottom-[-10%] right-[-5%] w-[50vw] h-[50vw] bg-inverse-primary/20 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 px-6 py-4 bg-white/40 dark:bg-black/40 backdrop-blur-3xl shadow-[0_0_20px_rgba(255,107,74,0.1)] border-b border-white/20 dark:border-white/10 font-['Epilogue'] tracking-tight">
+<div class="flex justify-between items-center max-w-screen-2xl mx-auto">
+<!-- Brand -->
+<div class="text-2xl font-bold tracking-tighter text-orange-600 dark:text-orange-400 italic">
+                SoulSync
+            </div>
+<!-- Web Navigation Links (Hidden on Mobile) -->
+<div class="hidden md:flex items-center gap-8">
+<a class="text-orange-600 dark:text-orange-400 font-semibold border-b-2 border-orange-500 pb-1" href="#">Gallery</a>
+<a class="text-neutral-600 dark:text-neutral-400 hover:text-orange-500 hover:backdrop-blur-2xl transition-all duration-500 pb-1" href="#">Stories</a>
+<a class="text-neutral-600 dark:text-neutral-400 hover:text-orange-500 hover:backdrop-blur-2xl transition-all duration-500 pb-1" href="#">The Edit</a>
+</div>
+<!-- Trailing Action (Hidden on Mobile to preserve minimalism) -->
+<button class="hidden md:block px-6 py-2 rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-label-caps text-label-caps hover:shadow-[0_0_30px_rgba(255,107,74,0.3)] transition-all duration-300 scale-95 hover:scale-100">
+                Connect
+            </button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-[100px] pb-32 max-w-screen-2xl mx-auto px-4 sm:px-6">
+<!-- Subtle Filters -->
+<div class="flex items-center gap-3 mb-8 overflow-x-auto no-scrollbar py-2">
+<button class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-highest text-on-surface font-label-caps text-label-caps border border-white/40 backdrop-blur-md shadow-sm whitespace-nowrap">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+                Filter
+            </button>
+<div class="w-px h-4 bg-outline-variant mx-2"></div>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-variant transition-colors whitespace-nowrap">Near Me</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-variant transition-colors whitespace-nowrap">Creative Souls</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-variant transition-colors whitespace-nowrap">Coffee Lovers</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-variant transition-colors whitespace-nowrap">Wanderlust</button>
+</div>
+<!-- Staggered Gallery Grid -->
+<div class="masonry">
+<!-- Profile Card 1 -->
+<div class="masonry-item relative rounded-[2rem] overflow-hidden group shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-white/60 bg-surface-container-lowest">
+<img alt="Portrait" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A candid, beautifully lit portrait of a young woman with a soft smile, standing against an out-of-focus urban sunset. The warm, golden-hour lighting perfectly complements the Neo-Organic UI aesthetic, casting gentle glowing tones that feel premium and inviting. The image features a shallow depth of field, highlighting the subject while seamlessly blending into a high-end, glassmorphic digital gallery environment. The mood is authentic, artistic, and deeply human." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcLQdyQb7ACRdqboLw95cF1ep7TjPQ7F8CT_CBWZTma2wcQbCloAncIx2w5hzPc97tWMIX9jb0LlqSX9IlvkuwksonqmAYtna1RE_iXZZnVspgnkAosrQVXkWFfSpR4CdKc_LvAY_O7_Bw0cao_7SugL2kqQyQQ1r4n6ZFS2huShSSFio1V1Nc4U-E5GwN6OSDkW11j0naCwFAvbgjo9mkHM8HZB37mo6G6lKZDCP839ZyZuXVWX3qeVIYxwIhnjOoKOQa3pTgMFei"/>
+<!-- Curated Badge -->
+<div class="absolute top-4 right-4 bg-secondary-container/80 backdrop-blur-md border border-white/20 text-on-secondary-container font-label-caps text-label-caps px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">star</span>
+                    High Match
+                </div>
+<!-- Minimal Info Overlay -->
+<div class="absolute bottom-0 left-0 w-full p-6 pt-24 bg-gradient-to-t from-black/80 via-black/30 to-transparent">
+<h2 class="font-headline-md text-headline-md text-white mb-1">Elara, 28</h2>
+<p class="font-body-md text-body-md text-white/80 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                        Brooklyn, NY
+                    </p>
+</div>
+</div>
+<!-- Profile Card 2 -->
+<div class="masonry-item relative rounded-[2rem] overflow-hidden group shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-white/60 bg-surface-container-lowest">
+<img alt="Portrait" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="An atmospheric, moody portrait of a young man in profile, illuminated by soft natural window light inside a minimalist studio. The color palette leans towards cool, desaturated tones that contrast beautifully with the warm coral accents of the app's UI. The high-resolution photograph exudes a quiet confidence and artistic depth, fitting perfectly within an exclusive, neo-organic matchmaking gallery. The composition is asymmetrical, leaving elegant negative space." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQmgyY9XlbBPuZJTuW3-nmfojoB88hu7VuePzlTDEJl4Z7OD7Jmrxqola8eU_MxAXbR3wkgUK25cseX-_Lj767N-4ROt4-dpEEnqb3fS4SLMqsxrO54YpFfyTzcKBsGPchUdswqjdDwdErwYRo-ue573gH72PvaEt_sWxwQkSgpb5iqQKTF9G0qT89fLIz7VWssTgG0X3FMuY_pOQvW6I9-VdzZveUMGRIUYotsffxzABSZQySwtnjKm2_im4ZXPBy1-T812hjX_2I"/>
+<div class="absolute bottom-0 left-0 w-full p-6 pt-24 bg-gradient-to-t from-black/80 via-black/30 to-transparent">
+<h2 class="font-headline-md text-headline-md text-white mb-1">Julian, 31</h2>
+<p class="font-body-md text-body-md text-white/80 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                        Silver Lake, CA
+                    </p>
+</div>
+</div>
+<!-- Profile Card 3 -->
+<div class="masonry-item relative rounded-[2rem] overflow-hidden group shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-white/60 bg-surface-container-lowest">
+<img alt="Portrait" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A vibrant, energetic portrait of a woman laughing genuinely, holding a film camera in a sun-drenched park. The lighting is bright and cheerful, enhancing the light-mode neo-organic theme with bursts of natural green and warm sunlight. The image feels deeply authentic and spontaneous, capturing a fleeting moment of joy. It serves as a visual anchor in a high-end digital gallery, radiating warmth and approachable sophistication." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAimRa-GlRxhUfyptZPtNNya1VaGjNDO1jYYU4hGk3ZtlH6JgjIYwJDvX8Xx7EGeh6Yp5m3cf5LbyemkFKDvIDvCBKoOZoIbHOM56lclnOU5T6qREB0WWUnUiQ2xgdi7d8fX_d0oQxMqaJylWa-QU0qNdJjbJ85wS22sVVch1SyVyuIppBRGbJl0LY4oV1NGxTG5cNwXDEQm3qGTuW0pCMUDA_eVZtAACdyOHt1ZAU9DHQKFWA_BMKNWAClMo1_597TZOBi0Mpsn4_O"/>
+<div class="absolute bottom-0 left-0 w-full p-6 pt-24 bg-gradient-to-t from-black/80 via-black/30 to-transparent">
+<h2 class="font-headline-md text-headline-md text-white mb-1">Maya, 26</h2>
+<p class="font-body-md text-body-md text-white/80 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                        Austin, TX
+                    </p>
+</div>
+</div>
+<!-- Profile Card 4 -->
+<div class="masonry-item relative rounded-[2rem] overflow-hidden group shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-white/60 bg-surface-container-lowest">
+<img alt="Portrait" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A sophisticated, editorial-style portrait of a man standing against a textured, neutral-colored wall outdoors. The lighting is diffused and soft, creating a serene and premium atmosphere that aligns with the app's minimalist, high-end visual language. The image utilizes organic framing and subtle tonal shifts, avoiding harsh contrasts to maintain the smooth, glassmorphic feel of the surrounding user interface. The subject appears thoughtful and grounded." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcK2ld9cKK_qoavEoKgUjwLsp8OdLEoVVIb6KDFdyhdJXP9bOE3MwBuN7YJUCqXkpgB6fadyir4SYEStnVAZzic4xGAqRN2EeD6QVFxDtxhl6HtxyqvST3IzeALHUC6oTVgSBUlYWjBAOCXg_UVaMXTRN-J487_UZI6ybcuNwXjH3iSD3lmIP40F_c7LcQBawG6w5mo7z3eCTQWWmohs5mAJZvrYMrshLb5w8VlosiS541ZCUuKInu6oafNx3r6o8ylWNshDQN48cT"/>
+<!-- Curated Badge -->
+<div class="absolute top-4 right-4 bg-secondary-container/80 backdrop-blur-md border border-white/20 text-on-secondary-container font-label-caps text-label-caps px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+                    Verified
+                </div>
+<div class="absolute bottom-0 left-0 w-full p-6 pt-24 bg-gradient-to-t from-black/80 via-black/30 to-transparent">
+<h2 class="font-headline-md text-headline-md text-white mb-1">Marcus, 34</h2>
+<p class="font-body-md text-body-md text-white/80 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                        London, UK
+                    </p>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only per instructions) -->
+<nav class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md rounded-full px-8 py-3 z-50 border border-white/50 dark:border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.1)] bg-white/60 dark:bg-black/60 backdrop-blur-2xl flex justify-between items-center font-['Epilogue'] text-[10px] uppercase tracking-widest font-bold">
+<!-- Active Item -->
+<a class="flex flex-col items-center text-orange-600 dark:text-orange-400 scale-110 transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1)" href="#">
+<span class="material-symbols-outlined fill-icon mb-1 text-[24px]">explore</span>
+<span>Discovery</span>
+</a>
+<!-- Inactive Items -->
+<a class="flex flex-col items-center text-neutral-400 dark:text-neutral-500 opacity-70 hover:opacity-100 hover:scale-105 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]">favorite</span>
+<span>Matches</span>
+</a>
+<a class="flex flex-col items-center text-neutral-400 dark:text-neutral-500 opacity-70 hover:opacity-100 hover:scale-105 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]">auto_stories</span>
+<span>SoulMail</span>
+</a>
+<a class="flex flex-col items-center text-neutral-400 dark:text-neutral-500 opacity-70 hover:opacity-100 hover:scale-105 transition-transform" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]">person</span>
+<span>Curated</span>
+</a>
+</nav>
+</body></html>

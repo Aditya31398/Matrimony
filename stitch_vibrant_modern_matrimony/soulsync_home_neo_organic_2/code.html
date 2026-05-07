@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SoulSync | Where Your Forever Story Begins</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@300;600;700;900&amp;family=Be+Vietnam+Pro:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface": "#fff8f6",
+            "error-container": "#ffdad6",
+            "on-primary": "#ffffff",
+            "surface-dim": "#edd5cf",
+            "surface-container-highest": "#f6ddd8",
+            "tertiary-container": "#9a9a97",
+            "on-surface": "#261815",
+            "surface-container-high": "#fce3dd",
+            "on-surface-variant": "#59413c",
+            "inverse-primary": "#ffb4a3",
+            "background": "#fff8f6",
+            "primary-fixed-dim": "#ffb4a3",
+            "on-tertiary-container": "#313230",
+            "tertiary-fixed": "#e3e2df",
+            "on-error": "#ffffff",
+            "tertiary": "#5e5f5c",
+            "primary": "#ae3115",
+            "surface-container": "#ffe9e5",
+            "secondary-container": "#8a4cfc",
+            "tertiary-fixed-dim": "#c7c7c3",
+            "inverse-surface": "#3c2d29",
+            "surface-container-lowest": "#ffffff",
+            "surface-bright": "#fff8f6",
+            "on-secondary-fixed": "#25005a",
+            "secondary-fixed-dim": "#d2bbff",
+            "on-background": "#261815",
+            "outline": "#8d716a",
+            "on-secondary": "#ffffff",
+            "primary-fixed": "#ffdad2",
+            "on-tertiary-fixed-variant": "#464744",
+            "secondary-fixed": "#eaddff",
+            "on-primary-container": "#661000",
+            "on-tertiary-fixed": "#1b1c1a",
+            "secondary": "#712ae2",
+            "surface-tint": "#ae3115",
+            "on-secondary-container": "#fffbff",
+            "on-primary-fixed-variant": "#8c1900",
+            "on-secondary-fixed-variant": "#5a00c6",
+            "on-error-container": "#93000a",
+            "outline-variant": "#e1bfb8",
+            "on-tertiary": "#ffffff",
+            "on-primary-fixed": "#3d0600",
+            "primary-container": "#ff6b4a",
+            "inverse-on-surface": "#ffede9",
+            "surface-variant": "#f6ddd8",
+            "error": "#ba1a1a",
+            "surface-container-low": "#fff0ed"
+          },
+          "borderRadius": {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "safe-margin": "64px",
+            "overlap-negative": "-32px",
+            "organic-gutter": "40px",
+            "unit": "8px"
+          },
+          "fontFamily": {
+            "headline-lg": ["Epilogue"],
+            "display-xl": ["Epilogue"],
+            "body-md": ["Be Vietnam Pro"],
+            "label-caps": ["Be Vietnam Pro"],
+            "body-lg": ["Be Vietnam Pro"],
+            "headline-md": ["Epilogue"]
+          },
+          "fontSize": {
+            "headline-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "display-xl": ["84px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+            "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+            "label-caps": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "600" }],
+            "body-lg": ["18px", { "lineHeight": "1.8", "letterSpacing": "0.01em", "fontWeight": "300" }],
+            "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: theme('colors.background');
+      color: theme('colors.on-background');
+      overflow-x: hidden;
+    }
+    .glass-card {
+      background: rgba(255, 248, 246, 0.6);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 0.5px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05), 0 0 40px rgba(255, 107, 74, 0.05);
+    }
+    .glow-shadow {
+      box-shadow: 0 10px 30px rgba(255, 107, 74, 0.1);
+    }
+    .blob {
+      position: absolute;
+      filter: blur(80px);
+      z-index: -1;
+      opacity: 0.4;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body class="antialiased relative min-h-screen flex flex-col">
+<!-- Background Blobs -->
+<div class="blob bg-primary-container w-[600px] h-[600px] top-[-100px] left-[-200px]"></div>
+<div class="blob bg-inverse-primary w-[500px] h-[500px] top-[40%] right-[-150px]"></div>
+<div class="blob bg-surface-container-high w-[700px] h-[700px] bottom-[-200px] left-[10%]"></div>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-white/40 dark:bg-black/40 backdrop-blur-2xl border-b border-white/20 dark:border-white/10 shadow-[0_4px_30px_rgba(255,107,74,0.05)]">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="text-2xl font-black italic text-orange-600 dark:text-orange-500 font-epilogue tracking-tight">SoulSync</div>
+<div class="flex gap-4">
+<button class="text-stone-500 dark:text-stone-400 hover:text-orange-500 transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-stone-500 dark:text-stone-400 hover:text-orange-500 transition-colors duration-300">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow pt-32 pb-40 px-safe-margin relative z-10">
+<!-- Hero Section -->
+<section class="relative min-h-[819px] flex flex-col justify-center items-start mb-32">
+<div class="max-w-4xl relative z-20">
+<h1 class="font-display-xl text-display-xl text-on-surface mb-6">
+          Where Your <br/> <span class="text-primary italic">Forever Story</span> Begins
+        </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-12">
+          Curated connections for the discerning. Step into a neo-organic gallery of high-end matchmaking, where every interaction is infused with emotional warmth and exclusivity.
+        </p>
+<button class="min-h-[64px] px-10 rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-label-caps text-label-caps uppercase tracking-widest hover:shadow-[0_0_30px_rgba(255,107,74,0.6)] transition-all duration-300">
+          Apply for Membership
+        </button>
+</div>
+<!-- Hero Imagery (Asymmetrical) -->
+<div class="absolute right-0 top-1/2 -translate-y-1/2 w-1/2 h-[120%] hidden lg:block z-10 opacity-90 mix-blend-multiply">
+<img alt="Hero Romance" class="w-full h-full object-cover rounded-tl-[120px] rounded-bl-[40px] opacity-80 mask-image: linear-gradient(to left, rgba(0,0,0,1), rgba(0,0,0,0));" data-alt="A sophisticated, editorial-style photograph of a couple in a high-end, minimalist gallery setting. They are silhouetted against a soft, glowing sunset gradient of warm corals and deep creams, embodying the Neo-Organic aesthetic. The scene is slightly blurred, evoking a dreamlike, intimate, and premium atmosphere characteristic of modern luxury matchmaking." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjIV84Qsbp0XZj3gc2ZiveSFWYb36YyuhoqSG6BPXriDPs5FqwjB1vdTCtM9WK-9oP-wgkJqBeSzYZ6gOw-AklaRJrDMEkiK00SMtFHr65YXvVS5UgpzP4LTaK_H6mRB6HtnbBNw7TbRnhbPVjaIFSE_dlVqE_mDQU7skXjRNmCBtTaQWr6iLBn1szh1tqydqAFXdH6pU8itrpyg3NftzIZnOFtpVviE92zzD-lcXkX0jMQhWDUNtiQNl9POXS0K4dBs9bhtZZWou-"/>
+</div>
+</section>
+<!-- The Edit (Success Stories / Featured) -->
+<section class="mb-32 relative">
+<div class="flex items-end justify-between mb-16">
+<div>
+<span class="font-label-caps text-label-caps text-primary uppercase tracking-widest block mb-4">The Edit</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Curated Connections</h2>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-organic-gutter">
+<!-- Large Card -->
+<div class="md:col-span-7 glass-card rounded-xl overflow-hidden relative group">
+<img alt="Featured Story" class="w-full h-[500px] object-cover transition-transform duration-700 group-hover:scale-105" data-alt="An intimate, close-up lifestyle portrait of a diverse couple laughing over coffee in a bright, sunlit cafe. The lighting is warm and high-key, creating a light-mode aesthetic. The colors feature soft creams and a subtle coral glow, matching the Neo-Organic luxury style. The image has a soft-focus depth of field, feeling natural and unposed." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDz5Ma2PzndXc5Y17G7aUeObF4Af0Pt4jGJO1DpM_YbGDtBYcco7eD4mkkY5WuoFxTntyNa7BFtrdZDYtcMtKCkxrn3a4DSDaV9K_J9-kz9PoS3GiRpub88OZEMn7qvmEesU3JwjG_Tbm76pj8bZUMAAoVWSQn3rqp9TzMM8TP82u3ERwczakyBhLmIRfBdpzjhsEwlbjgbu23aQqhkCCJjXZ1cVFnG2SAmWS4RMR2FGpWeuD9uzWTDrO_yq8qw9EN1HbnG45545jhr"/>
+<div class="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black/60 to-transparent">
+<div class="inline-flex items-center gap-2 bg-secondary/80 text-white px-4 py-2 rounded-full font-label-caps text-[10px] mb-4 backdrop-blur-md">
+<span class="material-symbols-outlined text-[14px]" data-icon="verified">verified</span> Verified Match
+            </div>
+<h3 class="font-headline-md text-headline-md text-white mb-2">Elena &amp; Marcus</h3>
+<p class="font-body-md text-body-md text-white/90">Matched in Paris, November 2023</p>
+</div>
+</div>
+<!-- Stacked Small Cards -->
+<div class="md:col-span-5 flex flex-col gap-organic-gutter mt-24">
+<div class="glass-card rounded-lg p-6 flex flex-col gap-4 glow-shadow hover:-translate-y-2 transition-transform duration-300">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<h4 class="font-headline-md text-[24px] text-on-surface">Soulful Algorithms</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Moving beyond clinical data. We analyze conversational chemistry and lifestyle cadence to find genuine resonance.</p>
+</div>
+<div class="glass-card rounded-lg p-6 flex flex-col gap-4 glow-shadow hover:-translate-y-2 transition-transform duration-300 ml-8">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="shield_lock">shield_lock</span>
+</div>
+<h4 class="font-headline-md text-[24px] text-on-surface">Private by Design</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Your profile is an exclusive gallery, visible only to highly compatible, hand-selected introductions.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-lg rounded-full border border-white/40 dark:border-white/10 bg-white/60 dark:bg-stone-900/60 backdrop-blur-3xl shadow-[0_20px_50px_rgba(255,107,74,0.15)] flex justify-around items-center p-2 z-50">
+<button class="flex flex-col items-center justify-center bg-orange-600 dark:bg-orange-500 text-white rounded-full w-12 h-12 shadow-lg shadow-orange-600/30 scale-90 duration-150">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+</button>
+<button class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 w-12 h-12 hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+<button class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 w-12 h-12 hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+</button>
+<button class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 w-12 h-12 hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+</nav>
+<!-- Footer -->
+<footer class="w-full py-12 px-8 bg-stone-50 dark:bg-stone-950 border-t border-stone-200 dark:border-stone-800 z-10">
+<div class="flex flex-col md:flex-row justify-between items-center gap-6 max-w-7xl mx-auto">
+<div class="text-xl font-bold text-stone-900 dark:text-white font-epilogue">SoulSync</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-stone-400 hover:text-orange-500 transition-all font-epilogue text-sm font-light" href="#">Exclusivity</a>
+<a class="text-stone-400 hover:text-orange-500 transition-all font-epilogue text-sm font-light" href="#">Privacy</a>
+<a class="text-stone-400 hover:text-orange-500 transition-all font-epilogue text-sm font-light" href="#">The Gallery</a>
+<a class="text-stone-400 hover:text-orange-500 transition-all font-epilogue text-sm font-light" href="#">Journal</a>
+</div>
+<div class="font-epilogue text-sm font-light text-stone-400">© 2024 SoulSync. Curated Connections for the Discerning.</div>
+</div>
+</footer>
+</body></html>

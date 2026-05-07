@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-container": "#ff928b",
+            "tertiary-fixed": "#ffd7ef",
+            "on-primary-container": "#661000",
+            "secondary-fixed-dim": "#ffb3ae",
+            "on-primary": "#ffffff",
+            "error": "#ba1a1a",
+            "outline-variant": "#e1bfb8",
+            "secondary-fixed": "#ffdad7",
+            "on-surface-variant": "#59413c",
+            "inverse-on-surface": "#f0f1f2",
+            "background": "#f8f9fa",
+            "tertiary": "#8a4778",
+            "surface-dim": "#d9dadb",
+            "on-primary-fixed": "#3d0600",
+            "inverse-primary": "#ffb4a3",
+            "on-tertiary-fixed-variant": "#6e305f",
+            "on-tertiary-container": "#561a49",
+            "on-surface": "#191c1d",
+            "on-secondary-fixed-variant": "#7c2c29",
+            "on-error": "#ffffff",
+            "primary-container": "#ff6b4a",
+            "error-container": "#ffdad6",
+            "surface-container-lowest": "#ffffff",
+            "surface-variant": "#e1e3e4",
+            "on-secondary": "#ffffff",
+            "surface-bright": "#f8f9fa",
+            "surface-container-low": "#f3f4f5",
+            "inverse-surface": "#2e3132",
+            "surface-container": "#edeeef",
+            "tertiary-fixed-dim": "#feade4",
+            "surface-container-highest": "#e1e3e4",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#cd82b6",
+            "outline": "#8d716a",
+            "primary-fixed": "#ffdad2",
+            "secondary": "#9a433f",
+            "on-primary-fixed-variant": "#8c1900",
+            "on-error-container": "#93000a",
+            "primary": "#ae3115",
+            "on-background": "#191c1d",
+            "surface-tint": "#ae3115",
+            "surface": "#f8f9fa",
+            "on-secondary-fixed": "#400104",
+            "on-tertiary-fixed": "#3a0130",
+            "primary-fixed-dim": "#ffb4a3",
+            "on-secondary-container": "#772926",
+            "surface-container-high": "#e7e8e9"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "card-gap": "24px",
+            "stack-md": "12px",
+            "stack-lg": "24px",
+            "container-max": "1280px",
+            "stack-sm": "4px",
+            "section-padding": "80px",
+            "gutter": "24px",
+            "base": "8px"
+          },
+          "fontFamily": {
+            "body-md": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "body-lg": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "display-xl": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+            "label-sm": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.02em", "fontWeight": "600"}],
+            "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+            "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+            "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+            "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- Navigation Shell -->
+<nav class="flex justify-between items-center px-6 py-4 w-full sticky top-0 bg-white/80 backdrop-blur-xl dark:bg-slate-900/80 z-50 border-b border-orange-50/50 dark:border-slate-800 shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
+<div class="text-2xl font-black tracking-tighter text-orange-600 dark:text-orange-500">SoulSync</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="font-['Plus_Jakarta_Sans'] text-sm text-slate-600 dark:text-slate-400 hover:text-orange-500 transition-all duration-300" href="#">Discover</a>
+<a class="font-['Plus_Jakarta_Sans'] text-sm text-orange-600 dark:text-orange-400 border-b-2 border-orange-500 font-bold pb-1 transition-all duration-300" href="#">Matches</a>
+<a class="font-['Plus_Jakarta_Sans'] text-sm text-slate-600 dark:text-slate-400 hover:text-orange-500 transition-all duration-300" href="#">Stories</a>
+<a class="font-['Plus_Jakarta_Sans'] text-sm text-slate-600 dark:text-slate-400 hover:text-orange-500 transition-all duration-300" href="#">Messages</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-orange-50/50 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95">
+<span class="material-symbols-outlined text-slate-600">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-orange-50/50 dark:hover:bg-slate-800 transition-all duration-300 active:scale-95">
+<span class="material-symbols-outlined text-slate-600">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary-container overflow-hidden">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a smiling user in their late 20s, set against a warm, soft-focus interior background. The lighting is natural and flattering, emphasizing a friendly and approachable personality. The overall color palette is composed of soft creams, oranges, and neutral tones consistent with a modern minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrf1l8eGgDg_q9QeDaeDvhCqjFiLZwsAHhIgM60w5_QwhzRWo2lOSEdJY7NcoxxY-avC4vbUHRfbLQYpNDIv_jxoVHB-Mvqfivfq6CQKxqZd0HllmGW-bhVjgXDac2rWoz9gEERVTs3oo5VzhPeuzWu-tsX1Hr7GDt_gzVPddiQGHOQAOcd19bGv_EjMAn6MC-t1wnjIxe2XWNSKw4492SE3h0V56l6m9sje7dkA8CIiUfPAKfjo4ujEQ4n_NhkNozAkfeBziobo45"/>
+</div>
+</div>
+</nav>
+<main class="max-w-[1280px] mx-auto px-6 py-8 pb-32">
+<!-- Header Section -->
+<header class="mb-12">
+<h1 class="font-display-xl text-display-xl text-on-surface mb-2">Find your SoulSync</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Here are your personalized matches for today.</p>
+</header>
+<!-- Top Picks Carousel Section -->
+<section class="mb-16">
+<div class="flex justify-between items-end mb-6">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Top Picks for You</h2>
+<a class="font-label-sm text-label-sm text-primary hover:underline" href="#">View All</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+<!-- Profile Card 1 -->
+<div class="group relative bg-white rounded-[24px] overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-xl transition-all duration-300">
+<div class="aspect-[4/5] relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A high-quality editorial style portrait of a vibrant woman laughing in a sunny cafe. She has a warm expression and stylish casual wear. The background is softly blurred with golden hour light filtering through windows, creating a welcoming and sophisticated atmosphere in line with the joy of connection brand theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdnzxu-iEAWt1tc_EiBWg9kzskmVLjB4ZD3cHebd9nRACU3QjHDXIu0v32yVbaOGLsca1U4PBHTyiJWG3hmjT-CzLH702AgQo_O7AemN-4Vna8w5xAbhdHTQxswhx14DNwbosmC37oRPF9bzbM0pU4kbTctmkK_0fc8XWpMbVbFF9rqrGSckUh9b-dNcGS9bydDL63Um39e3DhhBTYjH0WPUEfjffIYG5e4ElEL3NmDnUptISi_5NXSh4WSiFvFBOBxLpmyrhGG5j6"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-[10px] font-bold text-on-surface tracking-wider">VERIFIED</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
+<h3 class="text-white font-headline-md text-headline-md">Aditi, 26</h3>
+<p class="text-white/80 font-body-md text-sm">Product Designer • Mumbai</p>
+</div>
+</div>
+<div class="p-4 flex gap-2">
+<button class="flex-1 py-3 rounded-xl bg-primary text-white font-label-sm hover:brightness-110 active:scale-95 transition-all">Connect</button>
+<button class="w-12 h-12 rounded-xl border border-outline-variant flex items-center justify-center text-primary hover:bg-orange-50 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+<!-- Profile Card 2 -->
+<div class="group relative bg-white rounded-[24px] overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-xl transition-all duration-300">
+<div class="aspect-[4/5] relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A cinematic portrait of a confident man standing in a modern architectural garden. The lighting is crisp and cool, highlighting his thoughtful expression. The surrounding environment features minimalist stone and lush green plants, reflecting a lifestyle-oriented and premium matrimonial experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0LLLMhIS_X700s7l6VwfLFB55M_Z3dma4l5RPv5M0uGjvNOG3yevTEwxC3mCXJKWWZW9v5gCeGlir24uU4ucEI3G3xbbmhsiebD_WN6yY2vvl-vKTyl9gXmdkwqhZBXh8b0fjYMXabZUsAURTOFiVHaZ_XBMGKZOCBJzNFm6yd43LbwJE7M9AsrCECoj3Cs6pA68HbHJVgZ8RH4lmDRMfpmpR10xvCgBQBsZWldutZC6Hg_2ASG6ukVnC-vopZFHtm8PujFprM8ys"/>
+<div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-[10px] font-bold text-on-surface tracking-wider">VERIFIED</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
+<h3 class="text-white font-headline-md text-headline-md">Rohan, 29</h3>
+<p class="text-white/80 font-body-md text-sm">Architect • Bengaluru</p>
+</div>
+</div>
+<div class="p-4 flex gap-2">
+<button class="flex-1 py-3 rounded-xl bg-primary text-white font-label-sm hover:brightness-110 active:scale-95 transition-all">Connect</button>
+<button class="w-12 h-12 rounded-xl border border-outline-variant flex items-center justify-center text-primary hover:bg-orange-50 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+<!-- Profile Card 3 -->
+<div class="group relative bg-white rounded-[24px] overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-xl transition-all duration-300">
+<div class="aspect-[4/5] relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A candid photo of a cheerful woman with books in a library. The aesthetic is academic yet warm, with soft wooden textures and rows of colorful books in the background. The lighting is diffused, creating a serene and intellectual mood that emphasizes deep personal connection and shared interests." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT1fx2uxJ9eYCdL3Gtf3r09-NfELzQiQjB9UAojqGBZzeFhH0zg3PLAIZW4IOgs54f7XEkPuPqAyH9JSSjjzID0CER2cnJjeHmi9VrA67zmigGarqbsN45C-unv6L8NySFNGYXy3xEB0o1QYsh76_-ZniRfMIBKvW-XRJ-2KwUAeD50G2zLKNgeu_4qTIwzLgIn5lG-1LuIFz9WS1fRz4_qb1KvTJYOAomM0n6aH2MdGrLi3yh20rxCgL8COGtkz2lbx7pqr17Dzru"/>
+<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
+<h3 class="text-white font-headline-md text-headline-md">Sanya, 27</h3>
+<p class="text-white/80 font-body-md text-sm">Professor • Pune</p>
+</div>
+</div>
+<div class="p-4 flex gap-2">
+<button class="flex-1 py-3 rounded-xl bg-primary text-white font-label-sm hover:brightness-110 active:scale-95 transition-all">Connect</button>
+<button class="w-12 h-12 rounded-xl border border-outline-variant flex items-center justify-center text-primary hover:bg-orange-50 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+<!-- Profile Card 4 -->
+<div class="group relative bg-white rounded-[24px] overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-xl transition-all duration-300">
+<div class="aspect-[4/5] relative overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A lifestyle shot of an athletic man jogging in an urban park at sunrise. The lighting is vibrant with shades of orange and pink reflecting off modern glass buildings in the background. The scene feels energetic and healthy, promoting a lifestyle-first approach to matchmaking." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlrvDbOlsjV-sFMsMCFEIsrZOlNm662-vFlD6m0CvpaIqLF0RAUMRgqMBCIz_EosS_qkwFOH94wLLuqp5hEEmebnq5ZhICGjSMXDh49VgncSbvw_b4OXsfWVfY0Vf23tYFMdRh7L_uck3FX4I4_mec6oXrFehMd2e7C11tmmuA8jD93QSyS20Lob9G-XLB1Axdir-ETqEWYlyheTtcCfTLCyh9Mtlyd1QxBBvWRk7E28wISHxq9js4mrYUIQwLLlRNaPmtxix0j9gq"/>
+<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
+<h3 class="text-white font-headline-md text-headline-md">Kabir, 30</h3>
+<p class="text-white/80 font-body-md text-sm">Fitness Lead • Delhi</p>
+</div>
+</div>
+<div class="p-4 flex gap-2">
+<button class="flex-1 py-3 rounded-xl bg-primary text-white font-label-sm hover:brightness-110 active:scale-95 transition-all">Connect</button>
+<button class="w-12 h-12 rounded-xl border border-outline-variant flex items-center justify-center text-primary hover:bg-orange-50 transition-colors">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Lower Bento Grid Sections -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- People Interested in You Section -->
+<section class="lg:col-span-2">
+<div class="flex justify-between items-center mb-6">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Interested in You</h2>
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-3 py-1 rounded-full text-xs font-bold">12 NEW</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+<!-- Interest Card 1 -->
+<div class="flex items-center gap-4 p-4 bg-white rounded-[20px] shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-orange-50/30 hover:border-orange-200 transition-colors cursor-pointer">
+<div class="w-20 h-20 rounded-2xl overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a woman with a genuine, joyous smile. The lighting is bright and cheerful, with a palette of white and pastel tones. The image is clean and minimalist, focusing on the human connection and positive energy of a potential partner." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAhc7e1bhE74gi8-Xo7YgCaDiDHVC1EIhLSszfoG2MIQPizQJe_ypI7IM3W7tZjkrEbAfmqZY7jI78bs3nDSnsMU2btS_ItCmjHBL3JhyYOae7YFVsdtbx6sw5GKgqU4CnqTiSObW2A5u9uS1pzjxEUe6LToaZTHSUBSptjvCABOVB9DpJqSlOaudNZici4KVUI78AieDi5nC5i12zM_yIsnKp1gZkSb-yV5KgXgrzVzWM4IUsZe3AwwdUWwlQ88oua9N-J3ELVnjA"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-1">
+<h4 class="font-headline-md text-base">Meera, 25</h4>
+<span class="material-symbols-outlined text-primary text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="text-on-surface-variant text-sm font-body-md mb-2">Software Engineer</p>
+<div class="flex gap-2">
+<button class="text-xs font-bold text-primary px-3 py-1.5 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">Accept</button>
+<button class="text-xs font-bold text-on-surface-variant px-3 py-1.5 hover:bg-surface-container rounded-lg transition-colors">Decline</button>
+</div>
+</div>
+</div>
+<!-- Interest Card 2 -->
+<div class="flex items-center gap-4 p-4 bg-white rounded-[20px] shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-orange-50/30 hover:border-orange-200 transition-colors cursor-pointer">
+<div class="w-20 h-20 rounded-2xl overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A portrait of a serene man with a soft background of a modern living space. The lighting is warm and domestic, emphasizing comfort and safety. The image uses a palette of soft browns and tans, evoking a sense of stability and trustworthy character." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSdVlqaZ5kp-UGMR74iXh06wfX83mfiFlgToR0lv_6vnLV7ZamyZ53j0-Y5lMTDNNqOfTemlWNvzjpzL-u0uDzsM6yQ-F_ZXCBpQvefpH44IRWIgwH1yAr4LzHMsipuThWXBvr88adPgqciyLLFZ_cIj5Oy3MfCxxt6ayrPf2t0N8WVr0safEPZO6pzqd5eWLHiHahWA0K8AA2R1yf0RQU7dtsuCzDiNvtyunt3p2PkVyo8_94cDfOCoHuLgarkuVdhax_ZgPMuqss"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-1">
+<h4 class="font-headline-md text-base">Varun, 28</h4>
+</div>
+<p class="text-on-surface-variant text-sm font-body-md mb-2">Financial Analyst</p>
+<div class="flex gap-2">
+<button class="text-xs font-bold text-primary px-3 py-1.5 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">Accept</button>
+<button class="text-xs font-bold text-on-surface-variant px-3 py-1.5 hover:bg-surface-container rounded-lg transition-colors">Decline</button>
+</div>
+</div>
+</div>
+<!-- Interest Card 3 -->
+<div class="flex items-center gap-4 p-4 bg-white rounded-[20px] shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-orange-50/30 hover:border-orange-200 transition-colors cursor-pointer">
+<div class="w-20 h-20 rounded-2xl overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Portrait of a creative woman in a bright studio with art supplies in the background. The lighting is artistic and balanced, highlighting her curious and engaged expression. The color scheme is vibrant yet controlled, aligning with the brand's optimistic and modern minimalist look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYBU8uy-3nDELMQ_ZsBQjpA0irCb7HL9f5nHOe-MrKwE3wSyNRbX51DBkZB97eKzvoYhHl32qpj_-BSODtLxOpGr_MEypsMO2YKJ_8H92RQymgWb286s8K2VBoMTjSrG4-zicphYSyDx4JA1a9sWPV6MbUpT77XIzBNdPAUca5f-ia8qGdC0eWZa9P32XBDWsadraqo4Ig0ZcNeBoeFL1Z72m33TYIG3cUnMuhXokKl82t5yk3YeZavHGvNLTwDIvq_si4AXZcpoo9"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-1">
+<h4 class="font-headline-md text-base">Ishita, 26</h4>
+<span class="material-symbols-outlined text-primary text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="text-on-surface-variant text-sm font-body-md mb-2">UX Researcher</p>
+<div class="flex gap-2">
+<button class="text-xs font-bold text-primary px-3 py-1.5 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">Accept</button>
+<button class="text-xs font-bold text-on-surface-variant px-3 py-1.5 hover:bg-surface-container rounded-lg transition-colors">Decline</button>
+</div>
+</div>
+</div>
+<!-- Interest Card 4 -->
+<div class="flex items-center gap-4 p-4 bg-white rounded-[20px] shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-orange-50/30 hover:border-orange-200 transition-colors cursor-pointer">
+<div class="w-20 h-20 rounded-2xl overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A smiling man wearing business casual attire in a modern glass-walled office environment. The lighting is bright and professional, utilizing the clean white space and high-energy accents of the SoulSync brand. The overall mood is confident, successful, and welcoming." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5kFw90GXBlrUJB1v0K93EjmxMnkoIv761-1z7icHEUNwKcZMM5UiLGFRNa6aIFmLScSdX65xV4YTeHP16Be2lMFLC0uVAsjASkeyYMqaOSnZ3xeK3lEqRW0piUFu5SjribVlRtHI2A0xVyrLsZ0Ox2HjQb91ssRgXnTHON6vfz5POUlch5DGw9yksu5YDSZymINBELleNHIJDm3BocbGIcLPvvDYBJt58Wz5K6enoSS6nY5yS9d9BT6Bs82sLprzrEWY7xXDWLbog"/>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-1">
+<h4 class="font-headline-md text-base">Arjun, 31</h4>
+</div>
+<p class="text-on-surface-variant text-sm font-body-md mb-2">Tech Lead</p>
+<div class="flex gap-2">
+<button class="text-xs font-bold text-primary px-3 py-1.5 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">Accept</button>
+<button class="text-xs font-bold text-on-surface-variant px-3 py-1.5 hover:bg-surface-container rounded-lg transition-colors">Decline</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Messages Section -->
+<section>
+<div class="flex justify-between items-center mb-6">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Recent</h2>
+<button class="p-2 text-primary hover:bg-orange-50 rounded-full transition-colors">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+</div>
+<div class="bg-white rounded-[24px] p-2 shadow-[0_10px_30px_rgba(0,0,0,0.04)]">
+<!-- Message 1 -->
+<div class="flex items-center gap-4 p-4 hover:bg-surface-container rounded-[18px] transition-colors cursor-pointer">
+<div class="relative">
+<div class="w-12 h-12 rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A friendly close-up of a woman smiling, framed in a clean, soft circle. The lighting is soft and flattering, with a modern lifestyle feel. The background is a neutral cream, making the profile image pop within the messaging interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5b56GitwPogYnH4p-KKPXD2hW-kmKyuyphpxookfi1FG41PDt-GtlCp6orFV1fko9IM5W2JkklVNsz_QBILrZUtE2rlDhiqleUidl84Af47ny7zxLyFAXwTZmNAG_mfaBiDt9aLKMsKf6T1vE9Dbr22UXo9AAvMDEWBmaDAz4gnCoD4z-1h-Lz5pzFhYTVX36Zil4CJ95Y9KugyDT5vG1AzyplN5R5sOZ4wwAhrDpy9aPyd5c4ZXaGZON3e6WXZdxDhnPJ7Pca5S6"/>
+</div>
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline">
+<h4 class="font-label-sm text-on-surface truncate">Priya Sharma</h4>
+<span class="text-[10px] text-on-surface-variant font-bold">12:45 PM</span>
+</div>
+<p class="text-sm text-on-surface-variant truncate font-body-md">That sounds like a great plan!</p>
+</div>
+</div>
+<!-- Message 2 -->
+<div class="flex items-center gap-4 p-4 hover:bg-surface-container rounded-[18px] transition-colors cursor-pointer">
+<div class="w-12 h-12 rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A profile shot of a man looking off-camera with a gentle smile. The background is a blur of outdoor greenery and bright sunlight. The aesthetic is organic and warm, focusing on authenticity and approachable personality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBb1o3rmfDx0XRD13XBdF-aAYR8XxVpkbD85lmF4kN9-V1ED6oQc0xnOyDV36iD5ABdct8AE0f76jJ4qsOGIpfC4mPx02KYv-XrF8yxu0rvC_NIc8cvVsK4G3FYiHPFee4PJRrThMtMfmPubQ1zQF7H48vAashySqM6aqbGfULTwKW1fAaritElMGsuN1ZTcDdnIqy7_jmUjWuKM_9TOusA_ufmHMRLVTlxe5l313DXq9ZThGX3PFtUJsyjdDQPIMpKzYAldpoNQfX"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline">
+<h4 class="font-label-sm text-on-surface truncate">Rahul Verma</h4>
+<span class="text-[10px] text-on-surface-variant font-bold">Yesterday</span>
+</div>
+<p class="text-sm text-on-surface-variant truncate font-body-md font-bold text-primary">Sent a photo</p>
+</div>
+</div>
+<!-- Message 3 -->
+<div class="flex items-center gap-4 p-4 hover:bg-surface-container rounded-[18px] transition-colors cursor-pointer">
+<div class="w-12 h-12 rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional and friendly portrait of a woman with glasses, looking directly at the camera. The setting is a bright, modern interior with soft natural light. The visual style is minimalist and clean, representing a high-quality connection experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUpPVPJ0TMXtCo8RG2_xMjZqpqGoHOV2xXlkRMRuODwyGBE-ZmruSTuV73LWk3hh4fB-SUDbcrknRVxmKA9zmDfsxqPbeoDkn7uOa8LZUSEqA0AAsF3BgPJ_Y6wcK0-n6yhl_UwZp1mSUbBe17B4qvy_w7-qWTGXPCBt5sdkBB0AO9d0Tlz5yXgudPwBZtry347dIhxbo7iJ9OdHZPyiHG7iL6rg9jgKiNuLso2LidmcFhB2xSN5XZV0JAzxsemgRzSuBiynszERjZ"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline">
+<h4 class="font-label-sm text-on-surface truncate">Sneha Kapur</h4>
+<span class="text-[10px] text-on-surface-variant font-bold">Monday</span>
+</div>
+<p class="text-sm text-on-surface-variant truncate font-body-md">Nice to meet you!</p>
+</div>
+</div>
+<div class="p-4">
+<button class="w-full py-3 text-center text-primary font-label-sm hover:bg-orange-50 rounded-xl transition-colors">View All Messages</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<div class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-white/95 dark:bg-slate-900/95 border-t border-orange-100/30 dark:border-slate-800 shadow-[0_-10px_40px_rgba(255,107,74,0.1)] rounded-t-[32px]">
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold">Feed</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 rounded-2xl px-5 py-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold">Matches</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold">Chat</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2">
+<span class="material-symbols-outlined">person_celebrate</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-semibold">Profile</span>
+</div>
+</div>
+<!-- Footer -->
+<footer class="w-full py-12 px-8 flex flex-col md:flex-row justify-between items-center gap-6 max-w-7xl mx-auto border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
+<div class="text-xl font-bold text-slate-900 dark:text-white">SoulSync</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="font-['Plus_Jakarta_Sans'] text-sm text-slate-500 hover:text-orange-500 transition-colors duration-200" href="#">Privacy Policy</a>
+<a class="font-['Plus_Jakarta_Sans'] text-sm text-slate-500 hover:text-orange-500 transition-colors duration-200" href="#">Terms of Service</a>
+<a class="font-['Plus_Jakarta_Sans'] text-sm text-slate-500 hover:text-orange-500 transition-colors duration-200" href="#">Safety Guide</a>
+<a class="font-['Plus_Jakarta_Sans'] text-sm text-slate-500 hover:text-orange-500 transition-colors duration-200" href="#">Success Stories</a>
+<a class="font-['Plus_Jakarta_Sans'] text-sm text-slate-500 hover:text-orange-500 transition-colors duration-200" href="#">Contact Us</a>
+</div>
+<div class="font-['Plus_Jakarta_Sans'] text-sm text-slate-500">© 2024 SoulSync Matrimony. Crafted for Connection.</div>
+</footer>
+</body></html>

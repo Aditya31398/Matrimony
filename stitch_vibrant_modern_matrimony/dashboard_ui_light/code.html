@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SoulSync Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,100..900;1,100..900&amp;family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-container": "#8a4cfc",
+                      "inverse-primary": "#ffb4a3",
+                      "primary": "#ae3115",
+                      "outline-variant": "#e1bfb8",
+                      "on-error-container": "#93000a",
+                      "error": "#ba1a1a",
+                      "secondary-fixed": "#eaddff",
+                      "tertiary-fixed": "#e3e2df",
+                      "on-primary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "on-error": "#ffffff",
+                      "surface-dim": "#edd5cf",
+                      "surface-tint": "#ae3115",
+                      "surface-container-low": "#fff0ed",
+                      "secondary": "#712ae2",
+                      "secondary-fixed-dim": "#d2bbff",
+                      "on-primary-fixed-variant": "#8c1900",
+                      "surface-container": "#ffe9e5",
+                      "on-tertiary-fixed": "#1b1c1a",
+                      "on-secondary-container": "#fffbff",
+                      "on-primary-fixed": "#3d0600",
+                      "surface-container-highest": "#f6ddd8",
+                      "primary-container": "#ff6b4a",
+                      "on-surface": "#261815",
+                      "on-primary-container": "#661000",
+                      "tertiary-fixed-dim": "#c7c7c3",
+                      "tertiary-container": "#9a9a97",
+                      "tertiary": "#5e5f5c",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-high": "#fce3dd",
+                      "on-surface-variant": "#59413c",
+                      "surface-bright": "#fff8f6",
+                      "outline": "#8d716a",
+                      "on-tertiary": "#ffffff",
+                      "surface": "#fff8f6",
+                      "background": "#fff8f6",
+                      "on-tertiary-fixed-variant": "#464744",
+                      "on-background": "#261815",
+                      "on-secondary-fixed-variant": "#5a00c6",
+                      "primary-fixed": "#ffdad2",
+                      "on-tertiary-container": "#313230",
+                      "inverse-on-surface": "#ffede9",
+                      "surface-variant": "#f6ddd8",
+                      "on-secondary": "#ffffff",
+                      "inverse-surface": "#3c2d29",
+                      "primary-fixed-dim": "#ffb4a3",
+                      "on-secondary-fixed": "#25005a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "8px",
+                      "organic-gutter": "40px",
+                      "safe-margin": "64px",
+                      "overlap-negative": "-32px"
+              },
+              "fontFamily": {
+                      "display-xl": [
+                              "Epilogue"
+                      ],
+                      "body-lg": [
+                              "Be Vietnam Pro"
+                      ],
+                      "headline-lg": [
+                              "Epilogue"
+                      ],
+                      "headline-md": [
+                              "Epilogue"
+                      ],
+                      "label-caps": [
+                              "Be Vietnam Pro"
+                      ],
+                      "body-md": [
+                              "Be Vietnam Pro"
+                      ]
+              },
+              "fontSize": {
+                      "display-xl": [
+                              "84px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.04em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.8",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "300"
+                              }
+                      ],
+                      "headline-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "0.1em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+            },
+          }
+        }
+      </script>
+</head>
+<body class="bg-background text-on-background min-h-screen relative overflow-x-hidden font-body-md text-body-md">
+<!-- Atmospheric Blob Backgrounds -->
+<div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
+<div class="absolute -top-[20%] -left-[10%] w-[60vw] h-[60vw] rounded-full bg-surface-container-highest opacity-50 blur-[100px]"></div>
+<div class="absolute top-[40%] -right-[20%] w-[50vw] h-[50vw] rounded-full bg-secondary-fixed/30 opacity-40 blur-[120px]"></div>
+<div class="absolute -bottom-[10%] left-[20%] w-[40vw] h-[40vw] rounded-full bg-primary-fixed/20 opacity-30 blur-[80px]"></div>
+</div>
+<!-- TopAppBar (Web) -->
+<nav class="hidden md:flex fixed top-0 w-full z-50 px-6 py-4 bg-white/40 dark:bg-black/40 backdrop-blur-3xl border-b border-white/20 dark:border-white/10 shadow-[0_0_20px_rgba(255,107,74,0.1)]">
+<div class="flex justify-between items-center max-w-screen-2xl mx-auto w-full">
+<div class="text-2xl font-bold tracking-tighter text-orange-600 dark:text-orange-400 italic font-['Epilogue'] tracking-tight">SoulSync</div>
+<div class="flex gap-8 items-center">
+<a class="text-neutral-600 dark:text-neutral-400 hover:text-orange-500 font-['Epilogue'] tracking-tight hover:backdrop-blur-2xl transition-all duration-500 scale-95 hover:scale-100" href="#">Gallery</a>
+<a class="text-neutral-600 dark:text-neutral-400 hover:text-orange-500 font-['Epilogue'] tracking-tight hover:backdrop-blur-2xl transition-all duration-500 scale-95 hover:scale-100" href="#">Stories</a>
+<a class="text-orange-600 dark:text-orange-400 font-semibold border-b-2 border-orange-500 font-['Epilogue'] tracking-tight hover:backdrop-blur-2xl transition-all duration-500 scale-95 hover:scale-100" href="#">The Edit</a>
+</div>
+<button class="text-orange-500 dark:text-orange-400 font-['Epilogue'] tracking-tight hover:backdrop-blur-2xl transition-all duration-500 scale-95 hover:scale-100">Connect</button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-24 md:pt-32 pb-40 px-6 max-w-screen-xl mx-auto relative z-10">
+<!-- Header Section -->
+<header class="mb-16 md:mb-24 flex flex-col items-start relative">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2 relative z-10">Morning, Alex.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-md relative z-10">A quiet overview of your recent connections and curated matches. Explore at your own pace.</p>
+<!-- Organic Decoration -->
+<div class="absolute -top-8 -left-12 w-32 h-32 bg-primary-fixed/40 rounded-full blur-2xl -z-10"></div>
+</header>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-organic-gutter">
+<!-- Left Column: Recent Exchanges & Premium -->
+<div class="md:col-span-5 flex flex-col gap-8">
+<!-- Recent Exchanges -->
+<section class="flex flex-col gap-6">
+<h2 class="font-headline-md text-headline-md text-on-surface">Recent Whispers</h2>
+<div class="flex flex-col gap-4">
+<!-- Exchange Item 1 -->
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-12 h-12 rounded-full overflow-hidden shrink-0 shadow-[0_4px_10px_rgba(0,0,0,0.05),0_0_20px_rgba(255,107,74,0.05)] border border-white/50">
+<img alt="A close-up, soft-focus portrait of a smiling woman in a sunlit cafe. The light is warm and inviting, casting gentle shadows. The mood is relaxed and approachable, fitting the Neo-Organic matchmaking aesthetic. The color palette features warm creams and soft sunset tones." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-rGEdrnULnZ1yFnXSAA-GUvhJ0mMcISztwR6ncSp0CMAWTEX3Wc_zz_HqGIwbty8ygL7z2rncao5qRUhT-dXSdgPqR6vENIWzffmOcnd2NQuqbaKY-E5GblP2K6ZqaK-ainpuQi5Z7dt4oH-IeGoRQRRySHoih4q2DFMeoLu76MPCn7Bst40yTmSpMdmbtcGtgwXsOP1rzj8ZJISJt_ahBQCA_mfh69uikeYTL1b3WY6SC9LggJwAKhkylpdvUO1j_JsBdVXMXEn8"/>
+</div>
+<div class="flex flex-col flex-grow min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<span class="font-label-caps text-label-caps text-on-surface truncate">Clara</span>
+<span class="font-label-caps text-[10px] text-outline">2h ago</span>
+</div>
+<p class="font-body-md text-sm text-on-surface-variant truncate group-hover:text-primary transition-colors">"I completely agree about that exhibit..."</p>
+</div>
+</div>
+<!-- Exchange Item 2 -->
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-12 h-12 rounded-full overflow-hidden shrink-0 shadow-[0_4px_10px_rgba(0,0,0,0.05),0_0_20px_rgba(255,107,74,0.05)] border border-white/50">
+<img alt="A candid portrait of a man looking thoughtfully to the side, set against an out-of-focus urban background at dusk. The lighting highlights his features with a soft glow. The mood is contemplative and deep, aligning with a soulful, editorial gallery style. Colors are muted with subtle warm highlights." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPcfl8Zdo0gbRpHyAHnOgwCdx2YK5SSZaZRrEOhIpozE2qLUKYC8On2mFJeoWB16IC0XzT-e2DBXAhi3Hr5TC4u5TifmrVLZK5fhd6qN4ZVp7gCQJVZex4XreLTlg2LUXC-Bf2OKCt3UZA46JIdIhlIH-UJCt3r26i48fEsWDqBXfmqqy7pBMX3h2UtkCH05qAqfr3b6J8sSOFo5Zi1_2UeIt8dHjLFO0GUtl6dIN05sQIKhPvU7TPHGqhhLN_jiXWkTQmDby1Mk5l"/>
+</div>
+<div class="flex flex-col flex-grow min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<span class="font-label-caps text-label-caps text-on-surface truncate">Julian</span>
+<span class="font-label-caps text-[10px] text-outline">Yesterday</span>
+</div>
+<p class="font-body-md text-sm text-on-surface-variant truncate group-hover:text-primary transition-colors">Shared a story: "Sunday mornings."</p>
+</div>
+</div>
+<!-- Exchange Item 3 -->
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-12 h-12 rounded-full overflow-hidden shrink-0 shadow-[0_4px_10px_rgba(0,0,0,0.05),0_0_20px_rgba(255,107,74,0.05)] border border-white/50">
+<img alt="A soft, atmospheric image of a woman laughing, captured in a botanical garden. The light filters through leaves, creating a dappled, organic effect. The mood is joyful and energetic, perfect for a high-end connection platform. Colors are lush greens and soft peachy tones." class="w-full h-full object-cover opacity-70 grayscale-[20%]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBICW11zEjHOtuTV2j59xd7mSzKRBfpRCbNXosjvlcv1F8GT9XYG9uyqdVw9k0KGAPja0f_9lqdfgMt5nSD9XIZHZJszqsm84w6aPMKgM1ckUm2Q4BSX38f1HnM1H7Z0HswMlfedQ4AyDPTLvRFlipPScYx9YElVwMG0GQCq-TnVjgQDmSFyH3HEAwlJT7mezYVTyRSTFIa3VUvOwOJEn2ycwNcZh4vgTSsPh62kF8I0QI1Czcgt8YVSCm0MSc64yeMuAjHPI_JD4o"/>
+</div>
+<div class="flex flex-col flex-grow min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<span class="font-label-caps text-label-caps text-on-surface/60 truncate">Elena</span>
+<span class="font-label-caps text-[10px] text-outline/60">3d ago</span>
+</div>
+<p class="font-body-md text-sm text-on-surface-variant/60 truncate">You sent a connection request.</p>
+</div>
+</div>
+</div>
+<button class="text-left font-label-caps text-label-caps text-primary hover:text-primary-container transition-colors mt-2 flex items-center gap-1 w-fit">
+                        View Journal <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</section>
+<!-- Subtle Upsell Banner -->
+<section class="mt-8 p-6 rounded-2xl bg-surface-container/30 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.02)] relative overflow-hidden">
+<div class="absolute -right-10 -bottom-10 w-32 h-32 bg-secondary-fixed/30 rounded-full blur-xl -z-10"></div>
+<h3 class="font-label-caps text-label-caps text-secondary mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">stars</span> SoulSync Premium
+                    </h3>
+<p class="font-body-md text-sm text-on-surface-variant mb-4">Unlock deeper insights and curated exclusivity. Elevate your experience.</p>
+<a class="font-label-caps text-[11px] text-on-surface hover:text-secondary transition-colors underline decoration-secondary/30 underline-offset-4" href="#">Discover Exclusivity</a>
+</section>
+</div>
+<!-- Right Column: Top Picks Scroll & Insights -->
+<div class="md:col-span-7 flex flex-col gap-12 mt-12 md:mt-0">
+<!-- Curated Scroll -->
+<section class="flex flex-col gap-6 relative">
+<div class="flex justify-between items-end mb-2">
+<h2 class="font-headline-md text-headline-md text-on-surface">The Edit</h2>
+<span class="font-label-caps text-[10px] text-outline bg-surface-variant/50 px-3 py-1 rounded-full backdrop-blur-sm border border-white/20">Refreshed Today</span>
+</div>
+<!-- Horizontal Scroll Container -->
+<div class="flex overflow-x-auto gap-6 pb-8 -mx-6 px-6 md:mx-0 md:px-0 snap-x snap-mandatory hide-scrollbar" style="scrollbar-width: none;">
+<!-- Pick 1 -->
+<div class="shrink-0 w-[240px] md:w-[280px] snap-center group cursor-pointer relative">
+<!-- Image Card -->
+<div class="aspect-[3/4] rounded-2xl overflow-hidden relative shadow-[0_10px_30px_rgba(0,0,0,0.08),0_0_40px_rgba(255,107,74,0.05)] border-[0.5px] border-white/60 group-hover:-translate-y-2 transition-transform duration-500 ease-out">
+<img alt="An editorial-style portrait of a person standing by the ocean at twilight. The sky is painted with soft sunset hues of coral and violet. The aesthetic is organic minimalism, evoking emotional warmth and depth. The subject is gazing thoughtfully, bathed in atmospheric, soft-focus light." class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjl69IrPcrgXCXilezOj0evJkaj0ofAhNYLwFx3DN0N2axrwRMSSrdryE7tI1kr3jxXnfOP-GZ3t-qyrXc3RGBA7KIaN3Sy2J2h-GGbVE5G-DDmi1bMY2ZrkDCFeagLFBwPhVptmRhQB64ZcuHjpG6yCZ2PsEL8KExFQ4g_kNfItyxDPrx_5tS1XaMbqmcgh-jxbz5v5qYXnQPJRohna-6D19ngVzCwlBf-FwX5jfKNdld7CgOZZJQVEQqWhmKngeouNkwz0gSUd2p"/>
+<!-- Curated Chip overlay -->
+<div class="absolute top-4 left-4 bg-secondary-container/20 backdrop-blur-md border border-white/30 rounded-full px-3 py-1 flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[12px] text-on-surface" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="font-display-xl text-[10px] font-bold text-on-surface tracking-widest uppercase">98% Match</span>
+</div>
+<!-- Gradient overlay for text legibility -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4">
+<h3 class="font-headline-md text-[24px] text-white mb-1 drop-shadow-md">Maya, 29</h3>
+<p class="font-body-md text-sm text-white/80 line-clamp-1 drop-shadow-md">Architect &amp; Ceramicist</p>
+</div>
+</div>
+</div>
+<!-- Pick 2 -->
+<div class="shrink-0 w-[240px] md:w-[280px] snap-center group cursor-pointer relative">
+<!-- Image Card -->
+<div class="aspect-[3/4] rounded-2xl overflow-hidden relative shadow-[0_10px_30px_rgba(0,0,0,0.08),0_0_40px_rgba(255,107,74,0.05)] border-[0.5px] border-white/60 group-hover:-translate-y-2 transition-transform duration-500 ease-out">
+<img alt="A lifestyle shot of a man reading a book in a lush, glass-enclosed conservatory. Sunlight streams through the foliage, creating high-contrast, dappled organic shadows. The mood is sophisticated and quiet, emphasizing negative space and natural textures. The color palette centers on deep greens and soft creams." class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYzhJf8UYWBL-sODSGBsbKMXwSr7etNVuBOA1WQqD8A2_h9CvCqiQ_4FKfdW2wZ2qtf-CbOaENdOfTdC6ByAZvzKcHXOF1KzCFkJVgZxuUks53gW0HxnnCsZlKScnuqO_UATeMhP_1JTWv0v5fkaEEyU50g89AoMN_r_Q20YUBxDIwhDgIZbtMsosbbqIX2XgEBZQh5vfXN7BS-EHz4JuN1KflfoTmokmyRtUC4jxTeVGTkjK2CHoeZlW1OF2CdMZ1tKn3ZF27MfEB"/>
+<!-- Gradient overlay -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4">
+<h3 class="font-headline-md text-[24px] text-white mb-1 drop-shadow-md">David, 34</h3>
+<p class="font-body-md text-sm text-white/80 line-clamp-1 drop-shadow-md">Literature Professor</p>
+</div>
+</div>
+</div>
+<!-- Empty State/Discover More -->
+<div class="shrink-0 w-[180px] snap-center flex flex-col justify-center items-center gap-4 rounded-2xl border border-dashed border-outline-variant/50 bg-surface/50 backdrop-blur-sm hover:bg-surface-variant/30 transition-colors cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">explore</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant text-center px-4">Discover<br/>More Souls</span>
+</div>
+</div>
+</section>
+<!-- Subtle Insight Widget -->
+<section class="bg-gradient-to-br from-surface-container-low to-surface rounded-3xl p-8 border border-white/60 shadow-[0_10px_40px_rgba(0,0,0,0.03)] relative overflow-hidden mt-8">
+<!-- Glassmorphic effect layer -->
+<div class="absolute inset-0 bg-white/20 backdrop-blur-xl"></div>
+<div class="relative z-10 flex flex-col md:flex-row gap-8 items-center justify-between">
+<div class="flex-1">
+<h3 class="font-headline-md text-[24px] text-on-surface mb-3">Your Aura is Resonating.</h3>
+<p class="font-body-md text-on-surface-variant max-w-sm">Your profile has gathered nuanced attention this week. The gallery feels alive with potential alignments.</p>
+</div>
+<div class="shrink-0 flex items-center justify-center relative w-24 h-24">
+<!-- Organic shape graph placeholder -->
+<div class="absolute inset-0 bg-primary-container/20 rounded-[40%_60%_70%_30%/40%_50%_60%_50%] shadow-[0_0_30px_rgba(255,107,74,0.3)] animate-[spin_10s_linear_infinite]"></div>
+<div class="absolute inset-2 bg-secondary-fixed/40 rounded-[60%_40%_30%_70%/60%_30%_70%_40%] mix-blend-multiply"></div>
+<span class="font-display-xl text-[28px] text-primary relative z-10 font-bold italic">+12</span>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md rounded-full px-8 py-3 z-50 bg-white/60 dark:bg-black/60 backdrop-blur-2xl border border-white/50 dark:border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex justify-between items-center">
+<a class="flex flex-col items-center text-neutral-400 dark:text-neutral-500 opacity-70 hover:opacity-100 hover:scale-105 transition-transform font-['Epilogue'] text-[10px] uppercase tracking-widest font-bold" href="#">
+<span class="material-symbols-outlined mb-1">explore</span>
+            Discovery
+        </a>
+<a class="flex flex-col items-center text-neutral-400 dark:text-neutral-500 opacity-70 hover:opacity-100 hover:scale-105 transition-transform font-['Epilogue'] text-[10px] uppercase tracking-widest font-bold" href="#">
+<span class="material-symbols-outlined mb-1">favorite</span>
+            Matches
+        </a>
+<a class="flex flex-col items-center text-neutral-400 dark:text-neutral-500 opacity-70 hover:opacity-100 hover:scale-105 transition-transform font-['Epilogue'] text-[10px] uppercase tracking-widest font-bold" href="#">
+<span class="material-symbols-outlined mb-1">auto_stories</span>
+            SoulMail
+        </a>
+<a class="flex flex-col items-center text-orange-600 dark:text-orange-400 scale-110 font-['Epilogue'] text-[10px] uppercase tracking-widest font-bold Active: transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1)" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+            Curated
+        </a>
+</nav>
+<!-- Footer -->
+<footer class="w-full py-20 px-10 rounded-t-[100px] mt-20 bg-orange-50/30 dark:bg-neutral-950/30 backdrop-blur-md flex flex-col md:flex-row justify-between items-center gap-8 text-center border-none relative z-10">
+<div class="text-xl font-black text-orange-600">SoulSync</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-neutral-500 dark:text-neutral-400 hover:text-orange-400 transition-colors duration-300 font-['Epilogue'] font-light" href="#">Philosophy</a>
+<a class="text-neutral-500 dark:text-neutral-400 hover:text-orange-400 transition-colors duration-300 font-['Epilogue'] font-light" href="#">Exclusivity</a>
+<a class="text-neutral-500 dark:text-neutral-400 hover:text-orange-400 transition-colors duration-300 font-['Epilogue'] font-light" href="#">Privacy</a>
+<a class="text-neutral-500 dark:text-neutral-400 hover:text-orange-400 transition-colors duration-300 font-['Epilogue'] font-light" href="#">The Journal</a>
+</div>
+<div class="text-sm text-neutral-500 dark:text-neutral-400 font-['Epilogue'] font-light">© 2024 SoulSync. A Neo-Organic Experience.</div>
+</footer>
+<!-- Style block to hide scrollbar for horizontal scroll -->
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</body></html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SoulSync Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600&amp;family=Epilogue:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#5a00c6",
+                        "primary": "#ae3115",
+                        "on-surface": "#261815",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#3c2d29",
+                        "tertiary": "#5e5f5c",
+                        "tertiary-container": "#9a9a97",
+                        "on-primary-container": "#661000",
+                        "secondary-fixed-dim": "#d2bbff",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#ffb4a3",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#ffede9",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#fff8f6",
+                        "surface-container": "#ffe9e5",
+                        "secondary-fixed": "#eaddff",
+                        "on-background": "#261815",
+                        "surface-container-high": "#fce3dd",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#3d0600",
+                        "surface-tint": "#ae3115",
+                        "surface-container-low": "#fff0ed",
+                        "secondary-container": "#8a4cfc",
+                        "primary-fixed-dim": "#ffb4a3",
+                        "surface-variant": "#f6ddd8",
+                        "surface-container-highest": "#f6ddd8",
+                        "primary-fixed": "#ffdad2",
+                        "on-tertiary-fixed": "#1b1c1a",
+                        "surface-bright": "#fff8f6",
+                        "on-primary-fixed-variant": "#8c1900",
+                        "outline": "#8d716a",
+                        "on-tertiary-fixed-variant": "#464744",
+                        "on-surface-variant": "#59413c",
+                        "background": "#fff8f6",
+                        "on-tertiary-container": "#313230",
+                        "surface-dim": "#edd5cf",
+                        "outline-variant": "#e1bfb8",
+                        "secondary": "#712ae2",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#25005a",
+                        "on-secondary-container": "#fffbff",
+                        "primary-container": "#ff6b4a",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#c7c7c3",
+                        "tertiary-fixed": "#e3e2df",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "overlap-negative": "-32px",
+                        "organic-gutter": "40px",
+                        "safe-margin": "64px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Epilogue"],
+                        "display-xl": ["Epilogue"],
+                        "label-caps": ["Be Vietnam Pro"],
+                        "body-lg": ["Be Vietnam Pro"],
+                        "headline-md": ["Epilogue"],
+                        "body-md": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-xl": ["84px", { "lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.1em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.8", "letterSpacing": "0.01em", "fontWeight": "300" }],
+                        "headline-md": ["32px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="hidden md:flex justify-between items-center px-6 py-4 w-full bg-white/40 dark:bg-black/40 backdrop-blur-2xl fixed top-0 z-50 border-b border-white/20 dark:border-white/10 shadow-[0_4px_30px_rgba(255,107,74,0.05)]">
+<div class="text-2xl font-black italic text-orange-600 dark:text-orange-500 font-epilogue tracking-tight">SoulSync</div>
+<nav class="flex gap-6">
+<a class="text-orange-600 dark:text-orange-400 font-bold border-b-2 border-orange-600 hover:text-orange-500 transition-colors duration-300" href="#">Discover</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-orange-500 transition-colors duration-300" href="#">Matches</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-orange-500 transition-colors duration-300" href="#">Messages</a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-orange-500 transition-colors duration-300" href="#">Profile</a>
+</nav>
+<div class="flex gap-4">
+<button class="text-orange-600 dark:text-orange-400 hover:opacity-80 scale-95 transition-all"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-orange-600 dark:text-orange-400 hover:opacity-80 scale-95 transition-all"><span class="material-symbols-outlined">settings</span></button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="px-6 pt-12 md:pt-32 max-w-2xl mx-auto flex flex-col gap-12">
+<!-- Greeting -->
+<section class="mt-8">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Morning, Alex.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Here is your curated journal for today.</p>
+</section>
+<!-- The Edit (Curated Matches) -->
+<section class="flex flex-col gap-6">
+<div class="flex justify-between items-end border-b border-outline-variant pb-2">
+<h2 class="font-headline-md text-headline-md text-on-surface">The Edit</h2>
+<span class="font-label-caps text-label-caps text-primary-container uppercase">3 New</span>
+</div>
+<div class="flex flex-col gap-8">
+<!-- Match Card 1 -->
+<div class="flex gap-6 items-center">
+<div class="w-24 h-32 rounded-lg overflow-hidden shrink-0 shadow-[0_10px_30px_rgba(255,107,74,0.15)]">
+<img alt="Profile of Elena" class="w-full h-full object-cover" data-alt="A close-up portrait of a sophisticated woman with dark hair, looking thoughtfully off-camera. She is sitting in a sunlit café, bathed in warm, soft morning light. The mood is serene and editorial, reflecting a neo-organic light mode aesthetic with soft cream and deep subtle contrasting shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuANZgvordBXNhp9UtyzarlBLmcH7x5CThSPNEsg-wfztOkA3G5iSsSqZOgoPjSpt8DryNK1xn-Taj3RSGqWhTQfdffgWac2S-6GThm5RWEAv7uVvVGGpHrxNLIcF2HGpybY9kB0SxYdOh7CzJX_RYzBKLvadZxombDeiXS5WOVqmOd9YLVKZIYxw2740Zl8hQqFziHZHEZUFZcaim9pzOQN9o3WR7DfXkyBcmIEtmn1nkqPPFUqq00DBnq4wrF8soWwVTWMQTh48ry2"/>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline-md text-[24px] text-on-surface">Elena, 28</h3>
+<span class="px-2 py-1 bg-secondary-container/20 text-secondary rounded-full font-label-caps text-[10px]">98% Match</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-3">Architect specializing in sustainable urban design. Loves jazz and long coastal drives.</p>
+<button class="font-label-caps text-label-caps text-primary flex items-center gap-1 self-start group">
+                            View Profile <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Match Card 2 -->
+<div class="flex gap-6 items-center">
+<div class="w-24 h-32 rounded-lg overflow-hidden shrink-0 shadow-[0_10px_30px_rgba(255,107,74,0.15)]">
+<img alt="Profile of Julian" class="w-full h-full object-cover" data-alt="A portrait of a stylish man with a slight beard, wearing a casual linen shirt. He is outdoors in a botanical garden, with soft, dappled sunlight filtering through the leaves. The image has a warm, cinematic quality, fitting a premium, organic minimal UI with a sunset-inspired color grading." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6z_2QMup55ipNb-6OY2_R1pTm_57WoT6NA5Il6ENk7BxkXDW0MURfnaHWYQ0d7E6Z6hKVuV9Gqt4A-SlZzbDJg6EwT-02xwvqsCMgRE7v-6c-3MPlD0xoFNJF0HN8ElwHAHQjdkpyIG7r5HbC4cSznvGlvIBU4OUtpYSQU62pRk8zp59Wpjrhl6cTSyYAdG_r_uxcT_0F4zyvVAQXlc6z9pzQN9DnupAlWNlHq_sQ1flld9wNDEOkNhFd6kExlevQCZzLpc4FllMg"/>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline-md text-[24px] text-on-surface">Julian, 31</h3>
+<span class="px-2 py-1 bg-secondary-container/20 text-secondary rounded-full font-label-caps text-[10px]">94% Match</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-3">Chef de cuisine. Seeking someone to explore hidden culinary gems and debate classic cinema.</p>
+<button class="font-label-caps text-label-caps text-primary flex items-center gap-1 self-start group">
+                            View Profile <span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Whispers (Messages) -->
+<section class="flex flex-col gap-6">
+<div class="flex justify-between items-end border-b border-outline-variant pb-2">
+<h2 class="font-headline-md text-headline-md text-on-surface">Recent Whispers</h2>
+</div>
+<div class="flex flex-col gap-6">
+<!-- Message 1 -->
+<div class="flex gap-4 items-start">
+<div class="w-12 h-12 rounded-full overflow-hidden shrink-0">
+<img alt="Profile of Clara" class="w-full h-full object-cover" data-alt="A vibrant headshot of a woman laughing naturally. The background is a soft, blurred bright sky. The lighting is high-key and flattering, suitable for a premium dating app interface. The colors are warm and inviting, leaning into the neo-organic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYGQ1vrOJfsC9DZNeiVhKRMmZ7zdaOZjPsenO_KA-qGpqRj18NR7OwkZpOlqGqdIGAOF8pgj6B-_zP1Cqq_-aB_Z_m_ZhI3n6pihGlADp4Ab2NV_PyURccl7ONlyvMTrjCtkhoJtEyezhwHe-C-tcjn5500MHnS-fS8dx0LoLbissW02UPbBMVEX44d2dHbhtpAjlmueIMv-E0LgqRw6exPnLHXKbRXimJC5FgyQErHJK7qDEniUNYTD4CFRjoN7cYtVdKFs_fepOQ"/>
+</div>
+<div class="flex flex-col flex-grow">
+<div class="flex justify-between items-baseline mb-1">
+<h3 class="font-headline-md text-[18px] text-on-surface">Clara</h3>
+<span class="font-label-caps text-[10px] text-tertiary">2m ago</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant font-medium">That gallery exhibition sounds perfect. Friday?</p>
+</div>
+</div>
+<!-- Message 2 -->
+<div class="flex gap-4 items-start">
+<div class="w-12 h-12 rounded-full overflow-hidden shrink-0 opacity-70">
+<img alt="Profile of Marcus" class="w-full h-full object-cover" data-alt="A calm portrait of a man looking off to the side, set against a muted, out-of-focus urban background. The image has a slightly desaturated, cool tone that contrasts nicely with the warm UI elements. It feels intimate and editorial." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzEw-rvU46e_0Rx6SrAlNZchs5bmw2vlD_56leDgwea0UpS2eq1mM6g09Uxn23kbipI2vvb8LSMMA8VGc__2yYH3RuRecET-m-Q43hNNyyB67EjsXNHoVYq2XkX3UqOnmDbPzaZk7S5FPC3NBG8-nYlSbuKl61XXAmtyRt2pAbQD23zMKvsdUwsb4I1KDCe6ulh2WVcWtAJr0CvD859sDwuDRxi7zWJmsg8CNEi3oYpcUk3HXPIXiPNdm0IuckZI5p7QJEL526KFa6"/>
+</div>
+<div class="flex flex-col flex-grow">
+<div class="flex justify-between items-baseline mb-1">
+<h3 class="font-headline-md text-[18px] text-on-surface">Marcus</h3>
+<span class="font-label-caps text-[10px] text-tertiary">Yesterday</span>
+</div>
+<p class="font-body-md text-body-md text-tertiary-container">I loved that book too. The ending was so unexpected.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden flex justify-around items-center p-2 bg-white/60 dark:bg-stone-900/60 backdrop-blur-3xl text-orange-600 dark:text-orange-400 font-epilogue text-[10px] font-semibold uppercase tracking-widest fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-lg rounded-full border border-white/40 dark:border-white/10 shadow-[0_20px_50px_rgba(255,107,74,0.15)] z-50">
+<a class="flex flex-col items-center justify-center bg-orange-600 dark:bg-orange-500 text-white rounded-full w-12 h-12 shadow-lg shadow-orange-600/30 hover:scale-110 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="sr-only">Discover</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 w-12 h-12 hover:scale-110 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="sr-only">Matches</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 w-12 h-12 hover:scale-110 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="sr-only">Messages</span>
+</a>
+<a class="flex flex-col items-center justify-center text-stone-400 dark:text-stone-500 w-12 h-12 hover:scale-110 transition-transform duration-300" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="sr-only">Profile</span>
+</a>
+</nav>
+</body></html>

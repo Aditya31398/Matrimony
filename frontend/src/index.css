@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f8f9fa;
+    color: #191c1d;
+  }
+
+  ::selection {
+    background-color: #ffdad2;
+    color: #3d0600;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+    user-select: none;
+  }
+
+  .fill-icon {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/80 backdrop-blur-xl border border-white/20;
+  }
+
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-2xl border border-white/30 shadow-card;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-on-primary font-semibold px-6 py-3 rounded-24 shadow-btn-primary
+           hover:shadow-btn-primary-hover hover:-translate-y-0.5
+           active:scale-95 transition-all duration-200;
+  }
+
+  .btn-ghost {
+    @apply border-2 border-orange-200 text-primary font-semibold px-6 py-3 rounded-24
+           hover:bg-orange-50 active:scale-95 transition-all duration-200;
+  }
+
+  .gradient-primary {
+    background: linear-gradient(135deg, #ae3115 0%, #ff6b4a 100%);
+  }
+
+  .gradient-sunset {
+    background: linear-gradient(135deg, #ff6b4a 0%, #ff928b 50%, #ffd7ef 100%);
+  }
+
+  .blob {
+    @apply absolute rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob;
+  }
+
+  .page-container {
+    @apply max-w-[1280px] mx-auto px-6;
+  }
+
+  .section-padding {
+    @apply py-20;
+  }
+
+  .card {
+    @apply bg-white rounded-32 shadow-card hover:shadow-card-hover transition-all duration-300;
+  }
+
+  .tag {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-bold;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, #ae3115 0%, #ff6b4a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, #f3f4f5 25%, #e7e8e9 50%, #f3f4f5 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+}

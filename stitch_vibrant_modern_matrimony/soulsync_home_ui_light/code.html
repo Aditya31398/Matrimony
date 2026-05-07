@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SoulSync - Landing Page</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600&amp;family=Epilogue:ital,wght@0,300;0,400;0,600;0,700;0,900;1,700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#8a4cfc",
+                    "inverse-primary": "#ffb4a3",
+                    "primary": "#ae3115",
+                    "outline-variant": "#e1bfb8",
+                    "on-error-container": "#93000a",
+                    "error": "#ba1a1a",
+                    "secondary-fixed": "#eaddff",
+                    "tertiary-fixed": "#e3e2df",
+                    "on-primary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#edd5cf",
+                    "surface-tint": "#ae3115",
+                    "surface-container-low": "#fff0ed",
+                    "secondary": "#712ae2",
+                    "secondary-fixed-dim": "#d2bbff",
+                    "on-primary-fixed-variant": "#8c1900",
+                    "surface-container": "#ffe9e5",
+                    "on-tertiary-fixed": "#1b1c1a",
+                    "on-secondary-container": "#fffbff",
+                    "on-primary-fixed": "#3d0600",
+                    "surface-container-highest": "#f6ddd8",
+                    "primary-container": "#ff6b4a",
+                    "on-surface": "#261815",
+                    "on-primary-container": "#661000",
+                    "tertiary-fixed-dim": "#c7c7c3",
+                    "tertiary-container": "#9a9a97",
+                    "tertiary": "#5e5f5c",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#fce3dd",
+                    "on-surface-variant": "#59413c",
+                    "surface-bright": "#fff8f6",
+                    "outline": "#8d716a",
+                    "on-tertiary": "#ffffff",
+                    "surface": "#fff8f6",
+                    "background": "#fff8f6",
+                    "on-tertiary-fixed-variant": "#464744",
+                    "on-background": "#261815",
+                    "on-secondary-fixed-variant": "#5a00c6",
+                    "primary-fixed": "#ffdad2",
+                    "on-tertiary-container": "#313230",
+                    "inverse-on-surface": "#ffede9",
+                    "surface-variant": "#f6ddd8",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#3c2d29",
+                    "primary-fixed-dim": "#ffb4a3",
+                    "on-secondary-fixed": "#25005a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "8px",
+                    "organic-gutter": "40px",
+                    "safe-margin": "64px",
+                    "overlap-negative": "-32px"
+            },
+            "fontFamily": {
+                    "display-xl": [
+                            "Epilogue"
+                    ],
+                    "body-lg": [
+                            "Be Vietnam Pro"
+                    ],
+                    "headline-lg": [
+                            "Epilogue"
+                    ],
+                    "headline-md": [
+                            "Epilogue"
+                    ],
+                    "label-caps": [
+                            "Be Vietnam Pro"
+                    ],
+                    "body-md": [
+                            "Be Vietnam Pro"
+                    ]
+            },
+            "fontSize": {
+                    "display-xl": [
+                            "84px",
+                            {
+                                    "lineHeight": "1.1",
+                                    "letterSpacing": "-0.04em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "1.8",
+                                    "letterSpacing": "0.01em",
+                                    "fontWeight": "300"
+                            }
+                    ],
+                    "headline-lg": [
+                            "48px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-md": [
+                            "32px",
+                            {
+                                    "lineHeight": "1.3",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-caps": [
+                            "12px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "0.1em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .blob-1 {
+            border-radius: 41% 59% 45% 55% / 51% 41% 59% 49%;
+        }
+        .blob-2 {
+            border-radius: 65% 35% 32% 68% / 46% 62% 38% 54%;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container relative overflow-x-hidden min-h-screen">
+<!-- TopAppBar -->
+<header class="hidden md:flex justify-between items-center max-w-screen-2xl mx-auto fixed top-0 w-full z-50 px-6 py-4 bg-white/40 dark:bg-black/40 backdrop-blur-3xl border-b border-white/20 dark:border-white/10 shadow-[0_0_20px_rgba(255,107,74,0.1)]">
+<a class="text-2xl font-bold tracking-tighter text-orange-600 dark:text-orange-400 italic font-['Epilogue'] tracking-tight" href="#">SoulSync</a>
+<nav class="flex items-center gap-8 font-['Epilogue'] tracking-tight">
+<a class="text-orange-600 dark:text-orange-400 font-semibold border-b-2 border-orange-500 pb-1" href="#">Gallery</a>
+<a class="text-neutral-600 dark:text-neutral-400 hover:text-orange-500 hover:backdrop-blur-2xl transition-all duration-500" href="#">Stories</a>
+<a class="text-neutral-600 dark:text-neutral-400 hover:text-orange-500 hover:backdrop-blur-2xl transition-all duration-500" href="#">The Edit</a>
+</nav>
+<button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-full font-label-caps text-label-caps hover:shadow-[0_0_30px_rgba(255,107,74,0.5)] transition-all duration-300 scale-95 duration-300">Connect</button>
+</header>
+<main class="pt-[100px] md:pt-[120px] pb-safe-margin">
+<!-- Hero Section: Ultra-minimalist cinematic -->
+<section class="relative w-full min-h-[921px] flex items-center justify-center px-6 overflow-hidden">
+<!-- Organic Background Element -->
+<div class="absolute inset-0 z-0 opacity-20 pointer-events-none">
+<div class="absolute top-[-10%] right-[-5%] w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] bg-gradient-to-tr from-surface-variant to-primary-fixed rounded-full blur-3xl mix-blend-multiply"></div>
+<div class="absolute bottom-[-20%] left-[-10%] w-[70vw] h-[70vw] max-w-[1000px] max-h-[1000px] bg-gradient-to-tr from-surface-container-high to-secondary-fixed rounded-full blur-3xl mix-blend-multiply"></div>
+</div>
+<div class="relative z-10 w-full max-w-screen-xl mx-auto flex flex-col md:flex-row items-center gap-organic-gutter">
+<div class="w-full md:w-1/2 flex flex-col items-start gap-8 z-20">
+<h1 class="font-display-xl text-display-xl text-on-background leading-tight">
+                        Artful<br/>Connections.
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">
+                        A neo-organic matchmaking experience. Step away from the noise and discover intentional, sophisticated compatibility designed for a life beautifully shared.
+                    </p>
+<button class="mt-4 bg-gradient-to-r from-primary to-primary-container text-on-primary px-10 py-5 rounded-full font-label-caps text-label-caps uppercase tracking-widest min-h-[64px] hover:shadow-[0_0_30px_rgba(255,107,74,0.5)] transition-all duration-500 hover:scale-[1.02]">
+                        Apply for Membership
+                    </button>
+</div>
+<div class="w-full md:w-1/2 relative mt-12 md:mt-0">
+<!-- Image mask -->
+<div class="relative w-full aspect-[3/4] md:aspect-[4/5] overflow-hidden blob-1 shadow-[0_20px_50px_rgba(0,0,0,0.05),0_0_40px_rgba(255,107,74,0.1)]">
+<img alt="Cinematic shot of a stylish couple walking together in a sun-drenched, airy space." class="w-full h-full object-cover object-center filter sepia-[0.1] contrast-[1.05]" data-alt="A high-fashion, cinematic shot of a sophisticated couple in an airy, sun-drenched architectural space. The lighting is warm and ethereal, creating a soft, light-mode aesthetic. The visual style is highly editorial and minimalist, with a neo-organic feel, focusing on genuine emotion and refined elegance. The color palette incorporates soft warm creams, subtle architectural shadows, and a touch of deep coral or sunset warmth in the highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgEeQYpy7X4U3Sb8O-VrKJHe69KkjWMpc-oWKKCSiq_StAQGLVRYKnn3waTl9XQWhkU1roobCpqPAzP7GxcQKotByxweyFg_dzm7q_Cbo51drPugEWp3CX-rcyBp-RzPC00GaEvXhP7eF9LHntdnKQ8y9rfWBSOq8OwfGClJ6MhXKQUX-uTLfbVHj9t0wb8QnRBvNnwrXJS55AfZfHUkv1RTjQfCrOmHiorMkiwJeazw9vjPyqRGfZcm1-8HcMfw0eiZTn9_yUwt08"/>
+</div>
+<!-- Floating Badge -->
+<div class="absolute -bottom-6 -left-6 bg-white/60 backdrop-blur-2xl px-6 py-4 rounded-3xl border border-white/50 shadow-[0_20px_50px_rgba(0,0,0,0.1)] z-30">
+<p class="font-headline-md text-headline-md text-primary">Est. 2024</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Neo-Organic Approach</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Minimalist Success Stories / Philosophy -->
+<section class="relative w-full py-32 px-6 bg-surface-bright">
+<div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-start gap-24">
+<div class="w-full md:w-5/12 sticky top-32">
+<h2 class="font-headline-lg text-headline-lg text-on-background mb-6">The Edit.</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-12">
+                        We curate profound connections through a lens of exclusivity and depth. Our success stories are not statistics; they are beautifully unfolding narratives.
+                    </p>
+<a class="inline-flex items-center gap-2 text-primary font-label-caps text-label-caps hover:gap-4 transition-all duration-300" href="#">
+                        Read The Journal <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<div class="w-full md:w-7/12 flex flex-col gap-32">
+<!-- Story 1 -->
+<div class="relative flex flex-col items-start group">
+<div class="w-full aspect-video overflow-hidden rounded-2xl mb-8 relative">
+<img alt="Detail shot of hands intertwined over a minimalist table setting." class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="A macro, editorial photograph of two elegant hands gently intertwined over a minimalist, textured stone table setting. The scene is bathed in soft, diffused natural light, emphasizing a refined, light-mode aesthetic. The color palette is composed of warm creams, subtle stone grays, and a hint of warm sunset glow, reflecting a neo-organic and deeply emotional atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyjvXdk259RVSgEn8q1RZ9cLA_z-l50UqLwYKT2wrgr6M05gtHH97IkH8hLjLxchAvTc9rDhruNmqVQBhuEcrG4Uv_p1Ze2YKfrr0ML6DLjtOAghsg23S4VKLfZXyxTqSspZlJmaderkCpyehGCc-afu7VudIuGucodfYSgEl0P0uVLKdb7Fy-H8tztmNStaJjwvZ_gyHTC3Xaxno8x00QSSVEaV7xTTlNPQCoAowJuq6a3AJ99uUZew6Om54IqJZCksHtqTC7zXso"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/50 to-transparent"></div>
+</div>
+<div class="pl-8 border-l border-outline-variant relative">
+<span class="absolute -left-[5px] top-2 w-2 h-2 rounded-full bg-primary-container"></span>
+<h3 class="font-headline-md text-headline-md text-on-background mb-4">A Shared Rhythm</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-lg">
+                                "The curation felt less like an algorithm and more like introducing me to an extension of my own aesthetic and values. It was effortless."
+                            </p>
+<p class="mt-4 font-label-caps text-label-caps text-tertiary-container">— E. &amp; J., Matched in Milan</p>
+</div>
+</div>
+<!-- Story 2 -->
+<div class="relative flex flex-col items-start group">
+<div class="w-[80%] ml-auto aspect-square overflow-hidden blob-2 mb-8 relative shadow-[0_20px_50px_rgba(0,0,0,0.05),0_0_40px_rgba(138,76,252,0.1)]">
+<img alt="Portrait of a sophisticated woman smiling softly in natural light." class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 filter sepia-[0.05]" data-alt="A refined, editorial portrait of a sophisticated woman with a gentle, authentic smile, framed against a soft-focus, minimal background. The lighting is pristine and airy, creating a high-key light-mode visual. The neo-organic aesthetic is highlighted by the interplay of soft shadows, warm skin tones, and a serene, calming atmosphere, avoiding harsh contrasts." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzn8MoIhZ1Onq6d7hkN9xskdSpLAu8ZPk0oZhN1kqpI91nXIaF8lSR0SBOPB_ZgzAk-1zBqZWi6b8XxQ3OJD4Wk20jLk2VBp8ynp-J9JzhDgq3nJVX7zGAqnPoktnPwZCLW89g37QAYg5gZVsNAT-b9digV7-tQ9en1lY8FFdVgOSWIL9yTR45jgj3PK-WtJNuM2jI1ySLqtbUbqJyD_5cGLt1Zz9XYw__xwZMzj76pwJ15NVpHgij34KgYTyT-B76Z9_EZZbmWl0H"/>
+</div>
+<div class="pr-8 border-r border-outline-variant text-right self-end relative">
+<span class="absolute -right-[5px] top-2 w-2 h-2 rounded-full bg-secondary-container"></span>
+<h3 class="font-headline-md text-headline-md text-on-background mb-4">Intentional Depth</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-lg ml-auto">
+                                "SoulSync bypasses the superficial layer entirely. Every detail curated for me resonated with the life I am building."
+                            </p>
+<p class="mt-4 font-label-caps text-label-caps text-tertiary-container">— S.T., The Edit Alumni</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden flex justify-between items-center fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md rounded-full px-8 py-3 z-50 bg-white/60 dark:bg-black/60 backdrop-blur-2xl border border-white/50 dark:border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.1)]">
+<a class="flex flex-col items-center text-orange-600 dark:text-orange-400 scale-110 hover:opacity-100 hover:scale-105 transition-transform" href="#">
+<span class="material-symbols-outlined fill">explore</span>
+<span class="font-['Epilogue'] text-[10px] uppercase tracking-widest font-bold mt-1">Discovery</span>
+</a>
+<a class="flex flex-col items-center text-neutral-400 dark:text-neutral-500 opacity-70 hover:opacity-100 hover:scale-105 transition-transform" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="font-['Epilogue'] text-[10px] uppercase tracking-widest font-bold mt-1 hidden">Matches</span>
+</a>
+<a class="flex flex-col items-center text-neutral-400 dark:text-neutral-500 opacity-70 hover:opacity-100 hover:scale-105 transition-transform" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<span class="font-['Epilogue'] text-[10px] uppercase tracking-widest font-bold mt-1 hidden">SoulMail</span>
+</a>
+<a class="flex flex-col items-center text-neutral-400 dark:text-neutral-500 opacity-70 hover:opacity-100 hover:scale-105 transition-transform" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Epilogue'] text-[10px] uppercase tracking-widest font-bold mt-1 hidden">Curated</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="w-full py-20 px-10 rounded-t-[100px] mt-20 bg-orange-50/30 dark:bg-neutral-950/30 backdrop-blur-md flex flex-col md:flex-row justify-between items-center gap-8 text-center">
+<div class="text-xl font-black text-orange-600 font-['Epilogue'] font-light">SoulSync</div>
+<div class="flex flex-wrap justify-center gap-6 font-['Epilogue'] font-light">
+<a class="text-neutral-500 dark:text-neutral-400 hover:text-orange-400 transition-colors duration-300" href="#">Philosophy</a>
+<a class="text-neutral-500 dark:text-neutral-400 hover:text-orange-400 transition-colors duration-300" href="#">Exclusivity</a>
+<a class="text-neutral-500 dark:text-neutral-400 hover:text-orange-400 transition-colors duration-300" href="#">Privacy</a>
+<a class="text-neutral-500 dark:text-neutral-400 hover:text-orange-400 transition-colors duration-300" href="#">The Journal</a>
+</div>
+<div class="text-orange-600 dark:text-orange-400 font-['Epilogue'] font-light text-sm">
+            © 2024 SoulSync. A Neo-Organic Experience.
+        </div>
+</footer>
+</body></html>

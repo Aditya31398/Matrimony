@@ -40,7 +40,9 @@ public class ProfileService {
     public List<ProfileSummaryDTO> getAll(int page, int size, String education, String gender, boolean verified, Long excludeId) {
         Pageable pageable = PageRequest.of(page, size);
         String edu = normalizeEducation(education);
-        String gen = (gender == null || gender.isBlank()) ? null : gender;
+        String gen = (gender == null || gender.isBlank())
+                ? resolveGenderFilter(excludeId)
+                : gender;
         return profileRepo.findWithFilters(excludeId, edu, gen, verified, pageable)
                 .map(ProfileSummaryDTO::from)
                 .toList();
@@ -56,9 +58,10 @@ public class ProfileService {
     @Transactional(readOnly = true)
     public List<ProfileSummaryDTO> getTopPicks(Long excludeId) {
         Pageable pageable = PageRequest.of(0, 8, Sort.by("isPremium").descending().and(Sort.by("createdAt").descending()));
+        String genderFilter = resolveGenderFilter(excludeId);
         return (excludeId != null
-                ? profileRepo.findTopPicks(excludeId, pageable)
-                : profileRepo.findTopPicks(pageable))
+                ? profileRepo.findTopPicks(excludeId, genderFilter, pageable)
+                : profileRepo.findTopPicks(genderFilter, pageable))
                 .stream()
                 .map(ProfileSummaryDTO::from)
                 .toList();
@@ -199,6 +202,19 @@ public class ProfileService {
         ProfileDTO saved = ProfileDTO.from(profileRepo.save(profile));
         emailService.sendOtpEmail(req.getEmail(), req.getFirstName(), otp);
         return saved;
+    }
+
+    private String resolveGenderFilter(Long profileId) {
+        if (profileId == null) return null;
+        return profileRepo.findById(profileId).map(p -> {
+            String looking = p.getLookingForGender();
+            if (looking == null) return null;
+            return switch (looking.toLowerCase()) {
+                case "man", "male" -> "MALE";
+                case "woman", "female" -> "FEMALE";
+                default -> null;
+            };
+        }).orElse(null);
     }
 
     private String normalizeEducation(String education) {

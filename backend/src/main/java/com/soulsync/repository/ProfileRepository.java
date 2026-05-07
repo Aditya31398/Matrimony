@@ -51,10 +51,15 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     @Query("""
         SELECT p FROM Profile p
         WHERE p.id != :excludeId
+          AND (:gender IS NULL OR CAST(p.gender AS string) = :gender)
         ORDER BY p.isVerified DESC, p.createdAt DESC
     """)
-    List<Profile> findTopPicks(@Param("excludeId") Long excludeId, Pageable pageable);
+    List<Profile> findTopPicks(@Param("excludeId") Long excludeId, @Param("gender") String gender, Pageable pageable);
 
-    @Query("SELECT p FROM Profile p ORDER BY p.isPremium DESC, p.createdAt DESC")
-    List<Profile> findTopPicks(Pageable pageable);
+    @Query("""
+        SELECT p FROM Profile p
+        WHERE (:gender IS NULL OR CAST(p.gender AS string) = :gender)
+        ORDER BY p.isPremium DESC, p.createdAt DESC
+    """)
+    List<Profile> findTopPicks(@Param("gender") String gender, Pageable pageable);
 }

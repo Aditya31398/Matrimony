@@ -1,29 +1,28 @@
 package com.soulsync.controller;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Set;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/upload")
+@RequiredArgsConstructor
 public class UploadController {
 
-    private static final long MAX_SIZE = 5 * 1024 * 1024; // 5 MB
-    private static final java.util.Set<String> ALLOWED_TYPES =
-            java.util.Set.of("image/jpeg", "image/png", "image/webp", "image/jpg");
+    private static final long MAX_SIZE = 5 * 1024 * 1024;
+    private static final Set<String> ALLOWED_TYPES =
+            Set.of("image/jpeg", "image/png", "image/webp", "image/jpg");
 
-    @Value("${app.upload.dir:uploads}")
-    private String uploadDir;
+    private final Cloudinary cloudinary;
 
     @PostMapping("/photo")
     public ResponseEntity<Map<String, String>> uploadPhoto(
@@ -40,15 +39,14 @@ public class UploadController {
             return ResponseEntity.badRequest().body(Map.of("message", "Only JPEG, PNG and WebP are allowed"));
         }
 
-        String ext = contentType.contains("png") ? ".png" : contentType.contains("webp") ? ".webp" : ".jpg";
-        String filename = UUID.randomUUID().toString().replace("-", "") + ext;
+        @SuppressWarnings("rawtypes")
+        Map result = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
+                "folder", "soulsync/photos",
+                "resource_type", "image"
+        ));
 
-        Path photosDir = Paths.get(uploadDir, "photos");
-        Files.createDirectories(photosDir);
-        Files.copy(file.getInputStream(), photosDir.resolve(filename));
-
-        String url = "/uploads/photos/" + filename;
-        log.info("Photo uploaded: {}", url);
+        String url = (String) result.get("secure_url");
+        log.info("Photo uploaded to Cloudinary: {}", url);
         return ResponseEntity.ok(Map.of("url", url));
     }
 }

@@ -40,6 +40,11 @@ spring.servlet.multipart.max-request-size=10MB
 # ── Brevo REST API ───────────────────────────────────────────────────────
 brevo.api.key=YOUR_BREVO_API_KEY
 
+# ── Cloudinary ───────────────────────────────────────────────────────────
+cloudinary.cloud-name=YOUR_CLOUD_NAME
+cloudinary.api-key=YOUR_API_KEY
+cloudinary.api-secret=YOUR_API_SECRET
+
 # ── App config ───────────────────────────────────────────────────────────
 app.mail.from=YOUR_EMAIL@example.com
 app.mail.from-name=SoulSync

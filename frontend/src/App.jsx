@@ -20,6 +20,11 @@ function RootRedirect() {
   return <Navigate to={isLoggedIn ? '/dashboard' : '/login'} replace />
 }
 
+function ProtectedRoute({ children }) {
+  const { isLoggedIn } = useAuth()
+  return isLoggedIn ? children : <Navigate to="/login" replace />
+}
+
 export default function App() {
   return (
     <AuthProvider>
@@ -37,16 +42,16 @@ export default function App() {
           <AnimatePresence mode="wait">
             <Routes>
               <Route path="/" element={<RootRedirect />} />
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/discover" element={<DiscoverPage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/profile/:id" element={<ProfileDetailPage />} />
-              <Route path="/register" element={<RegisterPage />} />
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/messages" element={<MessagesPage />} />
-              <Route path="/messages/:conversationId" element={<MessagesPage />} />
-              <Route path="/my-profile" element={<MyProfilePage />} />
-              <Route path="/edit-profile" element={<EditProfilePage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+              <Route path="/discover" element={<ProtectedRoute><DiscoverPage /></ProtectedRoute>} />
+              <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+              <Route path="/profile/:id" element={<ProtectedRoute><ProfileDetailPage /></ProtectedRoute>} />
+              <Route path="/messages" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} />
+              <Route path="/messages/:conversationId" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} />
+              <Route path="/my-profile" element={<ProtectedRoute><MyProfilePage /></ProtectedRoute>} />
+              <Route path="/edit-profile" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
             </Routes>
           </AnimatePresence>
           <Footer />

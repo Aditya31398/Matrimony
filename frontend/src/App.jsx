@@ -1,7 +1,7 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { Toaster } from 'react-hot-toast'
-import { AuthProvider } from './context/AuthContext'
+import { AuthProvider, useAuth } from './context/AuthContext'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import BottomNav from './components/layout/BottomNav'
@@ -14,6 +14,11 @@ import LoginPage from './pages/LoginPage'
 import MessagesPage from './pages/MessagesPage'
 import MyProfilePage from './pages/MyProfilePage'
 import EditProfilePage from './pages/EditProfilePage'
+
+function RootRedirect() {
+  const { isLoggedIn } = useAuth()
+  return <Navigate to={isLoggedIn ? '/dashboard' : '/login'} replace />
+}
 
 export default function App() {
   return (
@@ -31,7 +36,8 @@ export default function App() {
           <Navbar />
           <AnimatePresence mode="wait">
             <Routes>
-              <Route path="/" element={<HomePage />} />
+              <Route path="/" element={<RootRedirect />} />
+              <Route path="/home" element={<HomePage />} />
               <Route path="/discover" element={<DiscoverPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/profile/:id" element={<ProfileDetailPage />} />

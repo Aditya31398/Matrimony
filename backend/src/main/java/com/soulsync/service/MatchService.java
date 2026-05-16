@@ -7,6 +7,7 @@ import com.soulsync.model.Profile;
 import com.soulsync.repository.MatchRepository;
 import com.soulsync.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,17 +69,25 @@ public class MatchService {
     }
 
     @Transactional
-    public MatchDTO accept(Long matchId) {
+    public MatchDTO accept(Long matchId, Long callerProfileId) {
         Match match = matchRepo.findById(matchId)
                 .orElseThrow(() -> new ResourceNotFoundException("Match", matchId));
+        // IDOR: only the receiver may accept
+        if (!match.getReceiverProfile().getId().equals(callerProfileId)) {
+            throw new AccessDeniedException("Not authorized to accept this match");
+        }
         match.setStatus(Match.Status.ACCEPTED);
         return MatchDTO.fromReceived(matchRepo.save(match));
     }
 
     @Transactional
-    public MatchDTO decline(Long matchId) {
+    public MatchDTO decline(Long matchId, Long callerProfileId) {
         Match match = matchRepo.findById(matchId)
                 .orElseThrow(() -> new ResourceNotFoundException("Match", matchId));
+        // IDOR: only the receiver may decline
+        if (!match.getReceiverProfile().getId().equals(callerProfileId)) {
+            throw new AccessDeniedException("Not authorized to decline this match");
+        }
         match.setStatus(Match.Status.DECLINED);
         return MatchDTO.fromReceived(matchRepo.save(match));
     }

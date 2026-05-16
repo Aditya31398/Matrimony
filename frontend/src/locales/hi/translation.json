@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "discover": "खोजें",
+    "matches": "मेल",
+    "stories": "कहानियां",
+    "messages": "संदेश",
+    "myProfile": "मेरी प्रोफ़ाइल",
+    "signIn": "साइन इन",
+    "signOut": "साइन आउट",
+    "getStarted": "शुरू करें",
+    "notifications": "सूचनाएं"
+  },
+  "footer": {
+    "tagline": "© 2024 {{name}}. {{tagline}}.",
+    "privacy": "गोपनीयता नीति",
+    "terms": "सेवा की शर्तें",
+    "safety": "सुरक्षा गाइड",
+    "stories": "सफलता की कहानियां",
+    "contact": "संपर्क करें"
+  },
+  "auth": {
+    "login": {
+      "title": "वापस स्वागत है",
+      "subtitle": "अपनी यात्रा जारी रखने के लिए साइन इन करें",
+      "email": "ईमेल पता",
+      "password": "पासवर्ड",
+      "submit": "साइन इन करें",
+      "noAccount": "खाता नहीं है?",
+      "register": "बनाएं",
+      "forgotPassword": "पासवर्ड भूल गए?"
+    },
+    "register": {
+      "title": "अपनी प्रोफ़ाइल बनाएं",
+      "subtitle": "अपना सही साथी खोजें",
+      "submit": "शुरू करें",
+      "hasAccount": "पहले से खाता है?",
+      "login": "साइन इन करें"
+    }
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "कुछ गलत हो गया",
+    "retry": "फिर कोशिश करें",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "edit": "संपादित करें",
+    "delete": "हटाएं",
+    "send": "भेजें",
+    "connect": "जुड़ें",
+    "accept": "स्वीकार करें",
+    "decline": "अस्वीकार करें",
+    "viewProfile": "प्रोफ़ाइल देखें",
+    "sendInterest": "रुचि भेजें",
+    "message": "संदेश",
+    "verified": "सत्यापित",
+    "premium": "प्रीमियम"
+  },
+  "discover": {
+    "title": "प्रोफ़ाइल खोजें",
+    "subtitle": "अपना सही साथी खोजें",
+    "noProfiles": "दिखाने के लिए और प्रोफ़ाइल नहीं",
+    "filters": "फ़िल्टर"
+  },
+  "dashboard": {
+    "title": "आपके मेल",
+    "pending": "लंबित",
+    "accepted": "स्वीकृत",
+    "declined": "अस्वीकृत",
+    "noMatches": "अभी तक कोई मेल नहीं"
+  },
+  "messages": {
+    "title": "संदेश",
+    "placeholder": "संदेश लिखें...",
+    "noConversations": "अभी तक कोई बातचीत नहीं",
+    "startConversation": "बातचीत शुरू करें"
+  },
+  "profile": {
+    "about": "परिचय",
+    "interests": "रुचियां",
+    "lifestyle": "जीवनशैली",
+    "lookingFor": "तलाश है",
+    "editProfile": "प्रोफ़ाइल संपादित करें",
+    "myProfile": "मेरी प्रोफ़ाइल",
+    "age": "{{age}} वर्ष",
+    "location": "{{city}}",
+    "profession": "{{profession}}"
+  }
+}

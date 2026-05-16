@@ -8,7 +8,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "success_stories")
+@Table(name = "success_stories", indexes = {
+    @Index(name = "idx_story_visible_created", columnList = "is_visible, created_at")
+})
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class SuccessStory {
 

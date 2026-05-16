@@ -13,7 +13,18 @@ import java.util.Optional;
 @Repository
 public interface ConversationRepository extends JpaRepository<Conversation, Long> {
 
-    @Query("SELECT DISTINCT c FROM Conversation c LEFT JOIN FETCH c.messages WHERE c.profile1 = :p OR c.profile2 = :p")
+    /**
+     * Fetches both participant profiles eagerly (eliminates N+1) and sorts by
+     * lastMessageAt descending so no in-memory sort is needed. Messages are
+     * NOT loaded here — use the denormalized fields + a separate unread COUNT.
+     */
+    @Query("""
+        SELECT c FROM Conversation c
+        JOIN FETCH c.profile1
+        JOIN FETCH c.profile2
+        WHERE c.profile1 = :p OR c.profile2 = :p
+        ORDER BY COALESCE(c.lastMessageAt, c.createdAt) DESC
+    """)
     List<Conversation> findByProfile(@Param("p") Profile p);
 
     @Query("""

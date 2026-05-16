@@ -1,20 +1,27 @@
 import { Link } from 'react-router-dom'
-
-const footerLinks = [
-  { label: 'Privacy Policy', to: '/' },
-  { label: 'Terms of Service', to: '/' },
-  { label: 'Safety Guide', to: '/' },
-  { label: 'Success Stories', to: '/' },
-  { label: 'Contact Us', to: '/' },
-]
+import { useTranslation } from 'react-i18next'
+import { useTenant } from '../../context/TenantContext'
 
 export default function Footer() {
+  const { t } = useTranslation()
+  const { name, tagline } = useTenant()
+
+  const footerLinks = [
+    { label: t('footer.privacy'), to: '/' },
+    { label: t('footer.terms'), to: '/' },
+    { label: t('footer.safety'), to: '/' },
+    { label: t('footer.stories'), to: '/' },
+    { label: t('footer.contact'), to: '/' },
+  ]
+
   return (
     <footer className="bg-slate-50 border-t border-slate-200 mt-auto pb-20 md:pb-0">
       <div className="max-w-[1280px] mx-auto py-12 px-8 flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="flex flex-col items-center md:items-start gap-1">
-          <span className="text-xl font-black tracking-tighter text-orange-600">SoulSync</span>
-          <p className="text-sm text-slate-500">© 2024 SoulSync Matrimony. Crafted for Connection.</p>
+          <span className="text-xl font-black tracking-tighter text-primary">{name}</span>
+          <p className="text-sm text-slate-500">
+            {t('footer.tagline', { name, tagline })}
+          </p>
         </div>
 
         <div className="flex flex-wrap justify-center gap-x-8 gap-y-2">
@@ -22,7 +29,7 @@ export default function Footer() {
             <Link
               key={label}
               to={to}
-              className="text-sm text-slate-500 hover:text-orange-500 transition-colors duration-200"
+              className="text-sm text-slate-500 hover:text-primary transition-colors duration-200"
             >
               {label}
             </Link>

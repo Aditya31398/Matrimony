@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "discover": "Discover",
+    "matches": "Matches",
+    "stories": "Stories",
+    "messages": "Messages",
+    "myProfile": "My Profile",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "getStarted": "Get Started",
+    "notifications": "Notifications"
+  },
+  "footer": {
+    "tagline": "© 2024 {{name}}. {{tagline}}.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "safety": "Safety Guide",
+    "stories": "Success Stories",
+    "contact": "Contact Us"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue your journey",
+      "email": "Email address",
+      "password": "Password",
+      "submit": "Sign In",
+      "noAccount": "Don't have an account?",
+      "register": "Create one",
+      "forgotPassword": "Forgot password?"
+    },
+    "register": {
+      "title": "Create your profile",
+      "subtitle": "Find your perfect match",
+      "submit": "Get Started",
+      "hasAccount": "Already have an account?",
+      "login": "Sign in"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "send": "Send",
+    "connect": "Connect",
+    "accept": "Accept",
+    "decline": "Decline",
+    "viewProfile": "View Profile",
+    "sendInterest": "Send Interest",
+    "message": "Message",
+    "verified": "Verified",
+    "premium": "Premium"
+  },
+  "discover": {
+    "title": "Discover Profiles",
+    "subtitle": "Find your perfect match",
+    "noProfiles": "No more profiles to show",
+    "filters": "Filters"
+  },
+  "dashboard": {
+    "title": "Your Matches",
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "declined": "Declined",
+    "noMatches": "No matches yet"
+  },
+  "messages": {
+    "title": "Messages",
+    "placeholder": "Type a message...",
+    "noConversations": "No conversations yet",
+    "startConversation": "Start a conversation"
+  },
+  "profile": {
+    "about": "About",
+    "interests": "Interests",
+    "lifestyle": "Lifestyle",
+    "lookingFor": "Looking For",
+    "editProfile": "Edit Profile",
+    "myProfile": "My Profile",
+    "age": "{{age}} years",
+    "location": "{{city}}",
+    "profession": "{{profession}}"
+  }
+}

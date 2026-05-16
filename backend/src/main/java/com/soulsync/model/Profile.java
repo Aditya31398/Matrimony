@@ -11,7 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "profiles")
+@Table(name = "profiles", indexes = {
+    @Index(name = "idx_profile_gender",          columnList = "gender"),
+    @Index(name = "idx_profile_city",            columnList = "city"),
+    @Index(name = "idx_profile_verified",        columnList = "is_verified"),
+    @Index(name = "idx_profile_premium_created", columnList = "is_premium, created_at"),
+    @Index(name = "idx_profile_looking_gender",  columnList = "looking_for_gender"),
+    @Index(name = "idx_profile_user",            columnList = "user_id")
+})
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Profile {
 

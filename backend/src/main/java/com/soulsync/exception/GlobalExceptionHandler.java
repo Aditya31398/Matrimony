@@ -38,8 +38,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArg(IllegalArgumentException ex, WebRequest request) {
+        // Sanitise message — never echo back user-supplied values (e.g. email addresses)
+        String safe = sanitise(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), request.getDescription(false)));
+                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), safe, request.getDescription(false)));
+    }
+
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(
+            org.springframework.security.access.AccessDeniedException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Access denied", request.getDescription(false)));
     }
 
     @ExceptionHandler(Exception.class)
@@ -47,6 +56,12 @@ public class GlobalExceptionHandler {
         log.error("Unexpected error", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse(500, "An unexpected error occurred", request.getDescription(false)));
+    }
+
+    /** Strip anything that looks like an email address or PII from error messages. */
+    private String sanitise(String message) {
+        if (message == null) return "Bad request";
+        return message.replaceAll("[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}", "[redacted]");
     }
 
     public record ErrorResponse(int status, String message, String path, LocalDateTime timestamp) {

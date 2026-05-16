@@ -8,6 +8,7 @@ export function useProfiles(params) {
   return useQuery({
     queryKey: [PROFILES_KEY, params],
     queryFn: () => profileService.getAll(params),
+    staleTime: 2 * 60 * 1000, // 2 min — profile list changes slowly
   })
 }
 
@@ -15,6 +16,7 @@ export function useTopPicks() {
   return useQuery({
     queryKey: [TOP_PICKS_KEY],
     queryFn: profileService.getTopPicks,
+    staleTime: 5 * 60 * 1000, // 5 min — matches the server-side cache TTL
   })
 }
 
@@ -38,6 +40,7 @@ export function useMyProfile() {
   return useQuery({
     queryKey: ['my-profile'],
     queryFn: profileService.getMe,
+    staleTime: 5 * 60 * 1000,
   })
 }
 
@@ -45,5 +48,6 @@ export function useViewers() {
   return useQuery({
     queryKey: ['viewers'],
     queryFn: profileService.getViewers,
+    staleTime: 2 * 60 * 1000,
   })
 }

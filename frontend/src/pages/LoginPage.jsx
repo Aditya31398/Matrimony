@@ -106,6 +106,7 @@ export default function LoginPage() {
                 onChange={(e) => set('email', e.target.value)}
                 className="w-full bg-surface-container-low border-2 border-transparent focus:border-primary-container rounded-2xl pl-12 pr-5 py-4 text-base font-medium text-on-surface outline-none transition-all"
                 autoComplete="email"
+                maxLength={150}
               />
             </div>
           </div>
@@ -121,6 +122,7 @@ export default function LoginPage() {
                 onChange={(e) => set('password', e.target.value)}
                 className="w-full bg-surface-container-low border-2 border-transparent focus:border-primary-container rounded-2xl pl-12 pr-5 py-4 text-base font-medium text-on-surface outline-none transition-all"
                 autoComplete="current-password"
+                maxLength={128}
               />
             </div>
           </div>
@@ -175,9 +177,6 @@ export default function LoginPage() {
             <Link to="/register" className="text-primary font-bold hover:underline">Create one</Link>
           </p>
 
-          <div className="border-t border-slate-100 pt-4">
-            <p className="text-xs text-center text-slate-400 font-medium">Seed credentials: ananya.sharma@email.com / Test@1234</p>
-          </div>
         </form>
       </div>
     </motion.div>

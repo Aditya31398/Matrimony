@@ -7,7 +7,8 @@ export function useConversations() {
   return useQuery({
     queryKey: [CONVERSATIONS_KEY],
     queryFn: messageService.getConversations,
-    refetchInterval: 3000,
+    refetchInterval: 30_000, // poll every 30 s (was 3 s — 10× fewer requests)
+    refetchIntervalInBackground: false,
   })
 }
 
@@ -16,7 +17,8 @@ export function useMessages(conversationId) {
     queryKey: [CONVERSATIONS_KEY, conversationId, 'messages'],
     queryFn: () => messageService.getMessages(conversationId),
     enabled: !!conversationId,
-    refetchInterval: 3000,
+    refetchInterval: 30_000,
+    refetchIntervalInBackground: false,
   })
 }
 
@@ -25,6 +27,7 @@ export function useIcebreakers(conversationId) {
     queryKey: [CONVERSATIONS_KEY, conversationId, 'icebreakers'],
     queryFn: () => messageService.getIcebreakers(conversationId),
     enabled: !!conversationId,
+    staleTime: Infinity, // icebreakers are static
   })
 }
 

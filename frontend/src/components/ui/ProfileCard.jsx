@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { VerifiedBadge, InterestTag } from './Badge'
@@ -8,7 +8,7 @@ import { formatLastSeen } from '../../utils/lastSeen'
 const PLACEHOLDER =
   'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&q=80'
 
-export default function ProfileCard({ profile, variant = 'grid' }) {
+const ProfileCard = memo(function ProfileCard({ profile, variant = 'grid' }) {
   const [liked, setLiked] = useState(false)
   const connect = useConnect()
   const shortlist = useShortlist()
@@ -145,4 +145,6 @@ export default function ProfileCard({ profile, variant = 'grid' }) {
       </div>
     </motion.div>
   )
-}
+})
+
+export default ProfileCard

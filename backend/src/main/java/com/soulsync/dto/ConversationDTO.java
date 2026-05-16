@@ -1,12 +1,8 @@
 package com.soulsync.dto;
 
 import com.soulsync.model.Conversation;
-import com.soulsync.model.Message;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.Comparator;
-import java.util.List;
 
 @Data
 @Builder
@@ -18,29 +14,16 @@ public class ConversationDTO {
     private Boolean isOnline;
     private Integer unreadCount;
 
-    public static ConversationDTO from(Conversation conv, Long viewerProfileId) {
+    /**
+     * Build a DTO from denormalized conversation fields + a pre-computed unread count.
+     * Does NOT access conv.getMessages(), so no N+1 or full message load.
+     */
+    public static ConversationDTO from(Conversation conv, Long viewerProfileId, int unreadCount) {
         boolean viewerIsP1 = conv.getProfile1().getId().equals(viewerProfileId);
         var other = viewerIsP1 ? conv.getProfile2() : conv.getProfile1();
 
-        List<Message> msgs = conv.getMessages();
-        String lastMsg = "";
-        String lastTime = "";
-        int unread = 0;
-
-        if (!msgs.isEmpty()) {
-            Message latest = msgs.stream()
-                    .max(Comparator.comparing(Message::getSentAt))
-                    .orElse(null);
-            if (latest != null) {
-                lastMsg = latest.getContent().length() > 60
-                        ? latest.getContent().substring(0, 57) + "…"
-                        : latest.getContent();
-                lastTime = "Just now";
-                unread = (int) msgs.stream()
-                        .filter(m -> !m.getSenderProfile().getId().equals(viewerProfileId) && !m.getIsRead())
-                        .count();
-            }
-        }
+        String lastMsg  = conv.getLastMessagePreview() != null ? conv.getLastMessagePreview() : "";
+        String lastTime = conv.getLastMessageAt() != null ? "Just now" : "";
 
         ProfileSummaryDTO otherDTO = ProfileSummaryDTO.from(other);
         return ConversationDTO.builder()
@@ -49,7 +32,12 @@ public class ConversationDTO {
                 .lastMessage(lastMsg)
                 .lastMessageTime(lastTime)
                 .isOnline(Boolean.TRUE.equals(otherDTO.getIsOnline()))
-                .unreadCount(unread)
+                .unreadCount(unreadCount)
                 .build();
+    }
+
+    /** Convenience overload for newly created conversations (no messages yet). */
+    public static ConversationDTO from(Conversation conv, Long viewerProfileId) {
+        return from(conv, viewerProfileId, 0);
     }
 }

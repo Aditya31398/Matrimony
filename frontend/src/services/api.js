@@ -15,6 +15,7 @@ api.interceptors.request.use(
     if (token) config.headers.Authorization = `Bearer ${token}`
     const profileId = localStorage.getItem('soulsync_profile_id')
     if (profileId) config.headers['X-Profile-Id'] = profileId
+    config.headers['X-Tenant-ID'] = window.__TENANT_ID__ ?? 'soulsync'
     return config
   },
   (error) => Promise.reject(error)

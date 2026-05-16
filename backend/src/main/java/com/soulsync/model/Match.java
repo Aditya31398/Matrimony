@@ -7,10 +7,22 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+@NamedEntityGraph(
+    name = "Match.withProfiles",
+    attributeNodes = {
+        @NamedAttributeNode("senderProfile"),
+        @NamedAttributeNode("receiverProfile")
+    }
+)
 @Entity
 @Table(
     name = "matches",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"sender_profile_id", "receiver_profile_id"})
+    uniqueConstraints = @UniqueConstraint(columnNames = {"sender_profile_id", "receiver_profile_id"}),
+    indexes = {
+        @Index(name = "idx_match_receiver_status", columnList = "receiver_profile_id, status"),
+        @Index(name = "idx_match_sender",          columnList = "sender_profile_id"),
+        @Index(name = "idx_match_status",          columnList = "status")
+    }
 )
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Match {

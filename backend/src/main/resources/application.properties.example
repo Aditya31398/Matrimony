@@ -9,12 +9,22 @@ spring.datasource.password=YOUR_DB_PASSWORD
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
 # ── Connection pool (HikariCP) ──────────────────────────────────────────
-spring.datasource.hikari.maximum-pool-size=10
-spring.datasource.hikari.minimum-idle=2
+spring.datasource.hikari.maximum-pool-size=20
+spring.datasource.hikari.minimum-idle=5
 spring.datasource.hikari.idle-timeout=30000
 spring.datasource.hikari.connection-timeout=20000
 
+# ── HTTP Compression ────────────────────────────────────────────────────
+server.compression.enabled=true
+server.compression.mime-types=application/json,application/xml,text/html,text/plain
+server.compression.min-response-size=1024
+
+# ── Cache (Caffeine) ────────────────────────────────────────────────────
+spring.cache.type=caffeine
+spring.cache.caffeine.spec=maximumSize=500,expireAfterWrite=300s
+
 # ── JPA / Hibernate ─────────────────────────────────────────────────────
+# Use 'validate' in production to catch schema drift; keep 'update' during active development
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=false
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
@@ -45,6 +55,12 @@ cloudinary.cloud-name=YOUR_CLOUD_NAME
 cloudinary.api-key=YOUR_API_KEY
 cloudinary.api-secret=YOUR_API_SECRET
 
+# ── JWT ─────────────────────────────────────────────────────────────────
+# Must be at least 32 characters. Use: openssl rand -hex 32
+app.jwt.secret=CHANGE_THIS_TO_A_RANDOM_64_CHAR_SECRET_DO_NOT_USE_THIS_VALUE
+app.jwt.expiration-ms=86400000
+
 # ── App config ───────────────────────────────────────────────────────────
 app.mail.from=YOUR_EMAIL@example.com
 app.mail.from-name=SoulSync
+app.cors.allowed-origins=https://yourdomain.com

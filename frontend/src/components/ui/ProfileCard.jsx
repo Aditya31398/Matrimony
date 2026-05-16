@@ -1,34 +1,27 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { VerifiedBadge, InterestTag } from './Badge'
 import { useConnect, useShortlist } from '../../hooks/useMatches'
 import { formatLastSeen } from '../../utils/lastSeen'
+import { cloudinaryUrl, cloudinarySrcSet } from '../../utils/cloudinary'
 
 const PLACEHOLDER =
   'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&q=80'
 
-export default function ProfileCard({ profile, variant = 'grid' }) {
+const ProfileCard = memo(function ProfileCard({ profile, variant = 'grid' }) {
   const [liked, setLiked] = useState(false)
-  const connect = useConnect()
+  const connect   = useConnect()
   const shortlist = useShortlist()
 
   if (!profile) return null
 
-  const {
-    id,
-    firstName,
-    age,
-    profession,
-    city,
-    photoUrl,
-    isVerified,
-    isOnline,
-    lastSeenAt,
-    interests = [],
-  } = profile
-
+  const { id, firstName, age, profession, city, photoUrl, isVerified, isOnline, lastSeenAt, interests = [] } = profile
   const lastSeenLabel = formatLastSeen(lastSeenAt, isOnline)
+
+  // Serve the right Cloudinary size; fall back to original URL for non-Cloudinary sources
+  const imgSrc    = cloudinaryUrl(photoUrl || PLACEHOLDER, 'w_600,q_auto,f_auto')
+  const imgSrcSet = cloudinarySrcSet(photoUrl)
 
   if (variant === 'compact') {
     return (
@@ -39,10 +32,13 @@ export default function ProfileCard({ profile, variant = 'grid' }) {
         <Link to={`/profile/${id}`}>
           <div className="aspect-[4/5] relative overflow-hidden">
             <img
-              src={photoUrl || PLACEHOLDER}
+              src={imgSrc}
+              srcSet={imgSrcSet}
+              sizes="(max-width: 768px) 100vw, 300px"
               alt={firstName}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               loading="lazy"
+              decoding="async"
             />
             {isVerified && (
               <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1">
@@ -76,10 +72,8 @@ export default function ProfileCard({ profile, variant = 'grid' }) {
               liked ? 'bg-orange-50 border-primary text-primary' : 'border-outline-variant text-slate-400 hover:bg-orange-50 hover:text-primary'
             }`}
           >
-            <span
-              className="material-symbols-outlined text-[20px]"
-              style={liked ? { fontVariationSettings: "'FILL' 1" } : {}}
-            >
+            <span className="material-symbols-outlined text-[20px]"
+              style={liked ? { fontVariationSettings: "'FILL' 1" } : {}}>
               favorite
             </span>
           </button>
@@ -97,20 +91,21 @@ export default function ProfileCard({ profile, variant = 'grid' }) {
       <Link to={`/profile/${id}`}>
         <div className="relative aspect-[3/4] overflow-hidden">
           <img
-            src={photoUrl || PLACEHOLDER}
+            src={imgSrc}
+            srcSet={imgSrcSet}
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
             alt={firstName}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
             loading="lazy"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-70" />
           <button
             onClick={(e) => { e.preventDefault(); setLiked(!liked) }}
             className="absolute top-4 right-4 bg-white/20 backdrop-blur-md rounded-full p-2 text-white hover:bg-white hover:text-primary transition-colors"
           >
-            <span
-              className="material-symbols-outlined text-[20px]"
-              style={liked ? { fontVariationSettings: "'FILL' 1" } : {}}
-            >
+            <span className="material-symbols-outlined text-[20px]"
+              style={liked ? { fontVariationSettings: "'FILL' 1" } : {}}>
               favorite
             </span>
           </button>
@@ -145,4 +140,6 @@ export default function ProfileCard({ profile, variant = 'grid' }) {
       </div>
     </motion.div>
   )
-}
+})
+
+export default ProfileCard

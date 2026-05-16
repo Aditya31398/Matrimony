@@ -21,7 +21,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     @Query("""
         SELECT p FROM Profile p
         WHERE (:city IS NULL OR p.city = :city)
-          AND (:education IS NULL OR p.education LIKE %:education%)
+          AND (:education IS NULL OR p.education LIKE CONCAT(:education, '%'))
           AND (:gender IS NULL OR CAST(p.gender AS string) = :gender)
         ORDER BY p.createdAt DESC
     """)
@@ -35,7 +35,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     @Query("""
         SELECT p FROM Profile p
         WHERE (:excludeId IS NULL OR p.id != :excludeId)
-          AND (:education IS NULL OR p.education LIKE %:education%)
+          AND (:education IS NULL OR p.education LIKE CONCAT(:education, '%'))
           AND (:gender IS NULL OR CAST(p.gender AS string) = :gender)
           AND (:verified = false OR p.isVerified = true)
         ORDER BY p.isPremium DESC, p.createdAt DESC

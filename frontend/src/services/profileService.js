@@ -1,6 +1,7 @@
 import api from './api'
 
 export const profileService = {
+  // Returns Spring Page object: { content, number, last, totalElements, … }
   getAll: (params = {}) =>
     api.get('/profiles', { params }).then((r) => r.data),
 

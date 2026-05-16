@@ -13,6 +13,9 @@ import com.soulsync.repository.ProfileViewRepository;
 import com.soulsync.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,12 +39,16 @@ public class ProfileService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
+    // Self-injection via @Lazy proxy so @Cacheable on resolveGenderFilter goes through AOP
+    @Autowired @Lazy
+    private ProfileService self;
+
     @Transactional(readOnly = true)
     public List<ProfileSummaryDTO> getAll(int page, int size, String education, String gender, boolean verified, Long excludeId) {
         Pageable pageable = PageRequest.of(page, size);
         String edu = normalizeEducation(education);
         String gen = (gender == null || gender.isBlank())
-                ? resolveGenderFilter(excludeId)
+                ? self.resolveGenderFilter(excludeId)
                 : gender;
         return profileRepo.findWithFilters(excludeId, edu, gen, verified, pageable)
                 .map(ProfileSummaryDTO::from)
@@ -55,10 +62,11 @@ public class ProfileService {
                 .orElseThrow(() -> new ResourceNotFoundException("Profile", id));
     }
 
+    @Cacheable(value = "topPicks", key = "#excludeId")
     @Transactional(readOnly = true)
     public List<ProfileSummaryDTO> getTopPicks(Long excludeId) {
         Pageable pageable = PageRequest.of(0, 8, Sort.by("isPremium").descending().and(Sort.by("createdAt").descending()));
-        String genderFilter = resolveGenderFilter(excludeId);
+        String genderFilter = self.resolveGenderFilter(excludeId);
         return (excludeId != null
                 ? profileRepo.findTopPicks(excludeId, genderFilter, pageable)
                 : profileRepo.findTopPicks(genderFilter, pageable))
@@ -145,13 +153,14 @@ public class ProfileService {
         }
 
         String otp = String.format("%06d", new SecureRandom().nextInt(1_000_000));
+        if (req.getPassword() == null || req.getPassword().isBlank()) {
+            throw new IllegalArgumentException("Password is required");
+        }
         User user = User.builder()
                 .email(req.getEmail())
-                .passwordHash(req.getPassword() != null
-                        ? passwordEncoder.encode(req.getPassword())
-                        : passwordEncoder.encode("default123"))
+                .passwordHash(passwordEncoder.encode(req.getPassword()))
                 .emailVerified(false)
-                .verificationToken(otp)
+                .verificationToken(passwordEncoder.encode(otp)) // store hashed OTP
                 .tokenExpiresAt(LocalDateTime.now().plusMinutes(10))
                 .build();
         user = userRepo.save(user);
@@ -186,7 +195,9 @@ public class ProfileService {
         if (req.getDateOfBirth() != null && !req.getDateOfBirth().isBlank()) {
             try {
                 profile.setDateOfBirth(LocalDate.parse(req.getDateOfBirth()));
-            } catch (Exception ignored) {}
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Invalid date of birth format. Expected yyyy-MM-dd");
+            }
         }
 
         if (req.getGender() != null) {
@@ -204,7 +215,8 @@ public class ProfileService {
         return saved;
     }
 
-    private String resolveGenderFilter(Long profileId) {
+    @Cacheable(value = "genderFilter", key = "#profileId")
+    public String resolveGenderFilter(Long profileId) {
         if (profileId == null) return null;
         return profileRepo.findById(profileId).map(p -> {
             String looking = p.getLookingForGender();

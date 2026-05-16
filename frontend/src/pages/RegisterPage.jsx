@@ -516,10 +516,14 @@ function Field({ label, children }) {
   )
 }
 
-function FormInput({ type = 'text', placeholder, value, onChange }) {
+function FormInput({ type = 'text', placeholder, value, onChange, maxLength }) {
+  const resolvedMax = maxLength ?? (
+    type === 'email' ? 150 : type === 'password' ? 128 : type === 'number' ? undefined : 200
+  )
   return (
     <input type={type} placeholder={placeholder} value={value}
       onChange={(e) => onChange(e.target.value)}
+      maxLength={resolvedMax}
       className="w-full bg-white border-2 border-transparent focus:border-primary-container rounded-[24px] px-7 py-5 text-lg font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none placeholder:text-surface-variant"
     />
   )

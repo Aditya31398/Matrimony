@@ -7,7 +7,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "profile_views",
-       uniqueConstraints = @UniqueConstraint(name = "uq_viewer_viewed", columnNames = {"viewer_id", "viewed_id"}))
+       uniqueConstraints = @UniqueConstraint(name = "uq_viewer_viewed", columnNames = {"viewer_id", "viewed_id"}),
+       indexes = {
+           @Index(name = "idx_view_viewed_at", columnList = "viewed_id, viewed_at")
+       })
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class ProfileView {
 

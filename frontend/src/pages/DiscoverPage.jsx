@@ -1,42 +1,56 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
 import ProfileCard from '../components/ui/ProfileCard'
 import { SkeletonProfileCard } from '../components/ui/SkeletonCard'
-import { useProfiles } from '../hooks/useProfiles'
+import { useInfiniteProfiles } from '../hooks/useProfiles'
 
 const FILTER_CHIPS = [
-  { label: 'For You', icon: 'colors_spark', value: 'for_you' },
-  { label: 'Recent', icon: 'schedule', value: 'recent' },
-  { label: 'Near Me', icon: 'near_me', value: 'near_me' },
-  { label: 'Verified', icon: 'verified', value: 'verified' },
-  { label: 'Shared Interests', icon: 'interests', value: 'interests' },
+  { label: 'For You',          icon: 'colors_spark', value: 'for_you'   },
+  { label: 'Recent',           icon: 'schedule',     value: 'recent'    },
+  { label: 'Near Me',          icon: 'near_me',      value: 'near_me'   },
+  { label: 'Verified',         icon: 'verified',     value: 'verified'  },
+  { label: 'Shared Interests', icon: 'interests',    value: 'interests' },
 ]
 
 const EDUCATION_OPTIONS = ['Any Education', 'Masters Degree', 'PhD / Doctorate', 'Bachelors Degree']
 
 const FALLBACK_PROFILES = [
-  { id: 1, firstName: 'Ananya', age: 28, profession: 'Product Designer', city: 'Mumbai', isVerified: true, photoUrl: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&q=80', interests: ['Art', 'Travel'] },
-  { id: 2, firstName: 'Rohan', age: 31, profession: 'Software Architect', city: 'Bangalore', isVerified: false, photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80', interests: ['Hiking', 'Tech'] },
-  { id: 3, firstName: 'Meera', age: 27, profession: 'Pediatrician', city: 'Delhi', isVerified: true, photoUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&q=80', interests: ['Yoga', 'Music'] },
-  { id: 4, firstName: 'Arjun', age: 33, profession: 'Creative Director', city: 'Pune', isVerified: true, photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&q=80', interests: ['Photo', 'Design'] },
-  { id: 5, firstName: 'Ishita', age: 26, profession: 'UX Researcher', city: 'Chennai', isVerified: true, photoUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&q=80', interests: ['Design', 'Poetry'] },
-  { id: 6, firstName: 'Kabir', age: 30, profession: 'Fitness Lead', city: 'Delhi', isVerified: false, photoUrl: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=600&q=80', interests: ['Sports', 'Travel'] },
+  { id: 1, firstName: 'Ananya', age: 28, profession: 'Product Designer',   city: 'Mumbai',    isVerified: true,  photoUrl: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&q=80', interests: ['Art', 'Travel'] },
+  { id: 2, firstName: 'Rohan',  age: 31, profession: 'Software Architect', city: 'Bangalore', isVerified: false, photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80', interests: ['Hiking', 'Tech'] },
+  { id: 3, firstName: 'Meera',  age: 27, profession: 'Pediatrician',       city: 'Delhi',     isVerified: true,  photoUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&q=80', interests: ['Yoga', 'Music'] },
+  { id: 4, firstName: 'Arjun',  age: 33, profession: 'Creative Director',  city: 'Pune',      isVerified: true,  photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&q=80', interests: ['Photo', 'Design'] },
+  { id: 5, firstName: 'Ishita', age: 26, profession: 'UX Researcher',      city: 'Chennai',   isVerified: true,  photoUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&q=80', interests: ['Design', 'Poetry'] },
+  { id: 6, firstName: 'Kabir',  age: 30, profession: 'Fitness Lead',       city: 'Delhi',     isVerified: false, photoUrl: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=600&q=80', interests: ['Sports', 'Travel'] },
 ]
 
 export default function DiscoverPage() {
   const [activeChip, setActiveChip] = useState('for_you')
-  const [education, setEducation] = useState('Any Education')
-  const [distance, setDistance] = useState(50)
+  const [education,  setEducation]  = useState('Any Education')
+  const [distance,   setDistance]   = useState(50)
 
   const educationParam = education === 'Any Education' ? undefined : education
-  const verifiedParam = activeChip === 'verified'
+  const verifiedParam  = activeChip === 'verified' || undefined
 
-  const { data, isLoading, isError } = useProfiles({
-    education: educationParam,
-    verified: verifiedParam || undefined,
-  })
+  const {
+    data,
+    isLoading,
+    isError,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteProfiles({ education: educationParam, verified: verifiedParam })
 
-  const profiles = (Array.isArray(data) ? data : data?.content) ?? (isError ? FALLBACK_PROFILES : null)
+  // Sentinel div that triggers next-page fetch when it scrolls into view
+  const { ref: sentinelRef, inView } = useInView({ threshold: 0.1 })
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) fetchNextPage()
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
+
+  // Flatten all loaded pages into a single profile list
+  const profiles = data
+    ? data.pages.flatMap((page) => page?.content ?? (Array.isArray(page) ? page : []))
+    : (isError ? FALLBACK_PROFILES : null)
 
   return (
     <motion.main
@@ -105,13 +119,27 @@ export default function DiscoverPage() {
             {[...Array(6)].map((_, i) => <SkeletonProfileCard key={i} />)}
           </div>
         ) : profiles && profiles.length > 0 ? (
-          <motion.div key={activeChip + education}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-            {profiles.map((p) => <ProfileCard key={p.id} profile={p} variant="grid" />)}
-          </motion.div>
+          <>
+            <motion.div
+              key={activeChip + education}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"
+            >
+              {profiles.map((p) => <ProfileCard key={p.id} profile={p} variant="grid" />)}
+            </motion.div>
+
+            {/* Infinite scroll sentinel */}
+            <div ref={sentinelRef} className="h-8 mt-6 flex items-center justify-center">
+              {isFetchingNextPage && (
+                <div className="w-8 h-8 border-4 border-orange-100 border-t-primary rounded-full animate-spin" />
+              )}
+              {!hasNextPage && profiles.length > 6 && (
+                <p className="text-sm text-on-surface-variant">You've seen all profiles</p>
+              )}
+            </div>
+          </>
         ) : (
           <div className="flex flex-col items-center justify-center py-24 gap-4 text-on-surface-variant">
             <span className="material-symbols-outlined text-6xl opacity-30">search_off</span>

@@ -47,6 +47,8 @@ public class SecurityConfig {
                 ))
             )
             .authorizeHttpRequests(auth -> auth
+                // WebSocket handshake (JWT validated by WebSocketAuthInterceptor on STOMP CONNECT)
+                .requestMatchers("/ws/**").permitAll()
                 // Public auth endpoints
                 .requestMatchers(
                     "/api/auth/login",

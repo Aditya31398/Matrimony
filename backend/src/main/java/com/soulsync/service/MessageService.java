@@ -10,6 +10,7 @@ import com.soulsync.repository.ConversationRepository;
 import com.soulsync.repository.MessageRepository;
 import com.soulsync.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ public class MessageService {
     private final ConversationRepository convRepo;
     private final MessageRepository msgRepo;
     private final ProfileRepository profileRepo;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Transactional(readOnly = true)
     public List<ConversationDTO> getConversations(Long profileId) {
@@ -64,14 +66,25 @@ public class MessageService {
                 .build();
         msg = msgRepo.save(msg);
 
-        // Update denormalized last-message fields so getConversations() never needs to load messages
+        // Denormalized fields — keep conversation list sorted without loading all messages
         String preview = content.length() > 80 ? content.substring(0, 77) + "…" : content;
         conv.setLastMessageAt(msg.getSentAt());
         conv.setLastMessagePreview(preview);
         conv.setLastSenderId(senderProfileId);
         convRepo.save(conv);
 
-        return MessageDTO.from(msg, senderProfileId);
+        MessageDTO dto = MessageDTO.from(msg, senderProfileId);
+
+        // Push new message to all clients watching this conversation (real-time, no polling)
+        messagingTemplate.convertAndSend("/topic/conversation/" + conversationId, dto);
+
+        // Notify both participants' inbox feeds so their conversation list refreshes
+        messagingTemplate.convertAndSend("/topic/inbox/" + conv.getProfile1().getId(),
+                Map.of("type", "new_message", "conversationId", conversationId));
+        messagingTemplate.convertAndSend("/topic/inbox/" + conv.getProfile2().getId(),
+                Map.of("type", "new_message", "conversationId", conversationId));
+
+        return dto;
     }
 
     @Transactional
@@ -84,7 +97,6 @@ public class MessageService {
         return ConversationDTO.from(conv, profileId1, 0);
     }
 
-    /** Asserts that the given profile is a participant; throws 403 otherwise. */
     public void assertParticipant(Long conversationId, Long profileId) {
         Conversation conv = convRepo.findById(conversationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Conversation", conversationId));
@@ -108,9 +120,7 @@ public class MessageService {
     private void assertParticipant(Conversation conv, Long profileId) {
         boolean isParticipant = conv.getProfile1().getId().equals(profileId)
                 || conv.getProfile2().getId().equals(profileId);
-        if (!isParticipant) {
-            throw new AccessDeniedException("Not a participant in this conversation");
-        }
+        if (!isParticipant) throw new AccessDeniedException("Not a participant in this conversation");
     }
 
     private Profile getProfileOrThrow(Long id) {

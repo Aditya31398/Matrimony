@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import MessageItem from '../components/ui/MessageItem'
 import { useConversations, useMessages, useIcebreakers, useSendMessage } from '../hooks/useMessages'
+import { useChat } from '../hooks/useChat'
+import { useAuth } from '../context/AuthContext'
 import { formatLastSeen } from '../utils/lastSeen'
 import toast from 'react-hot-toast'
 
@@ -16,13 +18,16 @@ const FALLBACK_MSGS = [
 ]
 
 const FALLBACK_ICEBREAKERS = [
-  { id: 1, topic: 'Shared Interests', prompt: 'What\'s something you\'re genuinely passionate about that most people don\'t know?', featured: true },
-  { id: 2, topic: 'Travel', prompt: 'What\'s the most memorable trip you\'ve ever taken and why?', featured: false },
+  { id: 1, topic: 'Shared Interests', prompt: "What's something you're genuinely passionate about that most people don't know?", featured: true },
+  { id: 2, topic: 'Travel', prompt: "What's the most memorable trip you've ever taken and why?", featured: false },
   { id: 3, topic: 'Lifestyle', prompt: 'Morning person or night owl? What does your ideal weekend look like?', featured: false },
 ]
 
 export default function MessagesPage() {
   const { conversationId } = useParams()
+  const { auth } = useAuth()
+  const myProfileId = auth?.profileId
+
   const [searchQuery, setSearchQuery] = useState('')
   const [text, setText] = useState('')
   const bottomRef = useRef(null)
@@ -30,7 +35,6 @@ export default function MessagesPage() {
   const { data: convs, isLoading: convLoading } = useConversations()
   const conversations = convs ?? FALLBACK_CONVS
 
-  // Derive active conversation: URL param → first loaded conv → '1'
   const [activeConv, setActiveConv] = useState(() => conversationId ?? null)
   useEffect(() => {
     if (!activeConv && conversations.length > 0) {
@@ -39,6 +43,9 @@ export default function MessagesPage() {
   }, [conversations, activeConv])
 
   const effectiveConvId = activeConv ?? (conversations[0]?.id ? String(conversations[0].id) : null)
+
+  // Real-time WebSocket — replaces all polling for the active conversation
+  useChat(effectiveConvId, myProfileId)
 
   const { data: msgs, isLoading: msgsLoading } = useMessages(effectiveConvId)
   const { data: icebreakers } = useIcebreakers(effectiveConvId)
@@ -132,6 +139,7 @@ export default function MessagesPage() {
                 src={activeProfile?.photoUrl ?? 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&q=80'}
                 alt={activeProfile?.firstName ?? 'Chat'}
                 className="w-12 h-12 rounded-full object-cover"
+                loading="lazy"
               />
               {activeIsOnline && (
                 <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />
@@ -196,7 +204,9 @@ export default function MessagesPage() {
                 className={`flex gap-3 max-w-[80%] ${msg.isOwn ? 'self-end flex-row-reverse' : ''}`}>
                 {!msg.isOwn && (
                   <img src={activeProfile?.photoUrl ?? ''} alt=""
-                    className="w-8 h-8 rounded-full object-cover flex-shrink-0 self-end" />
+                    className="w-8 h-8 rounded-full object-cover flex-shrink-0 self-end"
+                    loading="lazy"
+                  />
                 )}
                 <div className={`space-y-1 flex flex-col ${msg.isOwn ? 'items-end' : ''}`}>
                   <div

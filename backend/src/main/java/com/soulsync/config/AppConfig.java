@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.cache.caffeine.CaffeineCache;
+import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
@@ -69,11 +71,20 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean
     public CacheManager cacheManager() {
-        CaffeineCacheManager manager = new CaffeineCacheManager("stories", "topPicks");
-        manager.setCaffeine(Caffeine.newBuilder()
-                .expireAfterWrite(5, TimeUnit.MINUTES)
-                .maximumSize(500));
-        return manager;
+        // Each cache has its own TTL — stories rarely change (10 min), topPicks (5 min),
+        // genderFilter per-user preference almost never changes in a session (30 min)
+        SimpleCacheManager mgr = new SimpleCacheManager();
+        mgr.setCaches(List.of(
+                buildCache("stories",      10, TimeUnit.MINUTES),
+                buildCache("topPicks",      5, TimeUnit.MINUTES),
+                buildCache("genderFilter", 30, TimeUnit.MINUTES)
+        ));
+        return mgr;
+    }
+
+    private static CaffeineCache buildCache(String name, long duration, TimeUnit unit) {
+        return new CaffeineCache(name,
+                Caffeine.newBuilder().expireAfterWrite(duration, unit).maximumSize(500).build());
     }
 
     @Override

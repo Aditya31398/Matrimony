@@ -1,7 +1,12 @@
 import axios from 'axios'
 
+// VITE_API_BASE_URL should be the backend origin (no trailing slash, no /api).
+// Local dev:  set to http://localhost:8080 in .env  (proxy not needed)
+// Production: set to https://your-app.onrender.com in Vercel env vars
+const baseURL = `${(import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/+$/, '')}/api`
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseURL,
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
@@ -13,9 +18,14 @@ api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('soulsync_token')
     if (token) config.headers.Authorization = `Bearer ${token}`
-    const profileId = localStorage.getItem('soulsync_profile_id')
-    if (profileId) config.headers['X-Profile-Id'] = profileId
     config.headers['X-Tenant-ID'] = window.__TENANT_ID__ ?? 'soulsync'
+
+    // For FormData (file uploads) let axios/browser set Content-Type with
+    // the correct multipart boundary — never force application/json.
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type']
+    }
+
     return config
   },
   (error) => Promise.reject(error)

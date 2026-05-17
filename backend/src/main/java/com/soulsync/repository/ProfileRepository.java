@@ -38,13 +38,16 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
           AND (:education IS NULL OR p.education LIKE CONCAT(:education, '%'))
           AND (:gender IS NULL OR CAST(p.gender AS string) = :gender)
           AND (:verified = false OR p.isVerified = true)
-        ORDER BY p.isPremium DESC, p.createdAt DESC
+          AND (:city IS NULL OR p.city = :city)
+          AND (:interest IS NULL OR p.interests LIKE CONCAT('%', :interest, '%'))
     """)
     Page<Profile> findWithFilters(
             @Param("excludeId") Long excludeId,
             @Param("education") String education,
             @Param("gender") String gender,
             @Param("verified") boolean verified,
+            @Param("city") String city,
+            @Param("interest") String interest,
             Pageable pageable
     );
 

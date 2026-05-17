@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 
 @RestController
@@ -22,15 +24,18 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @GetMapping
-    public ResponseEntity<List<ProfileSummaryDTO>> getAll(
+    public ResponseEntity<Page<ProfileSummaryDTO>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String education,
             @RequestParam(required = false) String gender,
             @RequestParam(defaultValue = "false") boolean verified,
+            @RequestParam(required = false) String sort,     // "recent" | null (default = recommended)
+            @RequestParam(required = false) String city,     // filter by exact city (near_me chip)
+            @RequestParam(required = false) String interest,  // filter by shared interest tag
             HttpServletRequest request) {
         Long profileId = (Long) request.getAttribute("profileId");
-        return ResponseEntity.ok(profileService.getAll(page, size, education, gender, verified, profileId));
+        return ResponseEntity.ok(profileService.getAll(page, size, education, gender, verified, sort, city, interest, profileId));
     }
 
     @GetMapping("/me")

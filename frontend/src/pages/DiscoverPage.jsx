@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import ProfileCard from '../components/ui/ProfileCard'
 import { SkeletonProfileCard } from '../components/ui/SkeletonCard'
-import { useInfiniteProfiles } from '../hooks/useProfiles'
+import { useInfiniteProfiles, useMyProfile } from '../hooks/useProfiles'
 
 const FILTER_CHIPS = [
   { label: 'For You',          icon: 'colors_spark', value: 'for_you'   },
@@ -29,8 +29,32 @@ export default function DiscoverPage() {
   const [education,  setEducation]  = useState('Any Education')
   const [distance,   setDistance]   = useState(50)
 
+  // Own profile — used to resolve city (near_me) and interests (shared interests)
+  const { data: myProfile } = useMyProfile()
+  const myCity      = myProfile?.city ?? null
+  const myInterests = myProfile?.interests ?? []
+
+  // Build query params from active chip + sidebar controls
   const educationParam = education === 'Any Education' ? undefined : education
-  const verifiedParam  = activeChip === 'verified' || undefined
+
+  const chipParams = {
+    for_you:   {},
+    recent:    { sort: 'recent' },
+    near_me:   { city: myCity ?? undefined },
+    verified:  { verified: true },
+    interests: { interest: myInterests[0] ?? undefined },
+  }
+
+  const queryParams = {
+    education: educationParam,
+    // Distance slider only makes sense when "Near Me" is active; passes
+    // city of the logged-in user (exact match). A future geo enhancement
+    // can replace this with radius + coordinates.
+    ...(activeChip === 'near_me' && distance < 500 && myCity
+      ? { city: myCity }
+      : {}),
+    ...chipParams[activeChip],
+  }
 
   const {
     data,
@@ -39,9 +63,9 @@ export default function DiscoverPage() {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
-  } = useInfiniteProfiles({ education: educationParam, verified: verifiedParam })
+  } = useInfiniteProfiles(queryParams)
 
-  // Sentinel div that triggers next-page fetch when it scrolls into view
+  // Sentinel div triggers next-page fetch when scrolled into view
   const { ref: sentinelRef, inView } = useInView({ threshold: 0.1 })
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) fetchNextPage()
@@ -79,10 +103,15 @@ export default function DiscoverPage() {
               <label className="text-sm font-bold text-on-surface-variant flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary text-lg">distance</span>
                 Distance ({distance}km)
+                {activeChip !== 'near_me' && (
+                  <span className="text-[10px] font-normal text-on-surface-variant/50">(activate Near Me)</span>
+                )}
               </label>
-              <input type="range" min={10} max={500} value={distance}
-                onChange={(e) => setDistance(e.target.value)}
-                className="w-full accent-primary" />
+              <input
+                type="range" min={10} max={500} value={distance}
+                onChange={(e) => { setDistance(Number(e.target.value)); setActiveChip('near_me') }}
+                className="w-full accent-primary"
+              />
             </div>
           </div>
         </div>
@@ -112,6 +141,22 @@ export default function DiscoverPage() {
             </button>
           ))}
         </div>
+
+        {/* Near Me + no city warning */}
+        {activeChip === 'near_me' && !myCity && !isLoading && (
+          <div className="mb-6 flex items-center gap-2 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3">
+            <span className="material-symbols-outlined text-lg">info</span>
+            Add your city to your profile to see matches near you.
+          </div>
+        )}
+
+        {/* Shared Interests + no interests warning */}
+        {activeChip === 'interests' && myInterests.length === 0 && !isLoading && (
+          <div className="mb-6 flex items-center gap-2 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3">
+            <span className="material-symbols-outlined text-lg">info</span>
+            Add interests to your profile to find people with shared hobbies.
+          </div>
+        )}
 
         {/* Profile grid */}
         {isLoading ? (

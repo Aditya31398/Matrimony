@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.data.domain.Page;
 
 @Slf4j
 @Service
@@ -44,15 +45,21 @@ public class ProfileService {
     private ProfileService self;
 
     @Transactional(readOnly = true)
-    public List<ProfileSummaryDTO> getAll(int page, int size, String education, String gender, boolean verified, Long excludeId) {
-        Pageable pageable = PageRequest.of(page, size);
+    public Page<ProfileSummaryDTO> getAll(int page, int size, String education, String gender,
+                                          boolean verified, String sort, String city,
+                                          String interest, Long excludeId) {
+        Sort jpaSort = "recent".equalsIgnoreCase(sort)
+                ? Sort.by("createdAt").descending()
+                : Sort.by("isPremium").descending().and(Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(page, size, jpaSort);
         String edu = normalizeEducation(education);
         String gen = (gender == null || gender.isBlank())
                 ? self.resolveGenderFilter(excludeId)
                 : gender;
-        return profileRepo.findWithFilters(excludeId, edu, gen, verified, pageable)
-                .map(ProfileSummaryDTO::from)
-                .toList();
+        String normalizedInterest = (interest == null || interest.isBlank()) ? null : interest.trim();
+        String normalizedCity = (city == null || city.isBlank()) ? null : city.trim();
+        return profileRepo.findWithFilters(excludeId, edu, gen, verified, normalizedCity, normalizedInterest, pageable)
+                .map(ProfileSummaryDTO::from);
     }
 
     @Transactional(readOnly = true)

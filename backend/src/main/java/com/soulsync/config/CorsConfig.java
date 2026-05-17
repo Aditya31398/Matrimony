@@ -32,7 +32,7 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(origins);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Tenant-ID"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Tenant-ID", "X-Profile-ID"));
         config.setExposedHeaders(List.of("Authorization", "Content-Type"));
         // allowCredentials must never be paired with a wildcard origin
         boolean hasWildcard = origins.stream().anyMatch(o -> o.equals("*"));

@@ -102,7 +102,9 @@ export default function EditProfilePage() {
     fd.append('file', file)
     setUploading(true)
     try {
-      const { data } = await api.post('/upload/photo', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+      // No explicit Content-Type — the request interceptor detects FormData
+      // and lets axios set multipart/form-data with the correct boundary.
+      const { data } = await api.post('/upload/photo', fd)
       set('photoUrl', data.url)
       set('photos', [data.url, ...(form.photos ?? []).filter((u) => u !== form.photoUrl).slice(0, 4)])
       toast.success('Photo uploaded')

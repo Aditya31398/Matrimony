@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { QueryClientProvider } from '@tanstack/react-query'
 import App from './App'
 import queryClient from './utils/queryClient'
+import { initRipple } from './utils/ripple'
 import './i18n'
 import './index.css'
 
@@ -14,6 +15,8 @@ window.addEventListener('vite:preloadError', () => {
   sessionStorage.setItem('reloaded-for-update', String(Date.now()))
   window.location.reload()
 })
+
+initRipple()
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 

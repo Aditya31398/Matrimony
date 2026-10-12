@@ -173,3 +173,22 @@
     animation-delay: 4s;
   }
 }
+
+/* ── Click ripple (see utils/ripple.js) ───────────────────────────────── */
+.ripple-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+.ripple-wave {
+  position: absolute;
+  border-radius: 9999px;
+  transform: scale(0);
+  opacity: 1;
+  animation: ripple 550ms ease-out forwards;
+}
+@keyframes ripple {
+  to { transform: scale(1); opacity: 0; }
+}

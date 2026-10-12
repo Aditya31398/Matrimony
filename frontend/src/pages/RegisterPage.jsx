@@ -93,8 +93,9 @@ export default function RegisterPage() {
   const handleSubmit = async () => {
     if (!validateStep()) return
     try {
-      await register.mutateAsync(form)
-      setRegisteredEmail(form.email)
+      const email = form.email.trim()
+      await register.mutateAsync({ ...form, email, phone: form.phone.trim() })
+      setRegisteredEmail(email)
     } catch (err) {
       toast.error(err.message || 'Registration failed. Please try again.')
     }

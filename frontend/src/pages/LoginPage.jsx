@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
@@ -8,7 +8,7 @@ import toast from 'react-hot-toast'
 export default function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { login } = useAuth()
+  const { login, isLoggedIn } = useAuth()
   const [form, setForm] = useState({ email: location.state?.email || '', password: '' })
   const [loading, setLoading] = useState(false)
   const [unverified, setUnverified] = useState(false)
@@ -59,7 +59,7 @@ export default function LoginPage() {
     if (otp.length !== 6) { toast.error('Enter the 6-digit code'); return }
     setVerifying(true)
     try {
-      await api.post('/auth/verify-otp', { email: form.email, otp })
+      await api.post('/auth/verify-otp', { email: form.email.trim(), otp })
       toast.success('Email verified! Signing you in…')
       await login(form.email, form.password)
       navigate('/dashboard')
@@ -73,7 +73,7 @@ export default function LoginPage() {
   const handleResend = async () => {
     setResending(true)
     try {
-      await api.post('/auth/resend-otp', { email: form.email })
+      await api.post('/auth/resend-otp', { email: form.email.trim() })
       toast.success('New code sent — check your inbox')
       setOtp('')
       setCooldown(60)
@@ -83,6 +83,9 @@ export default function LoginPage() {
       setResending(false)
     }
   }
+
+  // Already signed in (and not mid-way through verifying) — go straight in
+  if (isLoggedIn && !unverified) return <Navigate to="/dashboard" replace />
 
   return (
     <motion.div

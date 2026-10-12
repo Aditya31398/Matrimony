@@ -41,7 +41,7 @@ public class AuthController {
             return ResponseEntity.status(429).body(Map.of("message", "Too many attempts. Please try again later."));
         }
 
-        String email = body.get("email");
+        String email = trimmed(body.get("email"));
         String password = body.get("password");
 
         if (email == null || password == null) {
@@ -86,7 +86,7 @@ public class AuthController {
             return ResponseEntity.status(429).body(Map.of("message", "Too many attempts. Please try again later."));
         }
 
-        String email = body.get("email");
+        String email = trimmed(body.get("email"));
         String otp   = body.get("otp");
 
         if (email == null || otp == null || otp.isBlank()) {
@@ -129,7 +129,7 @@ public class AuthController {
             return ResponseEntity.status(429).body(Map.of("message", "Too many attempts. Please try again later."));
         }
 
-        String email = body.get("email");
+        String email = trimmed(body.get("email"));
         if (email == null) {
             return ResponseEntity.status(400).body(Map.of("message", "Email is required"));
         }
@@ -164,12 +164,12 @@ public class AuthController {
             return ResponseEntity.status(429).body(Map.of("message", "Too many attempts. Please try again later."));
         }
 
-        String email = body.get("email");
+        String email = trimmed(body.get("email"));
         if (email == null || email.isBlank()) {
             return ResponseEntity.status(400).body(Map.of("message", "Email is required"));
         }
 
-        userRepo.findByEmail(email.trim()).ifPresent(u -> {
+        userRepo.findByEmail(email).ifPresent(u -> {
             String otp = String.format("%06d", new SecureRandom().nextInt(1_000_000));
             // Store hashed OTP
             u.setResetToken(passwordEncoder.encode(otp));
@@ -194,7 +194,7 @@ public class AuthController {
             return ResponseEntity.status(429).body(Map.of("message", "Too many attempts. Please try again later."));
         }
 
-        String email = body.get("email");
+        String email = trimmed(body.get("email"));
         String otp = body.get("otp");
         String newPassword = body.get("newPassword");
 
@@ -207,7 +207,7 @@ public class AuthController {
 
         var invalid = ResponseEntity.status(400).body(Map.of("message", "Incorrect or expired code"));
 
-        return userRepo.findByEmail(email.trim())
+        return userRepo.findByEmail(email)
                 .map(u -> {
                     if (u.getResetToken() == null || u.getResetTokenExpiresAt() == null
                             || u.getResetTokenExpiresAt().isBefore(LocalDateTime.now())) {
@@ -239,6 +239,11 @@ public class AuthController {
     @GetMapping("/health")
     public ResponseEntity<Map<String, String>> health() {
         return ResponseEntity.ok(Map.of("status", "ok", "service", "SoulSync API"));
+    }
+
+    /** Phone keyboards often add a trailing space to emails. */
+    private static String trimmed(String email) {
+        return email == null ? null : email.trim();
     }
 
     private String getClientIp(HttpServletRequest request) {

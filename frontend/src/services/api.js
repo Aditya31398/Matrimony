@@ -41,7 +41,9 @@ api.interceptors.response.use(
 
     // Expired/invalid session: Spring answers 401, or 403 with an empty body
     // (a real "access denied" carries a message). Sign out instead of showing broken pages.
-    if (localStorage.getItem('soulsync_token') && (status === 401 || (status === 403 && !data))) {
+    // Auth endpoints answer 401 for a wrong password — that's not an expired session.
+    const isAuthCall = error.config?.url?.startsWith('/auth/')
+    if (!isAuthCall && localStorage.getItem('soulsync_token') && (status === 401 || (status === 403 && !data))) {
       localStorage.removeItem('soulsync_token')
       localStorage.removeItem('soulsync_user_id')
       localStorage.removeItem('soulsync_profile_id')

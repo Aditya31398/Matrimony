@@ -144,6 +144,8 @@ public class ProfileService {
         if (req.getNakshatra() != null)  profile.setNakshatra(req.getNakshatra());
         if (req.getRashi() != null)      profile.setRashi(req.getRashi());
         if (req.getIsManglik() != null)  profile.setIsManglik(req.getIsManglik());
+        if (req.getMatchingTradition() != null) profile.setMatchingTradition(normalizeTradition(req.getMatchingTradition()));
+        if (req.getPapaPoints() != null) profile.setPapaPoints(req.getPapaPoints());
         return ProfileDTO.from(profileRepo.save(profile));
     }
 
@@ -200,6 +202,8 @@ public class ProfileService {
                 .nakshatra(req.getNakshatra())
                 .rashi(req.getRashi())
                 .isManglik(req.getIsManglik())
+                .matchingTradition(normalizeTradition(req.getMatchingTradition()))
+                .papaPoints(req.getPapaPoints())
                 .lookingFor(req.getPartnerDescription())
                 .build();
 
@@ -261,4 +265,10 @@ public class ProfileService {
         if (tags == null || tags.isEmpty()) return null;
         return String.join(",", tags);
     }
+    /** "AUTO"/blank → null (decide from language); otherwise upper-cased tradition name. */
+    private static String normalizeTradition(String t) {
+        if (t == null || t.isBlank() || "AUTO".equalsIgnoreCase(t)) return null;
+        return t.trim().toUpperCase();
+    }
+
 }

@@ -92,6 +92,8 @@ export default function EditProfilePage() {
         nakshatra: profile.nakshatra ?? '',
         rashi: profile.rashi ?? '',
         isManglik: profile.isManglik ?? false,
+        matchingTradition: profile.matchingTradition ?? 'AUTO',
+        papaPoints: profile.papaPoints ?? '',
       })
     }
   }, [profile, form])
@@ -129,6 +131,8 @@ export default function EditProfilePage() {
         partnerDescription: form.partnerDescription,
         nakshatra: form.nakshatra || undefined,
         rashi: form.rashi || undefined,
+        matchingTradition: form.matchingTradition || 'AUTO',
+        papaPoints: form.papaPoints === '' ? undefined : Number(form.papaPoints),
       })
       queryClient.invalidateQueries({ queryKey: ['my-profile'] })
       toast.success('Profile updated!')
@@ -282,6 +286,20 @@ export default function EditProfilePage() {
                 <option value="">Auto (from nakshatra)</option>
                 {RASHIS.map((r, i) => <option key={i + 1} value={i + 1}>{r}</option>)}
               </select>
+            </Field>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Matching Tradition" icon="account_tree">
+              <select className={SELECT_CLS} value={form.matchingTradition}
+                onChange={(e) => set('matchingTradition', e.target.value)}>
+                <option value="AUTO">Automatic (from mother tongue)</option>
+                <option value="ASHTAKOOTA">Gun Milan (Ashtakoota, North)</option>
+                <option value="DASHAKOOTA">Porutham (Dashakoota, South)</option>
+              </select>
+            </Field>
+            <Field label="Papa Points (Kerala)" icon="pin">
+              <input type="number" min="0" max="50" className={INPUT_CLS} value={form.papaPoints}
+                onChange={(e) => set('papaPoints', e.target.value)} placeholder="From your jathakam" />
             </Field>
           </div>
           <Field label="Manglik Status" icon="warning">

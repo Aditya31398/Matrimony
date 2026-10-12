@@ -76,4 +76,12 @@ public class ProfileUpdateDTO {
     private Integer rashi;
 
     private Boolean isManglik;
+
+    @jakarta.validation.constraints.Pattern(regexp = "ASHTAKOOTA|DASHAKOOTA|AUTO",
+            message = "Matching tradition must be ASHTAKOOTA, DASHAKOOTA or AUTO")
+    private String matchingTradition;
+
+    @Min(value = 0) @Max(value = 50)
+    private Integer papaPoints;
+
 }

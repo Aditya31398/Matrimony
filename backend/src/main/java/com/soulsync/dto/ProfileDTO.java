@@ -36,6 +36,8 @@ public class ProfileDTO {
     private Integer nakshatra;
     private Integer rashi;
     private Boolean isManglik;
+    private String matchingTradition;
+    private Integer papaPoints;
 
     public static ProfileDTO from(Profile p) {
         return ProfileDTO.builder()
@@ -65,6 +67,8 @@ public class ProfileDTO {
                 .nakshatra(p.getNakshatra())
                 .rashi(p.getRashi())
                 .isManglik(p.getIsManglik())
+                .matchingTradition(p.getMatchingTradition())
+                .papaPoints(p.getPapaPoints())
                 .build();
     }
 

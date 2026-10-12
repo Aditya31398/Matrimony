@@ -73,7 +73,9 @@ function CompatibilityCard({ compat }) {
           </h3>
         </div>
         <div className="text-right">
-          <div className={`text-2xl font-black ${cfg.color}`}>{compat.percentage}%</div>
+          {isDasha && compat.rajjuDosha
+            ? <div className={`text-lg font-black ${cfg.color}`}>Not advised</div>
+            : <div className={`text-2xl font-black ${cfg.color}`}>{compat.percentage}%</div>}
           <div className="text-xs text-on-surface-variant font-medium">{scoreLabel}</div>
         </div>
       </div>
@@ -86,12 +88,43 @@ function CompatibilityCard({ compat }) {
 
       <p className="text-sm text-on-surface-variant mb-4">{compat.summary}</p>
 
+      {compat.region?.includes('/') && (
+        <p className="text-xs text-on-surface-variant mb-4">
+          Mixed traditions ({compat.region.replace('/', ' & ').toLowerCase()}) — both systems are shown.
+        </p>
+      )}
+
       {/* Dosha alerts */}
       {(compat.nadiDosha || compat.manglikDosha || compat.rajjuDosha) && (
         <div className="flex flex-wrap gap-2 mb-4">
           {compat.nadiDosha && <DoshaTag label="Nadi Dosha" />}
           {compat.rajjuDosha && <DoshaTag label="Rajju Dosha" />}
           {compat.manglikDosha && <DoshaTag label="Manglik Mismatch" />}
+        </div>
+      )}
+
+      {(compat.advisories ?? []).length > 0 && (
+        <ul className="mb-4 space-y-1.5">
+          {compat.advisories.map((note, i) => (
+            <li key={i} className="flex items-start gap-2 text-xs text-on-surface-variant">
+              <span className="material-symbols-outlined text-[14px] mt-0.5">info</span>
+              <span>{note}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {compat.alternate && compat.alternate.algorithm !== 'NONE' && (
+        <div className="flex items-center justify-between rounded-2xl bg-white/60 px-4 py-3 mb-4 text-sm">
+          <span className="font-bold text-on-surface">
+            {compat.alternate.algorithm === 'ASHTAKOOTA' ? 'Ashtakoota (North Indian)' : 'Dashakoota (South Indian)'}
+          </span>
+          <span className="font-black text-on-surface">
+            {compat.alternate.algorithm === 'DASHAKOOTA'
+              ? `${Math.round(compat.alternate.totalScore)} / ${compat.alternate.maxScore}`
+              : `${compat.alternate.totalScore.toFixed(1)} / ${compat.alternate.maxScore}`}
+            <span className="ml-2 text-xs font-bold text-on-surface-variant">{compat.alternate.percentage}%</span>
+          </span>
         </div>
       )}
 

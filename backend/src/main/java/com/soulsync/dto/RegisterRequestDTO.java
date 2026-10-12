@@ -49,4 +49,6 @@ public class RegisterRequestDTO {
     private Integer nakshatra;  // 1–27
     private Integer rashi;      // 1–12
     private Boolean isManglik;
+    private String matchingTradition;   // ASHTAKOOTA | DASHAKOOTA | null
+    private Integer papaPoints;
 }

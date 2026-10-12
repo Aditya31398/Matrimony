@@ -41,6 +41,8 @@ CREATE TABLE IF NOT EXISTS profiles (
   nakshatra           TINYINT,       -- 1-27 (Ashwini..Revati)
   rashi               TINYINT,       -- 1-12 (Aries..Pisces)
   is_manglik          TINYINT(1),
+  matching_tradition  VARCHAR(20),   -- ASHTAKOOTA | DASHAKOOTA | NULL (auto from language)
+  papa_points         INT,           -- Papasamyam points from the jathakam
   bio                 TEXT,
   photo_url           VARCHAR(500),
   is_verified         TINYINT(1)   NOT NULL DEFAULT 0,

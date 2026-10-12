@@ -76,6 +76,13 @@ public class Profile {
     private Integer rashi;       // 1–12 (Aries to Pisces); if null, derived from nakshatra
     private Boolean isManglik;
 
+    // Optional family tradition override: ASHTAKOOTA | DASHAKOOTA; null = decide from language
+    @Column(length = 20)
+    private String matchingTradition;
+
+    // Optional Papasamyam points taken from the jathakam (Kerala-style matching)
+    private Integer papaPoints;
+
     @Column(columnDefinition = "TEXT")
     private String bio;
 

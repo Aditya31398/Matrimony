@@ -24,7 +24,6 @@ public class ProfileDTO {
     private String motherTongue;
     private String dietaryPreference;
     private String education;
-    private String horoscope;
     private String bio;
     private String photoUrl;
     private List<String> photos;
@@ -37,8 +36,11 @@ public class ProfileDTO {
     private Integer ageMin;
     private Integer ageMax;
     private String phone;
-    private String nakshatra;
-    private String rashi;
+    private Integer nakshatra;
+    private Integer rashi;
+    private Boolean isManglik;
+    private String matchingTradition;
+    private Integer papaPoints;
     private LocalDateTime premiumUntil;
     /** True when details were withheld because the viewer isn't premium */
     private boolean restricted;
@@ -58,7 +60,6 @@ public class ProfileDTO {
                 .motherTongue(p.getMotherTongue())
                 .dietaryPreference(p.getDietaryPreference())
                 .education(p.getEducation())
-                .horoscope(p.getHoroscope())
                 .bio(p.getBio())
                 .photoUrl(p.getPhotoUrl())
                 .photos(splitTags(p.getPhotos()))
@@ -72,6 +73,9 @@ public class ProfileDTO {
                 .phone(p.getPhone())
                 .nakshatra(p.getNakshatra())
                 .rashi(p.getRashi())
+                .isManglik(p.getIsManglik())
+                .matchingTradition(p.getMatchingTradition())
+                .papaPoints(p.getPapaPoints())
                 .isPremium(p.hasActivePremium())
                 .premiumUntil(p.getPremiumUntil())
                 .build();

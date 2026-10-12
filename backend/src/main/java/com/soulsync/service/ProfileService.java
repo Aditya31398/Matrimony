@@ -138,11 +138,7 @@ public class ProfileService {
         if (req.getHeight() != null)            profile.setHeight(req.getHeight());
         if (req.getMotherTongue() != null)      profile.setMotherTongue(req.getMotherTongue());
         if (req.getDietaryPreference() != null) profile.setDietaryPreference(req.getDietaryPreference());
-        if (req.getHoroscope() != null)         profile.setHoroscope(req.getHoroscope());
         if (req.getPhone() != null)             profile.setPhone(blankToNull(req.getPhone()));
-        if (req.getNakshatra() != null)         profile.setNakshatra(blankToNull(req.getNakshatra()));
-        if (req.getRashi() != null)             profile.setRashi(blankToNull(req.getRashi()));
-        validateStars(profile.getNakshatra(), profile.getRashi());
         if (req.getEducation() != null)         profile.setEducation(req.getEducation());
         if (req.getBio() != null)               profile.setBio(req.getBio());
         if (req.getLookingForGender() != null)  profile.setLookingForGender(req.getLookingForGender());
@@ -157,6 +153,11 @@ public class ProfileService {
         }
         if (req.getInterests() != null)  profile.setInterests(joinTags(req.getInterests()));
         if (req.getLifestyle() != null)  profile.setLifestyle(joinTags(req.getLifestyle()));
+        if (req.getNakshatra() != null)  profile.setNakshatra(req.getNakshatra());
+        if (req.getRashi() != null)      profile.setRashi(req.getRashi());
+        if (req.getIsManglik() != null)  profile.setIsManglik(req.getIsManglik());
+        if (req.getMatchingTradition() != null) profile.setMatchingTradition(normalizeTradition(req.getMatchingTradition()));
+        if (req.getPapaPoints() != null) profile.setPapaPoints(req.getPapaPoints());
         return ProfileDTO.from(profileRepo.save(profile));
     }
 
@@ -180,7 +181,6 @@ public class ProfileService {
         if (req.getPassword() == null || req.getPassword().isBlank()) {
             throw new IllegalArgumentException("Password is required");
         }
-        validateStars(blankToNull(req.getNakshatra()), blankToNull(req.getRashi()));
         User user = User.builder()
                 .email(req.getEmail())
                 .passwordHash(passwordEncoder.encode(req.getPassword()))
@@ -202,10 +202,7 @@ public class ProfileService {
                 .height(req.getHeight())
                 .motherTongue(req.getMotherTongue())
                 .dietaryPreference(req.getDietaryPreference())
-                .horoscope(req.getHoroscope())
                 .phone(blankToNull(req.getPhone()))
-                .nakshatra(blankToNull(req.getNakshatra()))
-                .rashi(blankToNull(req.getRashi()))
                 .education(req.getEducation())
                 .bio(req.getBio())
                 .lookingForGender(req.getLookingForGender())
@@ -217,6 +214,11 @@ public class ProfileService {
                 .isPremium(false)
                 .interests(joinTags(req.getInterests()))
                 .lifestyle(joinTags(req.getLifestyle()))
+                .nakshatra(req.getNakshatra())
+                .rashi(req.getRashi())
+                .isManglik(req.getIsManglik())
+                .matchingTradition(normalizeTradition(req.getMatchingTradition()))
+                .papaPoints(req.getPapaPoints())
                 .lookingFor(req.getPartnerDescription())
                 .build();
 
@@ -272,19 +274,6 @@ public class ProfileService {
         };
     }
 
-    /** Star and rashi are optional, but must be real names and agree with each other. */
-    private void validateStars(String nakshatra, String rashi) {
-        if (nakshatra != null && !AstrologyService.isValidNakshatra(nakshatra)) {
-            throw new IllegalArgumentException("Unknown star (nakshatra)");
-        }
-        if (rashi != null && !AstrologyService.isValidRashi(rashi)) {
-            throw new IllegalArgumentException("Unknown rashi");
-        }
-        if (nakshatra != null && rashi != null && !AstrologyService.isConsistent(nakshatra, rashi)) {
-            throw new IllegalArgumentException(nakshatra + " does not fall in " + rashi + " rashi");
-        }
-    }
-
     private static String blankToNull(String s) {
         return s == null || s.isBlank() ? null : s.trim();
     }
@@ -298,4 +287,10 @@ public class ProfileService {
         if (tags == null || tags.isEmpty()) return null;
         return String.join(",", tags);
     }
+    /** "AUTO"/blank → null (decide from language); otherwise upper-cased tradition name. */
+    private static String normalizeTradition(String t) {
+        if (t == null || t.isBlank() || "AUTO".equalsIgnoreCase(t)) return null;
+        return t.trim().toUpperCase();
+    }
+
 }

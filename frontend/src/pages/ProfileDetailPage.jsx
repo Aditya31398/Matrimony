@@ -3,19 +3,160 @@ import { motion } from 'framer-motion'
 import { useProfile } from '../hooks/useProfile'
 import { useConnect, useShortlist } from '../hooks/useMatches'
 import { useStartConversation } from '../hooks/useMessages'
+import { useCompatibility } from '../hooks/useCompatibility'
 import { VerifiedBadge, PremiumBadge } from '../components/ui/Badge'
 import PremiumLock from '../components/ui/PremiumLock'
-import AstroMatchCard from '../components/ui/AstroMatchCard'
 import { usePremium } from '../hooks/usePremium'
 import { useAuth } from '../context/AuthContext'
-import { rashiLabel } from '../utils/astro'
 import { AVATAR_PLACEHOLDER, showPlaceholderOnError } from '../utils/placeholder'
 import toast from 'react-hot-toast'
+import { nakshatraName, rashiName } from '../utils/astrology'
+
+const TIER_CONFIG = {
+  EXCELLENT:    { color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200', label: 'Excellent' },
+  GOOD:         { color: 'text-blue-600',    bg: 'bg-blue-50',    border: 'border-blue-200',    label: 'Good' },
+  AVERAGE:      { color: 'text-amber-600',   bg: 'bg-amber-50',   border: 'border-amber-200',   label: 'Average' },
+  POOR:         { color: 'text-orange-600',  bg: 'bg-orange-50',  border: 'border-orange-200',  label: 'Poor' },
+  INCOMPATIBLE: { color: 'text-red-600',     bg: 'bg-red-50',     border: 'border-red-200',     label: 'Challenging' },
+}
+
+function CompatibilityCard({ compat }) {
+  if (!compat) return null
+
+  if (compat.algorithm === 'NONE') {
+    return (
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.4 }}
+        className="bg-white rounded-[32px] p-7 shadow-card border border-slate-100">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center">
+            <span className="material-symbols-outlined text-slate-400">stars</span>
+          </div>
+          <h3 className="text-lg font-black text-on-surface">Horoscope Match</h3>
+        </div>
+        <p className="text-sm text-on-surface-variant">{compat.summary}</p>
+      </motion.div>
+    )
+  }
+
+  const cfg = TIER_CONFIG[compat.tier] ?? TIER_CONFIG.AVERAGE
+  const isAshta = compat.algorithm === 'ASHTAKOOTA'
+  const isDasha = compat.algorithm === 'DASHAKOOTA'
+  const isBasic = compat.algorithm === 'BASIC_ZODIAC'
+  const scoreLabel = isBasic
+    ? `${compat.totalScore.toFixed(1)} / ${compat.maxScore}`
+    : isDasha
+      ? `${Math.round(compat.totalScore)} / ${compat.maxScore} poruthams`
+      : `${compat.totalScore.toFixed(1)} / ${compat.maxScore} pts`
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.4 }}
+      className={`rounded-[32px] p-7 border ${cfg.bg} ${cfg.border}`}>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-white/70 flex items-center justify-center">
+            <span className={`material-symbols-outlined ${cfg.color}`}>stars</span>
+          </div>
+          <h3 className="text-lg font-black text-on-surface">
+            {isAshta ? 'Ashtakoota Match' : isDasha ? 'Dashakoota Match' : 'Star Compatibility'}
+          </h3>
+        </div>
+        <div className="text-right">
+          {isDasha && compat.rajjuDosha
+            ? <div className={`text-lg font-black ${cfg.color}`}>Not advised</div>
+            : <div className={`text-2xl font-black ${cfg.color}`}>{compat.percentage}%</div>}
+          <div className="text-xs text-on-surface-variant font-medium">{scoreLabel}</div>
+        </div>
+      </div>
+
+      {/* Progress bar */}
+      <div className="h-2 rounded-full bg-white/60 mb-4 overflow-hidden">
+        <div className={`h-full rounded-full transition-all ${cfg.color.replace('text-', 'bg-')}`}
+          style={{ width: `${compat.percentage}%` }} />
+      </div>
+
+      <p className="text-sm text-on-surface-variant mb-4">{compat.summary}</p>
+
+      {compat.region?.includes('/') && (
+        <p className="text-xs text-on-surface-variant mb-4">
+          Mixed traditions ({compat.region.replace('/', ' & ').toLowerCase()}) — both systems are shown.
+        </p>
+      )}
+
+      {/* Dosha alerts */}
+      {(compat.nadiDosha || compat.manglikDosha || compat.rajjuDosha) && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {compat.nadiDosha && <DoshaTag label="Nadi Dosha" />}
+          {compat.rajjuDosha && <DoshaTag label="Rajju Dosha" />}
+          {compat.manglikDosha && <DoshaTag label="Manglik Mismatch" />}
+        </div>
+      )}
+
+      {(compat.advisories ?? []).length > 0 && (
+        <ul className="mb-4 space-y-1.5">
+          {compat.advisories.map((note, i) => (
+            <li key={i} className="flex items-start gap-2 text-xs text-on-surface-variant">
+              <span className="material-symbols-outlined text-[14px] mt-0.5">info</span>
+              <span>{note}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {compat.alternate && compat.alternate.algorithm !== 'NONE' && (
+        <div className="flex items-center justify-between rounded-2xl bg-white/60 px-4 py-3 mb-4 text-sm">
+          <span className="font-bold text-on-surface">
+            {compat.alternate.algorithm === 'ASHTAKOOTA' ? 'Ashtakoota (North Indian)' : 'Dashakoota (South Indian)'}
+          </span>
+          <span className="font-black text-on-surface">
+            {compat.alternate.algorithm === 'DASHAKOOTA'
+              ? `${Math.round(compat.alternate.totalScore)} / ${compat.alternate.maxScore}`
+              : `${compat.alternate.totalScore.toFixed(1)} / ${compat.alternate.maxScore}`}
+            <span className="ml-2 text-xs font-bold text-on-surface-variant">{compat.alternate.percentage}%</span>
+          </span>
+        </div>
+      )}
+
+      {/* Koota breakdown (collapsed by default) */}
+      {compat.kootas && compat.kootas.length > 0 && (
+        <details className="group">
+          <summary className="text-xs font-bold text-on-surface-variant cursor-pointer select-none hover:text-primary list-none flex items-center gap-1">
+            <span className="material-symbols-outlined text-[16px] group-open:rotate-90 transition-transform">chevron_right</span>
+            View breakdown
+          </summary>
+          <div className="mt-3 space-y-2">
+            {compat.kootas.map((k) => (
+              <div key={k.name} className="flex items-center gap-3 text-sm">
+                <span className="w-28 font-bold text-on-surface text-xs shrink-0">{k.name}</span>
+                <div className="flex-1 h-1.5 rounded-full bg-white/60 overflow-hidden">
+                  <div className={`h-full rounded-full ${k.scored > 0 ? cfg.color.replace('text-', 'bg-') : 'bg-red-300'}`}
+                    style={{ width: `${(k.scored / k.max) * 100}%` }} />
+                </div>
+                <span className={`w-10 text-right text-xs font-bold shrink-0 ${k.scored > 0 ? cfg.color : 'text-red-500'}`}>
+                  {k.scored}/{k.max}
+                </span>
+                <span className="text-xs text-on-surface-variant hidden sm:block truncate max-w-[140px]">{k.detail}</span>
+              </div>
+            ))}
+          </div>
+        </details>
+      )}
+    </motion.div>
+  )
+}
+
+function DoshaTag({ label }) {
+  return (
+    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-bold border border-red-200">
+      <span className="material-symbols-outlined text-[14px]">warning</span>
+      {label}
+    </span>
+  )
+}
 
 const INFO_FIELDS = [
   ['Religion', 'religion'], ['Caste', 'caste'], ['Height', 'height'],
   ['Mother Tongue', 'motherTongue'], ['Dietary Pref', 'dietaryPreference'],
-  ['Education', 'education'], ['Star (Nakshatra)', 'nakshatra'], ['Rashi', 'rashi'],
+  ['Education', 'education'], ['Birth Star', 'nakshatra'], ['Moon Sign', 'rashi'],
 ]
 
 // Free members only receive these fields from the API
@@ -30,6 +171,8 @@ export default function ProfileDetailPage() {
   const connect = useConnect()
   const shortlist = useShortlist()
   const startConversation = useStartConversation()
+
+  const { data: compat } = useCompatibility(isPremium && profile && profile.id !== auth?.profileId ? profile.id : null)
 
   if (isLoading) {
     return (
@@ -131,7 +274,7 @@ export default function ProfileDetailPage() {
               <div className="grid grid-cols-2 gap-y-5 gap-x-4">
                 {INFO_FIELDS.map(([label, key]) => {
                   const locked = restricted && !FREE_FIELDS.has(key)
-                  const value = key === 'rashi' && profile.rashi ? rashiLabel(profile.rashi) : profile[key]
+                  const value = key === 'nakshatra' ? nakshatraName(profile.nakshatra) : key === 'rashi' ? rashiName(profile.rashi) : profile[key]
                   return (
                     <div key={key} className="flex flex-col gap-1">
                       <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{label}</span>
@@ -204,6 +347,9 @@ export default function ProfileDetailPage() {
               </div>
             </motion.div>
 
+            {/* Horoscope compatibility card */}
+            <CompatibilityCard compat={compat} />
+
             {(profile.lookingFor ?? []).length > 0 && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.4 }}
                 className="bg-primary-fixed rounded-[32px] p-9 border border-orange-100/50">
@@ -225,8 +371,11 @@ export default function ProfileDetailPage() {
             )}
             </>)}
 
-            {!isOwn && (
-              <AstroMatchCard profileId={profile.id} firstName={profile.firstName} isPremium={isPremium} />
+            {!isOwn && !isPremium && (
+              <PremiumLock
+                title="Horoscope compatibility"
+                text={`See your Ashtakoota / Dashakoota match with ${profile.firstName}.`}
+              />
             )}
           </div>
         </div>

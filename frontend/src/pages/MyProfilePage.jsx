@@ -3,14 +3,14 @@ import { useMyProfile } from '../hooks/useProfiles'
 import { VerifiedBadge, PremiumBadge } from '../components/ui/Badge'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate, Link } from 'react-router-dom'
-import { rashiLabel } from '../utils/astro'
 import { AVATAR_PLACEHOLDER, showPlaceholderOnError } from '../utils/placeholder'
+import { nakshatraName, rashiName } from '../utils/astrology'
 
 const INFO_FIELDS = [
   ['Religion', 'religion'], ['Caste', 'caste'], ['Height', 'height'],
   ['Mother Tongue', 'motherTongue'], ['Dietary Pref', 'dietaryPreference'],
   ['Education', 'education'], ['Phone', 'phone'],
-  ['Star (Nakshatra)', 'nakshatra'], ['Rashi', 'rashi'],
+  ['Birth Star', 'nakshatra'], ['Moon Sign', 'rashi'],
   ['Looking For', 'lookingForGender'], ['Age Range', null],
 ]
 
@@ -111,8 +111,7 @@ export default function MyProfilePage() {
                 {INFO_FIELDS.map(([label, key]) => {
                   const value = key === null
                     ? (profile.ageMin && profile.ageMax ? `${profile.ageMin} – ${profile.ageMax} yrs` : '—')
-                    : key === 'rashi' && profile.rashi ? rashiLabel(profile.rashi)
-                    : (profile[key] ?? '—')
+                    : (key === 'nakshatra' ? nakshatraName(profile.nakshatra) : key === 'rashi' ? rashiName(profile.rashi) : profile[key]) ?? '—'
                   return (
                     <div key={label} className="flex flex-col gap-1">
                       <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{label}</span>

@@ -162,6 +162,10 @@ export default function ForgotPasswordPage() {
 
               <SubmitButton loading={loading}>Reset password</SubmitButton>
 
+              <p className="text-xs text-on-surface-variant text-center">
+                No email? Check spam, and make sure <strong>{email}</strong> is the address you registered with.
+              </p>
+
               <div className="flex justify-between text-xs font-bold pt-1">
                 <button type="button" onClick={() => setStep('email')} className="text-on-surface-variant hover:underline">
                   Change email

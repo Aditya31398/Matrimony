@@ -160,7 +160,7 @@ public class AuthController {
             HttpServletRequest request) {
 
         String clientIp = getClientIp(request);
-        if (!rateLimiter.isAllowed("reset:" + clientIp)) {
+        if (!rateLimiter.isAllowed("forgot:" + clientIp)) {
             return ResponseEntity.status(429).body(Map.of("message", "Too many attempts. Please try again later."));
         }
 

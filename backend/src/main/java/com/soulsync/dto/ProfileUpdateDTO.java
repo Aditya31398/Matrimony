@@ -1,5 +1,8 @@
 package com.soulsync.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.soulsync.astrology.StarFieldDeserializers;
+
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
@@ -73,9 +76,11 @@ public class ProfileUpdateDTO {
     private Integer ageMax;
 
     @Min(value = 1) @Max(value = 27)
+    @JsonDeserialize(using = StarFieldDeserializers.Nakshatra.class)
     private Integer nakshatra;
 
     @Min(value = 1) @Max(value = 12)
+    @JsonDeserialize(using = StarFieldDeserializers.Rashi.class)
     private Integer rashi;
 
     private Boolean isManglik;

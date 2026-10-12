@@ -7,6 +7,13 @@ services:
       MYSQL_USER: soulsync
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    # Sized for a 1 GB VM: small buffer pool, no performance schema
+    command:
+      - --performance-schema=OFF
+      - --innodb-buffer-pool-size=64M
+      - --innodb-log-buffer-size=8M
+      - --max-connections=40
+      - --table-open-cache=256
     volumes: [mysql_data:/var/lib/mysql]
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
@@ -28,6 +35,8 @@ services:
       # Message times and premium expiry are shown to Indian users
       TZ: Asia/Kolkata
       JAVA_TOOL_OPTIONS: -Duser.timezone=Asia/Kolkata
+      JAVA_OPTS: -Xmx256m -XX:MaxMetaspaceSize=128m -Xss512k -XX:+UseSerialGC
+      SERVER_TOMCAT_THREADS_MAX: 50
     volumes: [uploads:/app/uploads]
 
   caddy:

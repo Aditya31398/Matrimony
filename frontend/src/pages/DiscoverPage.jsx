@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom'
 import { useInfiniteProfiles, useMyProfile } from '../hooks/useProfiles'
 
 const FILTER_CHIPS = [
-  { label: 'For You',          icon: 'colors_spark', value: 'for_you'   },
   { label: 'Recent',           icon: 'schedule',     value: 'recent'    },
   { label: 'Near Me',          icon: 'near_me',      value: 'near_me'   },
   { label: 'Verified',         icon: 'verified',     value: 'verified'  },
@@ -17,7 +16,8 @@ const FILTER_CHIPS = [
 const EDUCATION_OPTIONS = ['Any Education', 'Masters Degree', 'PhD / Doctorate', 'Bachelors Degree']
 
 export default function DiscoverPage() {
-  const [activeChip, setActiveChip] = useState('for_you')
+  // null = no quick filter (everyone, recommended order)
+  const [activeChip, setActiveChip] = useState(null)
   const [education,  setEducation]  = useState('Any Education')
   const [distance,   setDistance]   = useState(50)
 
@@ -29,9 +29,7 @@ export default function DiscoverPage() {
   // Build query params from active chip + sidebar controls
   const educationParam = education === 'Any Education' ? undefined : education
 
-  const chipParams = {
-    for_you:   {},
-    recent:    { sort: 'recent' },
+  const chipParams = {    recent:    { sort: 'recent' },
     near_me:   { city: myCity ?? undefined },
     verified:  { verified: true },
     interests: { interest: myInterests[0] ?? undefined },
@@ -45,7 +43,7 @@ export default function DiscoverPage() {
     ...(activeChip === 'near_me' && distance < 500 && myCity
       ? { city: myCity }
       : {}),
-    ...chipParams[activeChip],
+    ...(activeChip ? chipParams[activeChip] : {}),
   }
 
   const {
@@ -124,7 +122,8 @@ export default function DiscoverPage() {
         {/* Filter chips */}
         <div className="flex items-center gap-3 mb-10 overflow-x-auto pb-2 scrollbar-hide">
           {FILTER_CHIPS.map(({ label, icon, value }) => (
-            <button key={value} onClick={() => setActiveChip(value)}
+            <button key={value} onClick={() => setActiveChip((c) => (c === value ? null : value))}
+              aria-pressed={activeChip === value}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all ${
                 activeChip === value
                   ? 'bg-primary text-white shadow-btn-primary'
@@ -166,7 +165,7 @@ export default function DiscoverPage() {
         ) : profiles && profiles.length > 0 ? (
           <>
             <motion.div
-              key={activeChip + education}
+              key={`${activeChip}-${education}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}

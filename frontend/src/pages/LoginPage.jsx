@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
@@ -7,8 +7,9 @@ import toast from 'react-hot-toast'
 
 export default function LoginPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { login } = useAuth()
-  const [form, setForm] = useState({ email: '', password: '' })
+  const [form, setForm] = useState({ email: location.state?.email || '', password: '' })
   const [loading, setLoading] = useState(false)
   const [unverified, setUnverified] = useState(false)
   const [otp, setOtp] = useState('')
@@ -112,7 +113,12 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-bold text-on-surface-variant block">Password</label>
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-bold text-on-surface-variant block">Password</label>
+              <Link to="/forgot-password" state={{ email: form.email }} className="text-xs font-bold text-primary hover:underline">
+                Forgot password?
+              </Link>
+            </div>
             <div className="relative">
               <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">lock</span>
               <input

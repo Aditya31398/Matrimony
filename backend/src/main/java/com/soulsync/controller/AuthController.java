@@ -29,6 +29,8 @@ public class AuthController {
     private final JwtService jwtService;
     private final RateLimitService rateLimiter;
 
+    private static final int MAX_RESET_ATTEMPTS = 5;
+
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(
             @RequestBody Map<String, String> body,
@@ -150,6 +152,88 @@ public class AuthController {
                 })
                 // Generic response to prevent email enumeration
                 .orElse(ResponseEntity.ok(Map.of("message", "If that email exists, an OTP has been sent")));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Map<String, String>> forgotPassword(
+            @RequestBody Map<String, String> body,
+            HttpServletRequest request) {
+
+        String clientIp = getClientIp(request);
+        if (!rateLimiter.isAllowed("reset:" + clientIp)) {
+            return ResponseEntity.status(429).body(Map.of("message", "Too many attempts. Please try again later."));
+        }
+
+        String email = body.get("email");
+        if (email == null || email.isBlank()) {
+            return ResponseEntity.status(400).body(Map.of("message", "Email is required"));
+        }
+
+        userRepo.findByEmail(email.trim()).ifPresent(u -> {
+            String otp = String.format("%06d", new SecureRandom().nextInt(1_000_000));
+            // Store hashed OTP
+            u.setResetToken(passwordEncoder.encode(otp));
+            u.setResetTokenExpiresAt(LocalDateTime.now().plusMinutes(10));
+            u.setResetAttempts(0);
+            userRepo.save(u);
+            String name = profileRepo.findByUserId(u.getId()).map(p -> p.getFirstName()).orElse("there");
+            emailService.sendPasswordResetEmail(u.getEmail(), name, otp);
+        });
+
+        // Same response whether or not the account exists, to prevent email enumeration
+        return ResponseEntity.ok(Map.of("message", "If that email is registered, a reset code has been sent"));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Map<String, String>> resetPassword(
+            @RequestBody Map<String, String> body,
+            HttpServletRequest request) {
+
+        String clientIp = getClientIp(request);
+        if (!rateLimiter.isAllowed("reset:" + clientIp)) {
+            return ResponseEntity.status(429).body(Map.of("message", "Too many attempts. Please try again later."));
+        }
+
+        String email = body.get("email");
+        String otp = body.get("otp");
+        String newPassword = body.get("newPassword");
+
+        if (email == null || otp == null || otp.isBlank() || newPassword == null) {
+            return ResponseEntity.status(400).body(Map.of("message", "Email, code and new password are required"));
+        }
+        if (newPassword.length() < 8 || newPassword.length() > 128) {
+            return ResponseEntity.status(400).body(Map.of("message", "Password must be 8–128 characters"));
+        }
+
+        var invalid = ResponseEntity.status(400).body(Map.of("message", "Incorrect or expired code"));
+
+        return userRepo.findByEmail(email.trim())
+                .map(u -> {
+                    if (u.getResetToken() == null || u.getResetTokenExpiresAt() == null
+                            || u.getResetTokenExpiresAt().isBefore(LocalDateTime.now())) {
+                        return invalid;
+                    }
+                    if (!passwordEncoder.matches(otp, u.getResetToken())) {
+                        int attempts = (u.getResetAttempts() == null ? 0 : u.getResetAttempts()) + 1;
+                        // Burn the code after 5 wrong guesses so it can't be brute-forced
+                        if (attempts >= MAX_RESET_ATTEMPTS) {
+                            u.setResetToken(null);
+                            u.setResetTokenExpiresAt(null);
+                        }
+                        u.setResetAttempts(attempts);
+                        userRepo.save(u);
+                        return invalid;
+                    }
+                    u.setPasswordHash(passwordEncoder.encode(newPassword));
+                    u.setResetToken(null);
+                    u.setResetTokenExpiresAt(null);
+                    u.setResetAttempts(0);
+                    // Receiving the code proves they own the inbox
+                    u.setEmailVerified(true);
+                    userRepo.save(u);
+                    return ResponseEntity.ok(Map.of("message", "Password reset successfully"));
+                })
+                .orElse(invalid);
     }
 
     @GetMapping("/health")

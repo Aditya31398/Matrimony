@@ -1,7 +1,5 @@
 package com.soulsync.config;
 
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,15 +29,6 @@ public class AppConfig implements WebMvcConfigurer {
     @Value("${app.upload.dir:uploads}")
     private String uploadDir;
 
-    @Value("${cloudinary.cloud-name}")
-    private String cloudName;
-
-    @Value("${cloudinary.api-key}")
-    private String apiKey;
-
-    @Value("${cloudinary.api-secret}")
-    private String apiSecret;
-
     private final LastSeenInterceptor lastSeenInterceptor;
 
     @Bean
@@ -47,17 +36,7 @@ public class AppConfig implements WebMvcConfigurer {
         return new RestTemplate();
     }
 
-    @Bean
-    public Cloudinary cloudinary() {
-        return new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", cloudName,
-                "api_key", apiKey,
-                "api_secret", apiSecret,
-                "secure", true
-        ));
-    }
-
-    /** Dedicated thread pool for blocking Cloudinary uploads — keeps servlet threads free. */
+    /** Dedicated thread pool for blocking photo uploads — keeps servlet threads free. */
     @Bean(name = "uploadExecutor")
     public TaskExecutor uploadExecutor() {
         ThreadPoolTaskExecutor exec = new ThreadPoolTaskExecutor();

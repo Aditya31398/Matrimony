@@ -30,7 +30,8 @@ export default function DiscoverPage() {
   const educationParam = education === 'Any Education' ? undefined : education
 
   const chipParams = {
-    for_you:   {},    recent:    { sort: 'recent' },
+    for_you:   {},
+    recent:    { sort: 'recent' },
     near_me:   { city: myCity ?? undefined },
     verified:  { verified: true },
     interests: { interest: myInterests[0] ?? undefined },

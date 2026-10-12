@@ -54,7 +54,7 @@ public class ProfileController {
             HttpServletRequest request) {
         Long viewerId = (Long) request.getAttribute("profileId");
         if (viewerId != null) profileService.recordView(viewerId, id);
-        return ResponseEntity.ok(profileService.getById(id));
+        return ResponseEntity.ok(profileService.getById(id, viewerId));
     }
 
     @GetMapping("/top-picks")
@@ -69,8 +69,10 @@ public class ProfileController {
             @RequestParam(required = false) String education,
             @RequestParam(required = false) String gender,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
-        return ResponseEntity.ok(profileService.search(city, education, gender, page, size));
+            @RequestParam(defaultValue = "20") int size,
+            HttpServletRequest request) {
+        Long viewerId = (Long) request.getAttribute("profileId");
+        return ResponseEntity.ok(profileService.search(city, education, gender, page, size, viewerId));
     }
 
     @PutMapping("/{id}")

@@ -9,4 +9,6 @@ FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/soulsync-backend-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-Xmx400m", "-Dspring.profiles.active=prod", "-jar", "app.jar"]
+# Override JAVA_OPTS to fit the host's memory (docker-compose sets it for small VMs)
+ENV JAVA_OPTS="-Xmx400m"
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -Dspring.profiles.active=prod -jar app.jar"]

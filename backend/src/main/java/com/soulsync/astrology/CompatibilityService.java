@@ -44,7 +44,8 @@ public class CompatibilityService {
     }
 
     public CompatibilityResult compute(Profile p1, Profile p2) {
-        if (p1.getNakshatra() == null || p2.getNakshatra() == null) {
+        if (NakshatraData.nakshatraIndex(p1.getNakshatra()) == 0
+                || NakshatraData.nakshatraIndex(p2.getNakshatra()) == 0) {
             return CompatibilityResult.insufficient(
                     "Nakshatra not set for one or both profiles. " +
                     "Please add your birth star (nakshatra) in Edit Profile to see a detailed match score.");
@@ -56,7 +57,8 @@ public class CompatibilityService {
             Profile t = p1; p1 = p2; p2 = t;
         }
         Profile groom = p1, bride = p2;
-        int nakG = groom.getNakshatra(), nakB = bride.getNakshatra();
+        int nakG = NakshatraData.nakshatraIndex(groom.getNakshatra());
+        int nakB = NakshatraData.nakshatraIndex(bride.getNakshatra());
         int rashiG = resolveRashi(groom), rashiB = resolveRashi(bride);
         boolean mG = Boolean.TRUE.equals(groom.getIsManglik());
         boolean mB = Boolean.TRUE.equals(bride.getIsManglik());
@@ -157,8 +159,9 @@ public class CompatibilityService {
     private static Algo firstNonNull(Algo a, Algo b) { return a != null ? a : b; }
 
     private int resolveRashi(Profile p) {
-        if (p.getRashi() != null) return p.getRashi();
-        return NakshatraData.RASHI[p.getNakshatra() - 1];
+        int r = NakshatraData.rashiIndex(p.getRashi());
+        if (r > 0) return r;
+        return NakshatraData.RASHI[NakshatraData.nakshatraIndex(p.getNakshatra()) - 1];
     }
 
     private boolean isBasicOnly(Profile p) {

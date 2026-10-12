@@ -22,7 +22,7 @@ INSERT INTO users (email, password_hash, role) VALUES
 INSERT INTO profiles (
   user_id, first_name, last_name, date_of_birth, gender,
   profession, city, state, country, religion,
-  height, mother_tongue, dietary_preference, education, nakshatra, rashi, is_manglik,
+  height, mother_tongue, dietary_preference, education, horoscope,
   bio, photo_url, is_verified, is_premium,
   interests, lifestyle, looking_for,
   looking_for_gender, age_min, age_max
@@ -30,7 +30,7 @@ INSERT INTO profiles (
 (
   1, 'Ananya', 'Sharma', '1996-03-15', 'FEMALE',
   'Product Designer', 'Mumbai', 'Maharashtra', 'India', 'Hindu (Brahmin)',
-  '5''6" (168cm)', 'Hindi, Marathi', 'Vegetarian', 'Masters in Design', 10, 5, 0,
+  '5''6" (168cm)', 'Hindi, Marathi', 'Vegetarian', 'Masters in Design', 'Leo (Sun Sign)',
   'I''m a curious soul who finds joy in the intersection of technology and human emotion. By day, I design digital experiences that make life easier; by night, I''m usually found experimenting with fusion recipes in my kitchen or lost in a classic Murakami novel.\n\nGrowing up in a household that balanced tradition with modern values, I''ve learned to appreciate the quiet moments as much as the grand milestones.',
   'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&q=85',
   1, 1,
@@ -42,7 +42,7 @@ INSERT INTO profiles (
 (
   2, 'Rohan', 'Mehta', '1995-07-22', 'MALE',
   'Software Architect', 'Bangalore', 'Karnataka', 'India', 'Hindu',
-  '5''11" (180cm)', 'Gujarati, Hindi', 'Non-Vegetarian', 'B.Tech Computer Science', 17, 8, 0,
+  '5''11" (180cm)', 'Gujarati, Hindi', 'Non-Vegetarian', 'B.Tech Computer Science', 'Scorpio (Sun Sign)',
   'Tech enthusiast by profession, adventurer by heart. I love building things that matter — be it software products or weekend camping setups. I''m deeply family-oriented and believe in building a life that blends purpose with joy.',
   'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=85',
   1, 1,
@@ -54,7 +54,7 @@ INSERT INTO profiles (
 (
   3, 'Priya', 'Nair', '1997-11-08', 'FEMALE',
   'Pediatrician', 'Delhi', 'Delhi', 'India', 'Hindu (Nair)',
-  '5''4" (163cm)', 'Malayalam, Hindi', 'Vegetarian', 'MBBS, MD Pediatrics', 19, 9, 0,
+  '5''4" (163cm)', 'Malayalam, Hindi', 'Vegetarian', 'MBBS, MD Pediatrics', 'Sagittarius',
   'Doctor by profession, dreamer by nature. I believe healing goes beyond medicine — it''s about connection, compassion, and community. My weekends are spent either at classical music concerts or on yoga retreats.',
   'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&q=85',
   1, 0,
@@ -66,7 +66,7 @@ INSERT INTO profiles (
 (
   4, 'Arjun', 'Kapoor', '1991-05-30', 'MALE',
   'Creative Director', 'Pune', 'Maharashtra', 'India', 'Hindu (Punjabi)',
-  '5''10" (178cm)', 'Punjabi, Hindi', 'Non-Vegetarian', 'BFA, MFA Design', 6, 3, 0,
+  '5''10" (178cm)', 'Punjabi, Hindi', 'Non-Vegetarian', 'BFA, MFA Design', 'Gemini',
   'Creative director at a design agency, part-time philosopher, full-time coffee enthusiast. I tell stories through visual design, and I''m looking for someone to tell our story with. Love independent cinema, world cuisine, and long road trips.',
   'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&q=85',
   1, 0,
@@ -78,7 +78,7 @@ INSERT INTO profiles (
 (
   5, 'Meera', 'Krishnan', '1999-01-14', 'FEMALE',
   'Software Engineer', 'Chennai', 'Tamil Nadu', 'India', 'Hindu (Brahmin)',
-  '5''3" (160cm)', 'Tamil, English', 'Vegetarian', 'B.Tech Information Technology', 22, 10, 0,
+  '5''3" (160cm)', 'Tamil, English', 'Vegetarian', 'B.Tech Information Technology', 'Capricorn',
   'Software engineer who loves building scalable systems and sustainable habits. Passionate about climate tech, carnatic music, and making the world a kinder place one line of code at a time.',
   'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=800&q=85',
   1, 0,
@@ -90,7 +90,7 @@ INSERT INTO profiles (
 (
   6, 'Kabir', 'Singh', '1994-09-05', 'MALE',
   'Fitness Lead', 'Delhi', 'Delhi', 'India', 'Sikh',
-  '6''0" (183cm)', 'Punjabi, Hindi', 'Non-Vegetarian', 'B.Sc Sports Science', 13, 6, 0,
+  '6''0" (183cm)', 'Punjabi, Hindi', 'Non-Vegetarian', 'B.Sc Sports Science', 'Virgo',
   'Fitness coach and wellness advocate. I believe a healthy body is the foundation of a fulfilled life. Off-duty, I love Bollywood dance, regional food trails, and mentoring underprivileged youth through sports.',
   'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=800&q=85',
   0, 0,
@@ -102,7 +102,7 @@ INSERT INTO profiles (
 (
   7, 'Ishita', 'Gupta', '1998-06-19', 'FEMALE',
   'UX Researcher', 'Hyderabad', 'Telangana', 'India', 'Hindu',
-  '5''5" (165cm)', 'Hindi, Telugu', 'Vegetarian', 'M.Des Human-Computer Interaction', 6, 3, 0,
+  '5''5" (165cm)', 'Hindi, Telugu', 'Vegetarian', 'M.Des Human-Computer Interaction', 'Gemini',
   'I study how people interact with technology so we can make it more human. I bring the same curiosity to life — always exploring, questioning, and empathizing. Love pottery, board games, and farmer''s markets.',
   'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&q=85',
   1, 0,
@@ -114,7 +114,7 @@ INSERT INTO profiles (
 (
   8, 'Varun', 'Malhotra', '1996-12-25', 'MALE',
   'Financial Analyst', 'Mumbai', 'Maharashtra', 'India', 'Hindu',
-  '5''9" (175cm)', 'Hindi, English', 'Non-Vegetarian', 'MBA Finance, CFA Level 2', 22, 10, 0,
+  '5''9" (175cm)', 'Hindi, English', 'Non-Vegetarian', 'MBA Finance, CFA Level 2', 'Capricorn',
   'Numbers by day, guitar by night. I balance spreadsheets and chord progressions with equal passion. Believe deeply in giving back — mentor young professionals and volunteer at financial literacy programs.',
   'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&q=85',
   0, 0,
@@ -126,7 +126,7 @@ INSERT INTO profiles (
 (
   9, 'Sneha', 'Agarwal', '1997-04-10', 'FEMALE',
   'Content Strategist', 'Kolkata', 'West Bengal', 'India', 'Hindu (Marwari)',
-  '5''4" (163cm)', 'Bengali, Hindi', 'Vegetarian', 'BA English Literature, PG Content Management', 1, 1, 0,
+  '5''4" (163cm)', 'Bengali, Hindi', 'Vegetarian', 'BA English Literature, PG Content Management', 'Aries',
   'Wordsmith by trade, storyteller at heart. I spend my days crafting narratives for brands and my evenings writing fiction no one has read yet. Lover of monsoons, adda sessions, and good biryani.',
   'https://images.unsplash.com/photo-1526413232644-8a40f03cc03b?w=800&q=85',
   0, 0,
@@ -138,7 +138,7 @@ INSERT INTO profiles (
 (
   10, 'Rahul', 'Verma', '1993-08-18', 'MALE',
   'Civil Engineer', 'Jaipur', 'Rajasthan', 'India', 'Hindu (Rajput)',
-  '5''11" (181cm)', 'Rajasthani, Hindi', 'Non-Vegetarian', 'B.Tech Civil Engineering', 10, 5, 0,
+  '5''11" (181cm)', 'Rajasthani, Hindi', 'Non-Vegetarian', 'B.Tech Civil Engineering', 'Leo',
   'I build bridges for a living and believe in building even stronger human connections. Family is my greatest achievement and my biggest motivation. I love polo, heritage architecture, and royal Rajasthani cuisine.',
   'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=85',
   0, 0,

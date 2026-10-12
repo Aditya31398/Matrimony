@@ -15,18 +15,26 @@ public class MatchDTO {
     private LocalDateTime createdAt;
 
     public static MatchDTO fromReceived(Match m) {
+        return fromReceived(m, true);
+    }
+
+    public static MatchDTO fromReceived(Match m, boolean viewerIsPremium) {
         return MatchDTO.builder()
                 .id(m.getId())
-                .profile(ProfileSummaryDTO.from(m.getSenderProfile()))
+                .profile(ProfileSummaryDTO.from(m.getSenderProfile(), viewerIsPremium))
                 .status(m.getStatus().name())
                 .createdAt(m.getCreatedAt())
                 .build();
     }
 
     public static MatchDTO fromSent(Match m) {
+        return fromSent(m, true);
+    }
+
+    public static MatchDTO fromSent(Match m, boolean viewerIsPremium) {
         return MatchDTO.builder()
                 .id(m.getId())
-                .profile(ProfileSummaryDTO.from(m.getReceiverProfile()))
+                .profile(ProfileSummaryDTO.from(m.getReceiverProfile(), viewerIsPremium))
                 .status(m.getStatus().name())
                 .createdAt(m.getCreatedAt())
                 .build();

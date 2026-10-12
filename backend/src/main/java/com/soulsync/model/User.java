@@ -36,6 +36,15 @@ public class User {
 
     private LocalDateTime tokenExpiresAt;
 
+    /** Hashed password-reset OTP — kept separate from the email-verification OTP */
+    @Column(length = 64)
+    private String resetToken;
+
+    private LocalDateTime resetTokenExpiresAt;
+
+    /** Failed reset-code attempts; the code is invalidated after too many */
+    private Integer resetAttempts;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

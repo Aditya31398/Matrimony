@@ -2,6 +2,7 @@ package com.soulsync.service;
 
 import com.soulsync.dto.ConversationDTO;
 import com.soulsync.dto.MessageDTO;
+import com.soulsync.exception.PremiumRequiredException;
 import com.soulsync.exception.ResourceNotFoundException;
 import com.soulsync.model.Conversation;
 import com.soulsync.model.Message;
@@ -30,21 +31,23 @@ public class MessageService {
     @Transactional(readOnly = true)
     public List<ConversationDTO> getConversations(Long profileId) {
         Profile profile = getProfileOrThrow(profileId);
+        boolean premium = profile.hasActivePremium();
         return convRepo.findByProfile(profile)
                 .stream()
                 .filter(c -> !c.getProfile1().getId().equals(c.getProfile2().getId()))
                 .map(c -> {
                     int unread = (int) msgRepo.countUnread(c, profileId);
-                    return ConversationDTO.from(c, profileId, unread);
+                    return ConversationDTO.from(c, profileId, unread, premium);
                 })
                 .toList();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<MessageDTO> getMessages(Long conversationId, Long viewerProfileId) {
         Conversation conv = convRepo.findById(conversationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Conversation", conversationId));
         assertParticipant(conv, viewerProfileId);
+        msgRepo.markRead(conv, viewerProfileId);
         return msgRepo.findByConversationOrderBySentAtAsc(conv)
                 .stream()
                 .map(m -> MessageDTO.from(m, viewerProfileId))
@@ -57,6 +60,7 @@ public class MessageService {
                 .orElseThrow(() -> new ResourceNotFoundException("Conversation", conversationId));
         assertParticipant(conv, senderProfileId);
         Profile sender = getProfileOrThrow(senderProfileId);
+        requirePremium(sender);
 
         Message msg = Message.builder()
                 .conversation(conv)
@@ -92,9 +96,10 @@ public class MessageService {
         if (profileId1.equals(profileId2)) throw new IllegalArgumentException("Cannot message yourself");
         Profile p1 = getProfileOrThrow(profileId1);
         Profile p2 = getProfileOrThrow(profileId2);
+        requirePremium(p1);
         Conversation conv = convRepo.findByProfiles(p1, p2)
                 .orElseGet(() -> convRepo.save(Conversation.builder().profile1(p1).profile2(p2).build()));
-        return ConversationDTO.from(conv, profileId1, 0);
+        return ConversationDTO.from(conv, profileId1, 0, true);
     }
 
     public void assertParticipant(Long conversationId, Long profileId) {
@@ -121,6 +126,12 @@ public class MessageService {
         boolean isParticipant = conv.getProfile1().getId().equals(profileId)
                 || conv.getProfile2().getId().equals(profileId);
         if (!isParticipant) throw new AccessDeniedException("Not a participant in this conversation");
+    }
+
+    private static void requirePremium(Profile profile) {
+        if (!profile.hasActivePremium()) {
+            throw new PremiumRequiredException("Upgrade to Premium to chat with other members");
+        }
     }
 
     private Profile getProfileOrThrow(Long id) {

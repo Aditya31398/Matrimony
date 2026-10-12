@@ -32,7 +32,9 @@ export function useChat(conversationId, myProfileId) {
       onConnect: () => {
         // Real-time message push — appends directly to React Query cache, no poll needed
         client.subscribe(`/topic/conversation/${conversationId}`, (frame) => {
-          const msg = JSON.parse(frame.body)
+          const raw = JSON.parse(frame.body)
+          // The server builds one payload for everyone, so decide ownership per viewer
+          const msg = { ...raw, isOwn: myProfileId != null && raw.senderId === Number(myProfileId) }
           queryClient.setQueryData(
             [CONVERSATIONS_KEY, String(conversationId), 'messages'],
             (prev = []) => {

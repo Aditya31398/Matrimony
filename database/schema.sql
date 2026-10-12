@@ -38,8 +38,9 @@ CREATE TABLE IF NOT EXISTS profiles (
   mother_tongue       VARCHAR(100),
   dietary_preference  VARCHAR(60),
   education           VARCHAR(120),
-  nakshatra           TINYINT,       -- 1-27 (Ashwini..Revati)
-  rashi               TINYINT,       -- 1-12 (Aries..Pisces)
+  horoscope           VARCHAR(80),
+  nakshatra           VARCHAR(30),   -- e.g. Rohini
+  rashi               VARCHAR(20),   -- e.g. Vrishabha
   is_manglik          TINYINT(1),
   matching_tradition  VARCHAR(20),   -- ASHTAKOOTA | DASHAKOOTA | NULL (auto from language)
   papa_points         INT,           -- Papasamyam points from the jathakam

@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import { useInfiniteProfiles, useMyProfile } from '../hooks/useProfiles'
 
 const FILTER_CHIPS = [
+  { label: 'Matches for you',  icon: 'auto_awesome', value: 'for_you'   },
   { label: 'Recent',           icon: 'schedule',     value: 'recent'    },
   { label: 'Near Me',          icon: 'near_me',      value: 'near_me'   },
   { label: 'Verified',         icon: 'verified',     value: 'verified'  },
@@ -16,8 +17,7 @@ const FILTER_CHIPS = [
 const EDUCATION_OPTIONS = ['Any Education', 'Masters Degree', 'PhD / Doctorate', 'Bachelors Degree']
 
 export default function DiscoverPage() {
-  // null = no quick filter (everyone, recommended order)
-  const [activeChip, setActiveChip] = useState(null)
+  const [activeChip, setActiveChip] = useState('for_you')
   const [education,  setEducation]  = useState('Any Education')
   const [distance,   setDistance]   = useState(50)
 
@@ -29,7 +29,8 @@ export default function DiscoverPage() {
   // Build query params from active chip + sidebar controls
   const educationParam = education === 'Any Education' ? undefined : education
 
-  const chipParams = {    recent:    { sort: 'recent' },
+  const chipParams = {
+    for_you:   {},    recent:    { sort: 'recent' },
     near_me:   { city: myCity ?? undefined },
     verified:  { verified: true },
     interests: { interest: myInterests[0] ?? undefined },
@@ -43,7 +44,7 @@ export default function DiscoverPage() {
     ...(activeChip === 'near_me' && distance < 500 && myCity
       ? { city: myCity }
       : {}),
-    ...(activeChip ? chipParams[activeChip] : {}),
+    ...chipParams[activeChip],
   }
 
   const {
@@ -122,7 +123,7 @@ export default function DiscoverPage() {
         {/* Filter chips */}
         <div className="flex items-center gap-3 mb-10 overflow-x-auto pb-2 scrollbar-hide">
           {FILTER_CHIPS.map(({ label, icon, value }) => (
-            <button key={value} onClick={() => setActiveChip((c) => (c === value ? null : value))}
+            <button key={value} onClick={() => setActiveChip(value)}
               aria-pressed={activeChip === value}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all ${
                 activeChip === value

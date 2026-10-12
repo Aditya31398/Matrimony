@@ -172,7 +172,6 @@ public class ProfileService {
 
     @Transactional
     public ProfileDTO register(RegisterRequestDTO req) {
-        req.setEmail(req.getEmail().trim());
         if (userRepo.existsByEmail(req.getEmail())) {
             throw new IllegalArgumentException("Email already registered: " + req.getEmail());
         }

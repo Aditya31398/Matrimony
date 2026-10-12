@@ -127,7 +127,6 @@ public class ProfileService {
         if (req.getHeight() != null)            profile.setHeight(req.getHeight());
         if (req.getMotherTongue() != null)      profile.setMotherTongue(req.getMotherTongue());
         if (req.getDietaryPreference() != null) profile.setDietaryPreference(req.getDietaryPreference());
-        if (req.getHoroscope() != null)         profile.setHoroscope(req.getHoroscope());
         if (req.getEducation() != null)         profile.setEducation(req.getEducation());
         if (req.getBio() != null)               profile.setBio(req.getBio());
         if (req.getLookingForGender() != null)  profile.setLookingForGender(req.getLookingForGender());
@@ -142,6 +141,9 @@ public class ProfileService {
         }
         if (req.getInterests() != null)  profile.setInterests(joinTags(req.getInterests()));
         if (req.getLifestyle() != null)  profile.setLifestyle(joinTags(req.getLifestyle()));
+        if (req.getNakshatra() != null)  profile.setNakshatra(req.getNakshatra());
+        if (req.getRashi() != null)      profile.setRashi(req.getRashi());
+        if (req.getIsManglik() != null)  profile.setIsManglik(req.getIsManglik());
         return ProfileDTO.from(profileRepo.save(profile));
     }
 
@@ -184,7 +186,6 @@ public class ProfileService {
                 .height(req.getHeight())
                 .motherTongue(req.getMotherTongue())
                 .dietaryPreference(req.getDietaryPreference())
-                .horoscope(req.getHoroscope())
                 .education(req.getEducation())
                 .bio(req.getBio())
                 .lookingForGender(req.getLookingForGender())
@@ -196,6 +197,9 @@ public class ProfileService {
                 .isPremium(false)
                 .interests(joinTags(req.getInterests()))
                 .lifestyle(joinTags(req.getLifestyle()))
+                .nakshatra(req.getNakshatra())
+                .rashi(req.getRashi())
+                .isManglik(req.getIsManglik())
                 .lookingFor(req.getPartnerDescription())
                 .build();
 

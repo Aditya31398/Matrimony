@@ -71,8 +71,10 @@ public class Profile {
     @Column(length = 120)
     private String education;
 
-    @Column(length = 80)
-    private String horoscope;
+    // Vedic astrology — used by the horoscope matching engine
+    private Integer nakshatra;   // 1–27 (Ashwini to Revati)
+    private Integer rashi;       // 1–12 (Aries to Pisces); if null, derived from nakshatra
+    private Boolean isManglik;
 
     @Column(columnDefinition = "TEXT")
     private String bio;

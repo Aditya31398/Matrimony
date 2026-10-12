@@ -6,11 +6,14 @@ import { profileService } from '../services/profileService'
 import { useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import api from '../services/api'
+import { NAKSHATRA_NAMES, RASHI_NAMES } from '../utils/astrology'
 
 const RELIGIONS = ['Hindu', 'Muslim', 'Christian', 'Sikh', 'Jain', 'Buddhist', 'Parsi', 'Jewish', 'No Religion', 'Other']
+
+const NAKSHATRAS = NAKSHATRA_NAMES.map((n, i) => `${i + 1} — ${n}`)
+const RASHIS = RASHI_NAMES.map((r, i) => `${i + 1} — ${r}`)
 const LANGUAGES = ['Hindi', 'English', 'Bengali', 'Telugu', 'Marathi', 'Tamil', 'Gujarati', 'Kannada', 'Malayalam', 'Punjabi', 'Odia', 'Other']
 const DIET_OPTIONS = ['Vegetarian', 'Non-Vegetarian', 'Vegan', 'Jain', 'Eggetarian']
-const HOROSCOPE_OPTIONS = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces']
 const HEIGHT_OPTIONS = Array.from({ length: 21 }, (_, i) => {
   const totalIn = 57 + i
   const ft = Math.floor(totalIn / 12)
@@ -76,7 +79,6 @@ export default function EditProfilePage() {
         height: profile.height ?? '',
         motherTongue: profile.motherTongue ?? '',
         dietaryPreference: profile.dietaryPreference ?? '',
-        horoscope: profile.horoscope ?? '',
         education: profile.education ?? '',
         bio: profile.bio ?? '',
         photoUrl: profile.photoUrl ?? '',
@@ -87,6 +89,9 @@ export default function EditProfilePage() {
         ageMin: profile.ageMin ?? 22,
         ageMax: profile.ageMax ?? 35,
         partnerDescription: (profile.lookingFor ?? []).join('\n'),
+        nakshatra: profile.nakshatra ?? '',
+        rashi: profile.rashi ?? '',
+        isManglik: profile.isManglik ?? false,
       })
     }
   }, [profile, form])
@@ -122,6 +127,8 @@ export default function EditProfilePage() {
       await profileService.update(profile.id, {
         ...form,
         partnerDescription: form.partnerDescription,
+        nakshatra: form.nakshatra || undefined,
+        rashi: form.rashi || undefined,
       })
       queryClient.invalidateQueries({ queryKey: ['my-profile'] })
       toast.success('Profile updated!')
@@ -252,13 +259,46 @@ export default function EditProfilePage() {
                 {DIET_OPTIONS.map((d) => <option key={d}>{d}</option>)}
               </select>
             </Field>
-            <Field label="Horoscope" icon="auto_awesome">
-              <select className={SELECT_CLS} value={form.horoscope} onChange={(e) => set('horoscope', e.target.value)}>
-                <option value="">Select sign</option>
-                {HOROSCOPE_OPTIONS.map((h) => <option key={h}>{h}</option>)}
+          </div>
+        </div>
+
+        {/* Vedic Matching */}
+        <div className="bg-white rounded-[28px] p-6 shadow-card border border-slate-100 space-y-5">
+          <div>
+            <h3 className="text-lg font-black text-on-surface flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary">stars</span> Vedic Horoscope Matching
+            </h3>
+            <p className="text-xs text-on-surface-variant mt-1">Used for Kundali / Porutham matching. Optional — leave blank if you prefer not to share.</p>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Birth Star (Nakshatra)" icon="star">
+              <select className={SELECT_CLS} value={form.nakshatra} onChange={(e) => set('nakshatra', e.target.value ? Number(e.target.value) : '')}>
+                <option value="">Select nakshatra</option>
+                {NAKSHATRAS.map((n, i) => <option key={i + 1} value={i + 1}>{n}</option>)}
+              </select>
+            </Field>
+            <Field label="Moon Sign (Rashi)" icon="nightlight">
+              <select className={SELECT_CLS} value={form.rashi} onChange={(e) => set('rashi', e.target.value ? Number(e.target.value) : '')}>
+                <option value="">Auto (from nakshatra)</option>
+                {RASHIS.map((r, i) => <option key={i + 1} value={i + 1}>{r}</option>)}
               </select>
             </Field>
           </div>
+          <Field label="Manglik Status" icon="warning">
+            <div className="flex gap-3">
+              {[['Not Manglik', false], ['Manglik', true]].map(([label, val]) => (
+                <button key={label} type="button"
+                  onClick={() => set('isManglik', val)}
+                  className={`flex-1 py-3 px-4 rounded-[18px] text-sm font-bold transition-all border-2 ${
+                    form.isManglik === val
+                      ? 'bg-primary text-white border-primary shadow-btn-primary'
+                      : 'bg-white border-surface-variant text-on-surface-variant hover:border-primary/40'
+                  }`}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </Field>
         </div>
 
         {/* Bio */}

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useRegisterProfile } from '../hooks/useProfiles'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
+import { NAKSHATRA_NAMES, RASHI_NAMES } from '../utils/astrology'
 
 const TOTAL_STEPS = 5
 
@@ -19,7 +20,8 @@ const INTERESTS_OPTIONS = ['Yoga', 'Travel', 'Music', 'Reading', 'Cooking', 'Tec
 const RELIGIONS = ['Hindu', 'Muslim', 'Christian', 'Sikh', 'Jain', 'Buddhist', 'Jewish', 'Other']
 const LANGUAGES = ['Hindi', 'Bengali', 'Telugu', 'Marathi', 'Tamil', 'Gujarati', 'Kannada', 'Malayalam', 'Punjabi', 'Odia', 'Urdu', 'English', 'Other']
 const DIET_OPTIONS = ['Vegetarian', 'Non-Vegetarian', 'Vegan', 'Jain', 'Eggetarian', 'Occasionally Non-Veg']
-const HOROSCOPE_OPTIONS = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces']
+const NAKSHATRAS = NAKSHATRA_NAMES.map((n, i) => `${i + 1} — ${n}`)
+const RASHIS = RASHI_NAMES.map((r, i) => `${i + 1} — ${r}`)
 const HEIGHT_OPTIONS = [
   `4'9" (145cm)`, `4'10" (147cm)`, `4'11" (150cm)`,
   `5'0" (152cm)`, `5'1" (155cm)`, `5'2" (157cm)`, `5'3" (160cm)`, `5'4" (163cm)`,
@@ -45,7 +47,7 @@ export default function RegisterPage() {
     firstName: '', lastName: '', gender: '', dateOfBirth: '',
     email: '', password: '',
     city: '', state: '', religion: '', caste: '', education: '', profession: '',
-    height: '', motherTongue: '', dietaryPreference: '', horoscope: '',
+    height: '', motherTongue: '', dietaryPreference: '', nakshatra: '', rashi: '', isManglik: false,
     photos: [],
     interests: [], bio: '',
     lookingForGender: '', ageMin: 22, ageMax: 35, partnerDescription: '',
@@ -84,7 +86,11 @@ export default function RegisterPage() {
   const handleSubmit = async () => {
     if (!validateStep()) return
     try {
-      await register.mutateAsync(form)
+      await register.mutateAsync({
+        ...form,
+        nakshatra: form.nakshatra || undefined,
+        rashi: form.rashi || undefined,
+      })
       setRegisteredEmail(form.email)
     } catch (err) {
       toast.error(err.message || 'Registration failed. Please try again.')
@@ -225,14 +231,30 @@ export default function RegisterPage() {
                       {DIET_OPTIONS.map((d) => <option key={d}>{d}</option>)}
                     </select>
                   </Field>
-                  <Field label="Horoscope" icon="auto_awesome">
-                    <select value={form.horoscope} onChange={(e) => set('horoscope', e.target.value)}
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Field label="Birth Star (Nakshatra)" icon="star">
+                    <select value={form.nakshatra} onChange={(e) => set('nakshatra', e.target.value ? Number(e.target.value) : '')}
                       className={SELECT_CLS}>
-                      <option value="">Select sign</option>
-                      {HOROSCOPE_OPTIONS.map((h) => <option key={h}>{h}</option>)}
+                      <option value="">Select nakshatra</option>
+                      {NAKSHATRAS.map((n, i) => <option key={i + 1} value={i + 1}>{n}</option>)}
+                    </select>
+                  </Field>
+                  <Field label="Moon Sign (Rashi)" icon="nightlight">
+                    <select value={form.rashi} onChange={(e) => set('rashi', e.target.value ? Number(e.target.value) : '')}
+                      className={SELECT_CLS}>
+                      <option value="">Auto (from nakshatra)</option>
+                      {RASHIS.map((r, i) => <option key={i + 1} value={i + 1}>{r}</option>)}
                     </select>
                   </Field>
                 </div>
+                <Field label="Manglik" icon="warning">
+                  <select value={form.isManglik ? 'yes' : 'no'} onChange={(e) => set('isManglik', e.target.value === 'yes')}
+                    className={SELECT_CLS}>
+                    <option value="no">Not Manglik</option>
+                    <option value="yes">Manglik</option>
+                  </select>
+                </Field>
               </>
             )}
 

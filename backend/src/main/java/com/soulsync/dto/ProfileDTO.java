@@ -23,7 +23,6 @@ public class ProfileDTO {
     private String motherTongue;
     private String dietaryPreference;
     private String education;
-    private String horoscope;
     private String bio;
     private String photoUrl;
     private Boolean isVerified;
@@ -34,6 +33,11 @@ public class ProfileDTO {
     private String lookingForGender;
     private Integer ageMin;
     private Integer ageMax;
+    private Integer nakshatra;
+    private Integer rashi;
+    private Boolean isManglik;
+    private String matchingTradition;
+    private Integer papaPoints;
 
     public static ProfileDTO from(Profile p) {
         return ProfileDTO.builder()
@@ -50,7 +54,6 @@ public class ProfileDTO {
                 .motherTongue(p.getMotherTongue())
                 .dietaryPreference(p.getDietaryPreference())
                 .education(p.getEducation())
-                .horoscope(p.getHoroscope())
                 .bio(p.getBio())
                 .photoUrl(p.getPhotoUrl())
                 .isVerified(p.getIsVerified())
@@ -61,6 +64,11 @@ public class ProfileDTO {
                 .lookingForGender(p.getLookingForGender())
                 .ageMin(p.getAgeMin())
                 .ageMax(p.getAgeMax())
+                .nakshatra(p.getNakshatra())
+                .rashi(p.getRashi())
+                .isManglik(p.getIsManglik())
+                .matchingTradition(p.getMatchingTradition())
+                .papaPoints(p.getPapaPoints())
                 .build();
     }
 

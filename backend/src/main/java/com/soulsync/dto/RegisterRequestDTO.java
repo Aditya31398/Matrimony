@@ -43,6 +43,12 @@ public class RegisterRequestDTO {
     private String height;
     private String motherTongue;
     private String dietaryPreference;
-    private String horoscope;
     private String caste;
+
+    // Vedic matching fields (optional at registration)
+    private Integer nakshatra;  // 1–27
+    private Integer rashi;      // 1–12
+    private Boolean isManglik;
+    private String matchingTradition;   // ASHTAKOOTA | DASHAKOOTA | null
+    private Integer papaPoints;
 }

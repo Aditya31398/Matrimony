@@ -3,11 +3,14 @@ import { useMyProfile } from '../hooks/useProfiles'
 import { VerifiedBadge, PremiumBadge } from '../components/ui/Badge'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate, Link } from 'react-router-dom'
+import { rashiLabel } from '../utils/astro'
+import { AVATAR_PLACEHOLDER, showPlaceholderOnError } from '../utils/placeholder'
 
 const INFO_FIELDS = [
   ['Religion', 'religion'], ['Caste', 'caste'], ['Height', 'height'],
   ['Mother Tongue', 'motherTongue'], ['Dietary Pref', 'dietaryPreference'],
-  ['Education', 'education'], ['Horoscope', 'horoscope'],
+  ['Education', 'education'], ['Phone', 'phone'],
+  ['Star (Nakshatra)', 'nakshatra'], ['Rashi', 'rashi'],
   ['Looking For', 'lookingForGender'], ['Age Range', null],
 ]
 
@@ -64,7 +67,8 @@ export default function MyProfilePage() {
           <div className="md:col-span-2">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
               className="relative rounded-[32px] overflow-hidden aspect-[4/5] shadow-card">
-              <img src={profile.photoUrl} alt={profile.firstName} className="w-full h-full object-cover" />
+              <img src={profile.photoUrl || AVATAR_PLACEHOLDER} onError={showPlaceholderOnError}
+                alt={profile.firstName} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-6 text-white">
                 {profile.isPremium && <div className="mb-2"><PremiumBadge /></div>}
                 <h2 className="text-2xl font-black leading-tight">
@@ -80,6 +84,22 @@ export default function MyProfilePage() {
 
           {/* Info */}
           <div className="md:col-span-3 space-y-5">
+            {/* Membership */}
+            <div className={`rounded-[28px] p-5 flex items-center gap-4 ${profile.isPremium ? 'bg-green-50 border border-green-200' : 'bg-primary-fixed border border-primary/10'}`}>
+              <span className={`material-symbols-outlined fill-icon text-3xl ${profile.isPremium ? 'text-green-700' : 'text-primary'}`}>workspace_premium</span>
+              <div className="flex-1">
+                <p className="font-black text-on-surface">{profile.isPremium ? 'Premium member' : 'Free member'}</p>
+                <p className="text-sm text-on-surface-variant">
+                  {profile.isPremium && profile.premiumUntil
+                    ? `Active until ${new Date(profile.premiumUntil).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}`
+                    : 'Upgrade to see full profiles, chat and check astro matches.'}
+                </p>
+              </div>
+              <Link to="/premium" className="text-sm font-bold text-primary hover:underline whitespace-nowrap">
+                {profile.isPremium ? 'Extend' : 'Upgrade'}
+              </Link>
+            </div>
+
             {/* Basic Info */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }}
               className="bg-white rounded-[28px] p-6 shadow-card border border-slate-100">
@@ -91,6 +111,7 @@ export default function MyProfilePage() {
                 {INFO_FIELDS.map(([label, key]) => {
                   const value = key === null
                     ? (profile.ageMin && profile.ageMax ? `${profile.ageMin} – ${profile.ageMax} yrs` : '—')
+                    : key === 'rashi' && profile.rashi ? rashiLabel(profile.rashi)
                     : (profile[key] ?? '—')
                   return (
                     <div key={label} className="flex flex-col gap-1">

@@ -24,6 +24,22 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage(), request.getDescription(false)));
     }
 
+    @ExceptionHandler(PremiumRequiredException.class)
+    public ResponseEntity<Map<String, Object>> handlePremiumRequired(PremiumRequiredException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body(Map.of(
+                "status", HttpStatus.PAYMENT_REQUIRED.value(),
+                "message", ex.getMessage(),
+                "code", "PREMIUM_REQUIRED",
+                "path", request.getDescription(false)));
+    }
+
+    @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResource(
+            org.springframework.web.servlet.resource.NoResourceFoundException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Not found", request.getDescription(false)));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex, WebRequest request) {
         Map<String, String> errors = new HashMap<>();

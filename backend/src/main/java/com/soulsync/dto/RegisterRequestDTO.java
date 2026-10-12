@@ -30,6 +30,7 @@ public class RegisterRequestDTO {
     private String religion;
     private String education;
     private String profession;
+    @Size(max = 20, message = "Phone must be at most 20 characters")
     private String phone;
     private List<String> interests;
     private List<String> lifestyle;
@@ -45,4 +46,6 @@ public class RegisterRequestDTO {
     private String dietaryPreference;
     private String horoscope;
     private String caste;
+    private String nakshatra;
+    private String rashi;
 }

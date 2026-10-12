@@ -36,12 +36,27 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    const status = error.response?.status
+    const data = error.response?.data
+
+    // Expired/invalid session: Spring answers 401, or 403 with an empty body
+    // (a real "access denied" carries a message). Sign out instead of showing broken pages.
+    if (localStorage.getItem('soulsync_token') && (status === 401 || (status === 403 && !data))) {
+      localStorage.removeItem('soulsync_token')
+      localStorage.removeItem('soulsync_user_id')
+      localStorage.removeItem('soulsync_profile_id')
+      window.location.assign('/login?expired=1')
+    }
+
     const message =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
+      data?.message ||
+      data?.error ||
       error.message ||
       'An unexpected error occurred'
-    return Promise.reject(new Error(message))
+    const err = new Error(message)
+    err.status = status
+    err.code = data?.code   // e.g. PREMIUM_REQUIRED
+    return Promise.reject(err)
   }
 )
 

@@ -19,6 +19,13 @@ export default function LoginPage() {
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }))
 
+  // Set by the API client when a session expires mid-use
+  useEffect(() => {
+    if (new URLSearchParams(location.search).get('expired')) {
+      toast('Your session expired. Please sign in again.', { id: 'session-expired' })
+    }
+  }, [location.search])
+
   useEffect(() => {
     if (cooldown <= 0) return
     const t = setTimeout(() => setCooldown((c) => c - 1), 1000)

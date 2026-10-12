@@ -5,28 +5,19 @@ import InterestCard from '../components/ui/InterestCard'
 import { NewBadge } from '../components/ui/Badge'
 import { SkeletonProfileCard, SkeletonInterestCard } from '../components/ui/SkeletonCard'
 import { useTopPicks, useViewers } from '../hooks/useProfiles'
-import { useInterested } from '../hooks/useMatches'
+import { useInterested, useMatches } from '../hooks/useMatches'
 import { useConversations } from '../hooks/useMessages'
+import { AVATAR_PLACEHOLDER, showPlaceholderOnError } from '../utils/placeholder'
 
-const FALLBACK_TOP_PICKS = [
-  { id: 1, firstName: 'Aditi', age: 26, profession: 'Product Designer', city: 'Mumbai', isVerified: true, photoUrl: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&q=80', interests: ['Design', 'Travel'] },
-  { id: 2, firstName: 'Rohan', age: 29, profession: 'Architect', city: 'Bengaluru', isVerified: true, photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80', interests: ['Hiking', 'Tech'] },
-  { id: 3, firstName: 'Sanya', age: 27, profession: 'Professor', city: 'Pune', isVerified: false, photoUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&q=80', interests: ['Books', 'Art'] },
-  { id: 4, firstName: 'Kabir', age: 30, profession: 'Fitness Lead', city: 'Delhi', isVerified: false, photoUrl: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=600&q=80', interests: ['Sports', 'Music'] },
-]
-
-const FALLBACK_INTERESTED = [
-  { id: 1, profile: { id: 5, firstName: 'Meera', age: 25, profession: 'Software Engineer', photoUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&q=80', isVerified: true } },
-  { id: 2, profile: { id: 6, firstName: 'Varun', age: 28, profession: 'Financial Analyst', photoUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80', isVerified: false } },
-  { id: 3, profile: { id: 7, firstName: 'Ishita', age: 26, profession: 'UX Researcher', photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80', isVerified: true } },
-  { id: 4, profile: { id: 8, firstName: 'Arjun', age: 31, profession: 'Tech Lead', photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80', isVerified: false } },
-]
-
-const FALLBACK_CONVERSATIONS = [
-  { id: 1, otherProfile: { firstName: 'Priya Sharma', photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80' }, lastMessage: 'That sounds like a great plan!', lastMessageTime: '12:45 PM', isOnline: true },
-  { id: 2, otherProfile: { firstName: 'Rahul Verma', photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80' }, lastMessage: 'Sent a photo', lastMessageTime: 'Yesterday', isOnline: false },
-  { id: 3, otherProfile: { firstName: 'Sneha Kapur', photoUrl: 'https://images.unsplash.com/photo-1526413232644-8a40f03cc03b?w=100&q=80' }, lastMessage: 'Nice to meet you!', lastMessageTime: 'Monday', isOnline: false },
-]
+function EmptyState({ icon, title, children }) {
+  return (
+    <div className="col-span-full flex flex-col items-center justify-center text-center gap-2 py-10 px-6 rounded-[24px] border-2 border-dashed border-surface-variant text-on-surface-variant">
+      <span className="material-symbols-outlined text-4xl opacity-40">{icon}</span>
+      <p className="font-bold text-on-surface">{title}</p>
+      {children && <p className="text-sm">{children}</p>}
+    </div>
+  )
+}
 
 const stagger = {
   hidden: {},
@@ -38,14 +29,11 @@ const fadeUp = {
 }
 
 export default function DashboardPage() {
-  const { data: picks, isLoading: picksLoading } = useTopPicks()
-  const { data: interested, isLoading: intLoading } = useInterested()
-  const { data: conversations, isLoading: convLoading } = useConversations()
+  const { data: topPicks = [], isLoading: picksLoading } = useTopPicks()
+  const { data: interestedList = [], isLoading: intLoading } = useInterested()
+  const { data: convList = [], isLoading: convLoading } = useConversations()
+  const { data: matches = [] } = useMatches()
   const { data: viewers } = useViewers()
-
-  const topPicks = picks ?? FALLBACK_TOP_PICKS
-  const interestedList = interested ?? FALLBACK_INTERESTED
-  const convList = conversations ?? FALLBACK_CONVERSATIONS
 
   return (
     <motion.main
@@ -76,13 +64,38 @@ export default function DashboardPage() {
             ? [...Array(4)].map((_, i) => (
                 <motion.div key={i} variants={fadeUp}><SkeletonProfileCard /></motion.div>
               ))
-            : topPicks.map((p) => (
+            : topPicks.length === 0
+              ? <EmptyState icon="person_search" title="No profiles yet">New members join every day — check back soon.</EmptyState>
+              : topPicks.map((p) => (
                 <motion.div key={p.id} variants={fadeUp}>
                   <ProfileCard profile={p} variant="compact" />
                 </motion.div>
               ))}
         </motion.div>
       </section>
+
+      {/* ── Your Matches (accepted connections) ─────────────────────── */}
+      {matches.length > 0 && (
+        <section className="mb-16">
+          <div className="flex justify-between items-end mb-6">
+            <h2 className="text-headline-lg font-black text-on-surface">Your Matches</h2>
+            <span className="text-sm font-bold text-on-surface-variant">{matches.length} connected</span>
+          </div>
+          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+            {matches.map(({ id, profile: p }) => (
+              <Link key={id} to={`/profile/${p.id}`} className="flex-shrink-0">
+                <motion.div whileHover={{ y: -4 }} className="flex flex-col items-center gap-2 w-24 cursor-pointer">
+                  <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-primary">
+                    <img src={p.photoUrl || AVATAR_PLACEHOLDER} onError={showPlaceholderOnError} alt={p.firstName}
+                      className="w-full h-full object-cover" />
+                  </div>
+                  <span className="text-xs font-bold text-on-surface text-center truncate w-full">{p.firstName}, {p.age}</span>
+                </motion.div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ── Who Viewed Me ───────────────────────────────────────────── */}
       {viewers && viewers.length > 0 && (
@@ -96,13 +109,15 @@ export default function DashboardPage() {
               <Link key={p.id} to={`/profile/${p.id}`} className="flex-shrink-0">
                 <motion.div whileHover={{ y: -4 }} className="flex flex-col items-center gap-2 w-24 cursor-pointer">
                   <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-orange-200">
-                    <img src={p.photoUrl} alt={p.firstName}
+                    <img src={p.photoUrl || AVATAR_PLACEHOLDER} alt={p.firstName}
                       className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                      onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100&q=80' }}
+                      onError={showPlaceholderOnError}
                     />
                   </div>
                   <span className="text-xs font-bold text-on-surface text-center truncate w-full">{p.firstName}</span>
-                  <span className="text-[10px] text-on-surface-variant truncate w-full text-center">{p.profession}</span>
+                  <span className="text-[10px] text-on-surface-variant truncate w-full text-center">
+                    {p.restricted ? [p.caste, p.religion].filter(Boolean).join(' • ') : p.profession}
+                  </span>
                 </motion.div>
               </Link>
             ))}
@@ -116,12 +131,14 @@ export default function DashboardPage() {
         <section className="lg:col-span-2">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-headline-lg font-black text-on-surface">Interested in You</h2>
-            <NewBadge count={interestedList.length} />
+            {interestedList.length > 0 && <NewBadge count={interestedList.length} />}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {intLoading
               ? [...Array(4)].map((_, i) => <SkeletonInterestCard key={i} />)
-              : interestedList.map((match) => (
+              : interestedList.length === 0
+                ? <EmptyState icon="favorite" title="No requests yet">When someone sends you a connect request, it shows up here.</EmptyState>
+                : interestedList.map((match) => (
                   <InterestCard key={match.id} match={match} />
                 ))}
           </div>
@@ -150,13 +167,16 @@ export default function DashboardPage() {
                   </div>
                 ))}
               </div>
+            ) : convList.length === 0 ? (
+              <p className="p-6 text-center text-sm text-on-surface-variant">No conversations yet.</p>
             ) : (
-              convList.map((conv) => (
+              convList.slice(0, 5).map((conv) => (
                 <Link key={conv.id} to={`/messages/${conv.id}`}>
                   <div className="flex items-center gap-4 p-4 hover:bg-surface-container rounded-[18px] transition-colors cursor-pointer">
                     <div className="relative flex-shrink-0">
                       <div className="w-12 h-12 rounded-full overflow-hidden">
-                        <img src={conv.otherProfile?.photoUrl} alt={conv.otherProfile?.firstName} className="w-full h-full object-cover" loading="lazy" />
+                        <img src={conv.otherProfile?.photoUrl || AVATAR_PLACEHOLDER} onError={showPlaceholderOnError}
+                          alt={conv.otherProfile?.firstName} className="w-full h-full object-cover" loading="lazy" />
                       </div>
                       {conv.isOnline && (
                         <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />

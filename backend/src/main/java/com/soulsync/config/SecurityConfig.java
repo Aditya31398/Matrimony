@@ -49,6 +49,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // CORS pre-flight requests must never be blocked by Spring Security
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                // Let error responses (e.g. 404s for public files) through unchanged
+                .requestMatchers("/error").permitAll()
                 // WebSocket handshake (JWT validated by WebSocketAuthInterceptor on STOMP CONNECT)
                 .requestMatchers("/ws/**").permitAll()
                 // Public auth endpoints
@@ -66,6 +68,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/upload/**").permitAll()
                 // Uploaded photos are served publicly so <img> tags can load them
                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+                // Razorpay server-to-server callback (verified by HMAC signature)
+                .requestMatchers(HttpMethod.POST, "/api/payments/webhook").permitAll()
                 // Public success stories (landing page)
                 .requestMatchers(HttpMethod.GET, "/api/stories/**").permitAll()
                 // Everything else requires a valid JWT

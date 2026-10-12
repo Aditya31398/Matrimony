@@ -58,15 +58,24 @@ public class ProfileService {
                 : gender;
         String normalizedInterest = (interest == null || interest.isBlank()) ? null : interest.trim();
         String normalizedCity = (city == null || city.isBlank()) ? null : city.trim();
+        boolean premium = isPremium(excludeId);
         return profileRepo.findWithFilters(excludeId, edu, gen, verified, normalizedCity, normalizedInterest, pageable)
-                .map(ProfileSummaryDTO::from);
+                .map(p -> ProfileSummaryDTO.from(p, premium));
+    }
+
+    /** Free members see only photo, name, age, caste and religion of other profiles. */
+    @Transactional(readOnly = true)
+    public ProfileDTO getById(Long id, Long viewerId) {
+        Profile profile = profileRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Profile", id));
+        boolean fullAccess = id.equals(viewerId) || isPremium(viewerId);
+        return fullAccess ? ProfileDTO.from(profile) : ProfileDTO.limited(profile);
     }
 
     @Transactional(readOnly = true)
-    public ProfileDTO getById(Long id) {
-        return profileRepo.findById(id)
-                .map(ProfileDTO::from)
-                .orElseThrow(() -> new ResourceNotFoundException("Profile", id));
+    public boolean isPremium(Long profileId) {
+        if (profileId == null) return false;
+        return profileRepo.findById(profileId).map(Profile::hasActivePremium).orElse(false);
     }
 
     @Cacheable(value = "topPicks", key = "#excludeId")
@@ -74,11 +83,12 @@ public class ProfileService {
     public List<ProfileSummaryDTO> getTopPicks(Long excludeId) {
         Pageable pageable = PageRequest.of(0, 8, Sort.by("isPremium").descending().and(Sort.by("createdAt").descending()));
         String genderFilter = self.resolveGenderFilter(excludeId);
+        boolean premium = isPremium(excludeId);
         return (excludeId != null
                 ? profileRepo.findTopPicks(excludeId, genderFilter, pageable)
                 : profileRepo.findTopPicks(genderFilter, pageable))
                 .stream()
-                .map(ProfileSummaryDTO::from)
+                .map(p -> ProfileSummaryDTO.from(p, premium))
                 .toList();
     }
 
@@ -107,9 +117,10 @@ public class ProfileService {
         Profile profile = profileRepo.findById(profileId)
                 .orElseThrow(() -> new ResourceNotFoundException("Profile", profileId));
         Pageable pageable = PageRequest.of(0, 20, Sort.by("viewedAt").descending());
+        boolean premium = profile.hasActivePremium();
         return profileViewRepo.findViewers(profile, pageable)
                 .stream()
-                .map(v -> ProfileSummaryDTO.from(v.getViewer()))
+                .map(v -> ProfileSummaryDTO.from(v.getViewer(), premium))
                 .toList();
     }
 
@@ -128,6 +139,10 @@ public class ProfileService {
         if (req.getMotherTongue() != null)      profile.setMotherTongue(req.getMotherTongue());
         if (req.getDietaryPreference() != null) profile.setDietaryPreference(req.getDietaryPreference());
         if (req.getHoroscope() != null)         profile.setHoroscope(req.getHoroscope());
+        if (req.getPhone() != null)             profile.setPhone(blankToNull(req.getPhone()));
+        if (req.getNakshatra() != null)         profile.setNakshatra(blankToNull(req.getNakshatra()));
+        if (req.getRashi() != null)             profile.setRashi(blankToNull(req.getRashi()));
+        validateStars(profile.getNakshatra(), profile.getRashi());
         if (req.getEducation() != null)         profile.setEducation(req.getEducation());
         if (req.getBio() != null)               profile.setBio(req.getBio());
         if (req.getLookingForGender() != null)  profile.setLookingForGender(req.getLookingForGender());
@@ -146,10 +161,12 @@ public class ProfileService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProfileSummaryDTO> search(String city, String education, String gender, int page, int size) {
+    public List<ProfileSummaryDTO> search(String city, String education, String gender, int page, int size,
+                                          Long viewerId) {
         Pageable pageable = PageRequest.of(page, size);
+        boolean premium = isPremium(viewerId);
         return profileRepo.search(city, education, gender, pageable)
-                .map(ProfileSummaryDTO::from)
+                .map(p -> ProfileSummaryDTO.from(p, premium))
                 .toList();
     }
 
@@ -163,6 +180,7 @@ public class ProfileService {
         if (req.getPassword() == null || req.getPassword().isBlank()) {
             throw new IllegalArgumentException("Password is required");
         }
+        validateStars(blankToNull(req.getNakshatra()), blankToNull(req.getRashi()));
         User user = User.builder()
                 .email(req.getEmail())
                 .passwordHash(passwordEncoder.encode(req.getPassword()))
@@ -185,6 +203,9 @@ public class ProfileService {
                 .motherTongue(req.getMotherTongue())
                 .dietaryPreference(req.getDietaryPreference())
                 .horoscope(req.getHoroscope())
+                .phone(blankToNull(req.getPhone()))
+                .nakshatra(blankToNull(req.getNakshatra()))
+                .rashi(blankToNull(req.getRashi()))
                 .education(req.getEducation())
                 .bio(req.getBio())
                 .lookingForGender(req.getLookingForGender())
@@ -204,6 +225,9 @@ public class ProfileService {
                 profile.setDateOfBirth(LocalDate.parse(req.getDateOfBirth()));
             } catch (Exception e) {
                 throw new IllegalArgumentException("Invalid date of birth format. Expected yyyy-MM-dd");
+            }
+            if (profile.getAge() < 18) {
+                throw new IllegalArgumentException("You must be at least 18 years old to register");
             }
         }
 
@@ -246,6 +270,23 @@ public class ProfileService {
             case "high school" -> "High School";
             default -> education;
         };
+    }
+
+    /** Star and rashi are optional, but must be real names and agree with each other. */
+    private void validateStars(String nakshatra, String rashi) {
+        if (nakshatra != null && !AstrologyService.isValidNakshatra(nakshatra)) {
+            throw new IllegalArgumentException("Unknown star (nakshatra)");
+        }
+        if (rashi != null && !AstrologyService.isValidRashi(rashi)) {
+            throw new IllegalArgumentException("Unknown rashi");
+        }
+        if (nakshatra != null && rashi != null && !AstrologyService.isConsistent(nakshatra, rashi)) {
+            throw new IllegalArgumentException(nakshatra + " does not fall in " + rashi + " rashi");
+        }
+    }
+
+    private static String blankToNull(String s) {
+        return s == null || s.isBlank() ? null : s.trim();
     }
 
     private String primaryPhoto(RegisterRequestDTO req) {

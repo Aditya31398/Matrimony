@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import ProfileCard from '../components/ui/ProfileCard'
 import { SkeletonProfileCard } from '../components/ui/SkeletonCard'
+import { Link } from 'react-router-dom'
 import { useInfiniteProfiles, useMyProfile } from '../hooks/useProfiles'
 
 const FILTER_CHIPS = [
@@ -14,15 +15,6 @@ const FILTER_CHIPS = [
 ]
 
 const EDUCATION_OPTIONS = ['Any Education', 'Masters Degree', 'PhD / Doctorate', 'Bachelors Degree']
-
-const FALLBACK_PROFILES = [
-  { id: 1, firstName: 'Ananya', age: 28, profession: 'Product Designer',   city: 'Mumbai',    isVerified: true,  photoUrl: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&q=80', interests: ['Art', 'Travel'] },
-  { id: 2, firstName: 'Rohan',  age: 31, profession: 'Software Architect', city: 'Bangalore', isVerified: false, photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80', interests: ['Hiking', 'Tech'] },
-  { id: 3, firstName: 'Meera',  age: 27, profession: 'Pediatrician',       city: 'Delhi',     isVerified: true,  photoUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&q=80', interests: ['Yoga', 'Music'] },
-  { id: 4, firstName: 'Arjun',  age: 33, profession: 'Creative Director',  city: 'Pune',      isVerified: true,  photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&q=80', interests: ['Photo', 'Design'] },
-  { id: 5, firstName: 'Ishita', age: 26, profession: 'UX Researcher',      city: 'Chennai',   isVerified: true,  photoUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&q=80', interests: ['Design', 'Poetry'] },
-  { id: 6, firstName: 'Kabir',  age: 30, profession: 'Fitness Lead',       city: 'Delhi',     isVerified: false, photoUrl: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=600&q=80', interests: ['Sports', 'Travel'] },
-]
 
 export default function DiscoverPage() {
   const [activeChip, setActiveChip] = useState('for_you')
@@ -74,7 +66,7 @@ export default function DiscoverPage() {
   // Flatten all loaded pages into a single profile list
   const profiles = data
     ? data.pages.flatMap((page) => page?.content ?? (Array.isArray(page) ? page : []))
-    : (isError ? FALLBACK_PROFILES : null)
+    : null
 
   return (
     <motion.main
@@ -116,13 +108,15 @@ export default function DiscoverPage() {
           </div>
         </div>
 
-        <div className="p-6 rounded-3xl bg-primary-fixed border border-primary/10">
-          <p className="text-xs font-bold text-on-primary-fixed-variant tracking-widest uppercase mb-1">SoulSync Premium</p>
-          <p className="text-lg font-black text-on-primary-fixed-variant mb-4 leading-snug">Unlock 3× more Daily Matches</p>
-          <button className="w-full bg-gradient-to-r from-primary to-primary-container text-white py-3 rounded-2xl text-sm font-bold shadow-btn-primary hover:shadow-btn-primary-hover active:scale-95 transition-all">
-            Upgrade Now
-          </button>
-        </div>
+        {!myProfile?.isPremium && (
+          <div className="p-6 rounded-3xl bg-primary-fixed border border-primary/10">
+            <p className="text-xs font-bold text-on-primary-fixed-variant tracking-widest uppercase mb-1">Premium</p>
+            <p className="text-lg font-black text-on-primary-fixed-variant mb-4 leading-snug">See full profiles, chat and check astro matches</p>
+            <Link to="/premium" className="block text-center w-full bg-gradient-to-r from-primary to-primary-container text-white py-3 rounded-2xl text-sm font-bold shadow-btn-primary hover:shadow-btn-primary-hover active:scale-95 transition-all">
+              Upgrade Now
+            </Link>
+          </div>
+        )}
       </aside>
 
       {/* ── Main feed ───────────────────────────────────────────────── */}
@@ -162,6 +156,12 @@ export default function DiscoverPage() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {[...Array(6)].map((_, i) => <SkeletonProfileCard key={i} />)}
+          </div>
+        ) : isError ? (
+          <div className="flex flex-col items-center justify-center py-24 gap-4 text-on-surface-variant">
+            <span className="material-symbols-outlined text-6xl opacity-30">cloud_off</span>
+            <p className="text-lg font-bold">Couldn't load profiles</p>
+            <p className="text-sm">Check your connection and refresh the page.</p>
           </div>
         ) : profiles && profiles.length > 0 ? (
           <>

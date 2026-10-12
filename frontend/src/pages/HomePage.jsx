@@ -36,33 +36,6 @@ const STATS = [
   { value: '12+', label: 'Years of Trust' },
 ]
 
-const FALLBACK_STORIES = [
-  {
-    id: 1,
-    coupleNames: 'Ananya & Rohan',
-    matchedDate: 'June 2023',
-    story: '"We found each other through the Values First search. It wasn\'t about data points; it was about the soul connection we felt from the first message."',
-    photoUrl: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&q=80',
-    rating: 5,
-  },
-  {
-    id: 2,
-    coupleNames: 'Priya & Arjun',
-    matchedDate: 'October 2023',
-    story: '"SoulSync\'s personality tags made all the difference. We realized we shared a love for quiet mornings and sustainable living before even meeting."',
-    photoUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80',
-    rating: 5,
-  },
-  {
-    id: 3,
-    coupleNames: 'Kavita & Sameer',
-    matchedDate: 'January 2024',
-    story: '"The verification process gave me so much peace of mind. It was refreshing to be on a platform that actually prioritizes safety and sincerity."',
-    photoUrl: 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=600&q=80',
-    rating: 5,
-  },
-]
-
 const stagger = {
   hidden: {},
   show: { transition: { staggerChildren: 0.12 } },
@@ -79,7 +52,7 @@ export default function HomePage() {
   const [ageMin, setAgeMin] = useState(24)
   const [ageMax, setAgeMax] = useState(32)
   const { data: stories, isLoading } = useStories()
-  const displayStories = stories?.length ? stories.slice(0, 3) : FALLBACK_STORIES
+  const displayStories = stories?.slice(0, 3) ?? []
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -241,7 +214,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Success Stories ───────────────────────────────────────────── */}
+      {/* ── Success Stories (only real ones from the database) ──────────── */}
+      {(isLoading || displayStories.length > 0) && (
       <section className="section-padding bg-surface overflow-hidden">
         <div className="page-container">
           <div className="flex flex-col md:flex-row justify-between items-end mb-14 gap-6">
@@ -249,10 +223,6 @@ export default function HomePage() {
               <span className="text-primary font-bold tracking-widest uppercase text-xs mb-3 block">Our Wall of Joy</span>
               <h2 className="text-headline-lg text-on-surface font-black">SoulSync Success Stories</h2>
             </div>
-            <button className="flex-shrink-0 bg-white border-2 border-orange-100 text-orange-600 px-7 py-3 rounded-full font-bold hover:bg-orange-50 transition-colors flex items-center gap-2 group">
-              View All Stories
-              <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
-            </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -291,6 +261,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ── CTA ───────────────────────────────────────────────────────── */}
       <section className="section-padding px-6">

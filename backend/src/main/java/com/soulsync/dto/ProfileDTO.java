@@ -4,6 +4,7 @@ import com.soulsync.model.Profile;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class ProfileDTO {
     private String horoscope;
     private String bio;
     private String photoUrl;
+    private List<String> photos;
     private Boolean isVerified;
     private Boolean isPremium;
     private List<String> interests;
@@ -34,6 +36,12 @@ public class ProfileDTO {
     private String lookingForGender;
     private Integer ageMin;
     private Integer ageMax;
+    private String phone;
+    private String nakshatra;
+    private String rashi;
+    private LocalDateTime premiumUntil;
+    /** True when details were withheld because the viewer isn't premium */
+    private boolean restricted;
 
     public static ProfileDTO from(Profile p) {
         return ProfileDTO.builder()
@@ -53,14 +61,35 @@ public class ProfileDTO {
                 .horoscope(p.getHoroscope())
                 .bio(p.getBio())
                 .photoUrl(p.getPhotoUrl())
+                .photos(splitTags(p.getPhotos()))
                 .isVerified(p.getIsVerified())
-                .isPremium(p.getIsPremium())
                 .interests(splitTags(p.getInterests()))
                 .lifestyle(splitTags(p.getLifestyle()))
                 .lookingFor(splitTags(p.getLookingFor()))
                 .lookingForGender(p.getLookingForGender())
                 .ageMin(p.getAgeMin())
                 .ageMax(p.getAgeMax())
+                .phone(p.getPhone())
+                .nakshatra(p.getNakshatra())
+                .rashi(p.getRashi())
+                .isPremium(p.hasActivePremium())
+                .premiumUntil(p.getPremiumUntil())
+                .build();
+    }
+
+    /** What free members may see of someone else: photo, name, age, caste and religion. */
+    public static ProfileDTO limited(Profile p) {
+        return ProfileDTO.builder()
+                .id(p.getId())
+                .firstName(p.getFirstName())
+                .lastName(p.getLastName())
+                .age(p.getAge())
+                .religion(p.getReligion())
+                .caste(p.getCaste())
+                .photoUrl(p.getPhotoUrl())
+                .isVerified(p.getIsVerified())
+                .isPremium(p.hasActivePremium())
+                .restricted(true)
                 .build();
     }
 

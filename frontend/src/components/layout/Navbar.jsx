@@ -18,7 +18,10 @@ export default function Navbar() {
     { to: '/dashboard', label: t('nav.matches') },
     { to: '/', label: t('nav.stories') },
     { to: '/messages', label: t('nav.messages') },
-    ...(isLoggedIn ? [{ to: '/my-profile', label: t('nav.myProfile') }] : []),
+    ...(isLoggedIn ? [
+      { to: '/my-profile', label: t('nav.myProfile') },
+      { to: '/premium', label: t('nav.premium') },
+    ] : []),
   ]
 
   const handleLogout = () => {

@@ -25,6 +25,9 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/soulsync?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: soulsync
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      # Message times and premium expiry are shown to Indian users
+      TZ: Asia/Kolkata
+      JAVA_TOOL_OPTIONS: -Duser.timezone=Asia/Kolkata
     volumes: [uploads:/app/uploads]
 
   caddy:

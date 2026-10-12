@@ -43,6 +43,15 @@ public class ProfileUpdateDTO {
     @Size(max = 50, message = "Horoscope must be at most 50 characters")
     private String horoscope;
 
+    @Size(max = 20, message = "Phone must be at most 20 characters")
+    private String phone;
+
+    @Size(max = 30, message = "Star must be at most 30 characters")
+    private String nakshatra;
+
+    @Size(max = 20, message = "Rashi must be at most 20 characters")
+    private String rashi;
+
     @Size(max = 100, message = "Education must be at most 100 characters")
     private String education;
 

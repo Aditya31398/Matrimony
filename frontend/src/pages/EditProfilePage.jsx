@@ -6,11 +6,11 @@ import { profileService } from '../services/profileService'
 import { useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import api from '../services/api'
+import { NAKSHATRAS, rashisForNakshatra, rashiLabel } from '../utils/astro'
 
 const RELIGIONS = ['Hindu', 'Muslim', 'Christian', 'Sikh', 'Jain', 'Buddhist', 'Parsi', 'Jewish', 'No Religion', 'Other']
 const LANGUAGES = ['Hindi', 'English', 'Bengali', 'Telugu', 'Marathi', 'Tamil', 'Gujarati', 'Kannada', 'Malayalam', 'Punjabi', 'Odia', 'Other']
 const DIET_OPTIONS = ['Vegetarian', 'Non-Vegetarian', 'Vegan', 'Jain', 'Eggetarian']
-const HOROSCOPE_OPTIONS = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces']
 const HEIGHT_OPTIONS = Array.from({ length: 21 }, (_, i) => {
   const totalIn = 57 + i
   const ft = Math.floor(totalIn / 12)
@@ -76,7 +76,9 @@ export default function EditProfilePage() {
         height: profile.height ?? '',
         motherTongue: profile.motherTongue ?? '',
         dietaryPreference: profile.dietaryPreference ?? '',
-        horoscope: profile.horoscope ?? '',
+        phone: profile.phone ?? '',
+        nakshatra: profile.nakshatra ?? '',
+        rashi: profile.rashi ?? '',
         education: profile.education ?? '',
         bio: profile.bio ?? '',
         photoUrl: profile.photoUrl ?? '',
@@ -117,6 +119,8 @@ export default function EditProfilePage() {
 
   const handleSave = async () => {
     if (!form.firstName.trim()) { toast.error('First name is required'); return }
+    if (form.phone && !/^\+?[0-9 ]{10,15}$/.test(form.phone.trim())) { toast.error('Please enter a valid phone number'); return }
+    if (form.nakshatra && !form.rashi) { toast.error('Please pick your rashi too'); return }
     setSaving(true)
     try {
       await profileService.update(profile.id, {
@@ -252,13 +256,36 @@ export default function EditProfilePage() {
                 {DIET_OPTIONS.map((d) => <option key={d}>{d}</option>)}
               </select>
             </Field>
-            <Field label="Horoscope" icon="auto_awesome">
-              <select className={SELECT_CLS} value={form.horoscope} onChange={(e) => set('horoscope', e.target.value)}>
-                <option value="">Select sign</option>
-                {HOROSCOPE_OPTIONS.map((h) => <option key={h}>{h}</option>)}
+            <Field label="Phone" icon="call">
+              <input className={INPUT_CLS} type="tel" maxLength={20} value={form.phone}
+                onChange={(e) => set('phone', e.target.value)} placeholder="+91 98765 43210" />
+            </Field>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Star (Nakshatra)" icon="auto_awesome">
+              <select className={SELECT_CLS} value={form.nakshatra}
+                onChange={(e) => {
+                  const n = e.target.value
+                  const options = rashisForNakshatra(n)
+                  setForm((f) => ({
+                    ...f,
+                    nakshatra: n,
+                    // Keep the rashi only if it's still possible for this star
+                    rashi: !n ? '' : options.length === 1 ? options[0] : (options.includes(f.rashi) ? f.rashi : ''),
+                  }))
+                }}>
+                <option value="">Not set</option>
+                {NAKSHATRAS.map((n) => <option key={n}>{n}</option>)}
+              </select>
+            </Field>
+            <Field label="Rashi (Moon sign)" icon="dark_mode">
+              <select className={SELECT_CLS} value={form.rashi} onChange={(e) => set('rashi', e.target.value)}>
+                <option value="">Not set</option>
+                {rashisForNakshatra(form.nakshatra).map((r) => <option key={r} value={r}>{rashiLabel(r)}</option>)}
               </select>
             </Field>
           </div>
+          <p className="text-xs text-on-surface-variant -mt-2">Phone, star and rashi are shown only to Premium members. Star and rashi power astro matching.</p>
         </div>
 
         {/* Bio */}

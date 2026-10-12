@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { VerifiedBadge } from './Badge'
 import { useAcceptMatch, useDeclineMatch } from '../../hooks/useMatches'
-
-const PLACEHOLDER = 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&q=80'
+import { AVATAR_PLACEHOLDER, showPlaceholderOnError } from '../../utils/placeholder'
+import toast from 'react-hot-toast'
 
 export default function InterestCard({ match }) {
   const accept = useAcceptMatch()
@@ -11,7 +11,8 @@ export default function InterestCard({ match }) {
 
   if (!match) return null
   const { id, profile } = match
-  const { firstName, age, profession, photoUrl, isVerified } = profile ?? {}
+  const { firstName, age, profession, photoUrl, isVerified, restricted, caste, religion } = profile ?? {}
+  const subtitle = restricted ? [caste, religion].filter(Boolean).join(' • ') : profession
 
   return (
     <motion.div
@@ -21,7 +22,8 @@ export default function InterestCard({ match }) {
       <Link to={`/profile/${profile?.id}`} className="flex-shrink-0">
         <div className="w-20 h-20 rounded-2xl overflow-hidden">
           <img
-            src={photoUrl || PLACEHOLDER}
+            src={photoUrl || AVATAR_PLACEHOLDER}
+            onError={showPlaceholderOnError}
             alt={firstName}
             className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
             loading="lazy"
@@ -35,17 +37,22 @@ export default function InterestCard({ match }) {
           </h4>
           {isVerified && <VerifiedBadge />}
         </div>
-        <p className="text-on-surface-variant text-sm mb-3 truncate">{profession}</p>
+        <p className="text-on-surface-variant text-sm mb-3 truncate">{subtitle || '\u00a0'}</p>
         <div className="flex gap-2">
           <button
-            onClick={() => accept.mutate(id)}
+            onClick={() => accept.mutate(id, {
+              onSuccess: () => toast.success(`You and ${firstName} are now connected`),
+              onError: (e) => toast.error(e.message || 'Could not accept'),
+            })}
             disabled={accept.isPending}
             className="text-xs font-bold text-primary px-3 py-1.5 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors disabled:opacity-60 active:scale-95"
           >
             Accept
           </button>
           <button
-            onClick={() => decline.mutate(id)}
+            onClick={() => decline.mutate(id, {
+              onError: (e) => toast.error(e.message || 'Could not decline'),
+            })}
             disabled={decline.isPending}
             className="text-xs font-bold text-on-surface-variant px-3 py-1.5 hover:bg-surface-container rounded-lg transition-colors disabled:opacity-60 active:scale-95"
           >

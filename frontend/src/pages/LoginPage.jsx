@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import api from '../services/api'
@@ -7,8 +7,9 @@ import toast from 'react-hot-toast'
 
 export default function LoginPage() {
   const navigate = useNavigate()
-  const { login } = useAuth()
-  const [form, setForm] = useState({ email: '', password: '' })
+  const location = useLocation()
+  const { login, isLoggedIn } = useAuth()
+  const [form, setForm] = useState({ email: location.state?.email || '', password: '' })
   const [loading, setLoading] = useState(false)
   const [unverified, setUnverified] = useState(false)
   const [otp, setOtp] = useState('')
@@ -17,6 +18,13 @@ export default function LoginPage() {
   const [cooldown, setCooldown] = useState(0)
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }))
+
+  // Set by the API client when a session expires mid-use
+  useEffect(() => {
+    if (new URLSearchParams(location.search).get('expired')) {
+      toast('Your session expired. Please sign in again.', { id: 'session-expired' })
+    }
+  }, [location.search])
 
   useEffect(() => {
     if (cooldown <= 0) return
@@ -51,7 +59,7 @@ export default function LoginPage() {
     if (otp.length !== 6) { toast.error('Enter the 6-digit code'); return }
     setVerifying(true)
     try {
-      await api.post('/auth/verify-otp', { email: form.email, otp })
+      await api.post('/auth/verify-otp', { email: form.email.trim(), otp })
       toast.success('Email verified! Signing you in…')
       await login(form.email, form.password)
       navigate('/dashboard')
@@ -65,7 +73,7 @@ export default function LoginPage() {
   const handleResend = async () => {
     setResending(true)
     try {
-      await api.post('/auth/resend-otp', { email: form.email })
+      await api.post('/auth/resend-otp', { email: form.email.trim() })
       toast.success('New code sent — check your inbox')
       setOtp('')
       setCooldown(60)
@@ -75,6 +83,9 @@ export default function LoginPage() {
       setResending(false)
     }
   }
+
+  // Already signed in (and not mid-way through verifying) — go straight in
+  if (isLoggedIn && !unverified) return <Navigate to="/dashboard" replace />
 
   return (
     <motion.div
@@ -112,7 +123,12 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-bold text-on-surface-variant block">Password</label>
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-bold text-on-surface-variant block">Password</label>
+              <Link to="/forgot-password" state={{ email: form.email }} className="text-xs font-bold text-primary hover:underline">
+                Forgot password?
+              </Link>
+            </div>
             <div className="relative">
               <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">lock</span>
               <input

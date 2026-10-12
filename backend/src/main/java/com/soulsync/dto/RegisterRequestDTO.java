@@ -19,6 +19,11 @@ public class RegisterRequestDTO {
     @Email(message = "Invalid email format")
     private String email;
 
+    /** Trim before validation — phone keyboards often add a trailing space. */
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
+    }
+
     @NotBlank(message = "Password is required")
     @Size(min = 8, max = 128, message = "Password must be 8–128 characters")
     private String password;
@@ -30,6 +35,7 @@ public class RegisterRequestDTO {
     private String religion;
     private String education;
     private String profession;
+    @Size(max = 20, message = "Phone must be at most 20 characters")
     private String phone;
     private List<String> interests;
     private List<String> lifestyle;
@@ -43,11 +49,10 @@ public class RegisterRequestDTO {
     private String height;
     private String motherTongue;
     private String dietaryPreference;
+    private String horoscope;
     private String caste;
-
-    // Vedic matching fields (optional at registration)
-    private Integer nakshatra;  // 1–27
-    private Integer rashi;      // 1–12
+    private String nakshatra;
+    private String rashi;
     private Boolean isManglik;
     private String matchingTradition;   // ASHTAKOOTA | DASHAKOOTA | null
     private Integer papaPoints;

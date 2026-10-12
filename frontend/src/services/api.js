@@ -19,6 +19,8 @@ api.interceptors.request.use(
     const token = localStorage.getItem('soulsync_token')
     if (token) config.headers.Authorization = `Bearer ${token}`
     config.headers['X-Tenant-ID'] = window.__TENANT_ID__ ?? 'soulsync'
+    const profileId = localStorage.getItem('soulsync_profile_id')
+    if (profileId) config.headers['X-Profile-Id'] = profileId
 
     // For FormData (file uploads) let axios/browser set Content-Type with
     // the correct multipart boundary — never force application/json.
@@ -34,12 +36,29 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    const status = error.response?.status
+    const data = error.response?.data
+
+    // Expired/invalid session: Spring answers 401, or 403 with an empty body
+    // (a real "access denied" carries a message). Sign out instead of showing broken pages.
+    // Auth endpoints answer 401 for a wrong password — that's not an expired session.
+    const isAuthCall = error.config?.url?.startsWith('/auth/')
+    if (!isAuthCall && localStorage.getItem('soulsync_token') && (status === 401 || (status === 403 && !data))) {
+      localStorage.removeItem('soulsync_token')
+      localStorage.removeItem('soulsync_user_id')
+      localStorage.removeItem('soulsync_profile_id')
+      window.location.assign('/login?expired=1')
+    }
+
     const message =
-      error.response?.data?.message ||
-      error.response?.data?.error ||
+      data?.message ||
+      data?.error ||
       error.message ||
       'An unexpected error occurred'
-    return Promise.reject(new Error(message))
+    const err = new Error(message)
+    err.status = status
+    err.code = data?.code   // e.g. PREMIUM_REQUIRED
+    return Promise.reject(err)
   }
 )
 

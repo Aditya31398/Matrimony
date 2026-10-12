@@ -15,6 +15,8 @@ const DashboardPage    = lazy(() => import('./pages/DashboardPage'))
 const ProfileDetailPage = lazy(() => import('./pages/ProfileDetailPage'))
 const RegisterPage     = lazy(() => import('./pages/RegisterPage'))
 const LoginPage        = lazy(() => import('./pages/LoginPage'))
+const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'))
+const PremiumPage      = lazy(() => import('./pages/PremiumPage'))
 const MessagesPage     = lazy(() => import('./pages/MessagesPage'))
 const MyProfilePage    = lazy(() => import('./pages/MyProfilePage'))
 const EditProfilePage  = lazy(() => import('./pages/EditProfilePage'))
@@ -57,6 +59,7 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<RootRedirect />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
                 <Route path="/discover" element={<ProtectedRoute><DiscoverPage /></ProtectedRoute>} />
@@ -66,6 +69,7 @@ export default function App() {
                 <Route path="/messages/:conversationId" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} />
                 <Route path="/my-profile" element={<ProtectedRoute><MyProfilePage /></ProtectedRoute>} />
                 <Route path="/edit-profile" element={<ProtectedRoute><EditProfilePage /></ProtectedRoute>} />
+                <Route path="/premium" element={<ProtectedRoute><PremiumPage /></ProtectedRoute>} />
               </Routes>
             </AnimatePresence>
           </Suspense>

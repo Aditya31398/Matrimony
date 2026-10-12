@@ -157,6 +157,36 @@ public final class NakshatraData {
         };
     }
 
+    private static final String[] RASHI_SANSKRIT = {
+        "mesha", "vrishabha", "mithuna", "karka", "simha", "kanya",
+        "tula", "vrishchika", "dhanu", "makara", "kumbha", "meena"
+    };
+
+    private static String key(String s) {
+        return s == null ? "" : s.toLowerCase().replaceAll("[^a-z]", "");
+    }
+
+    /** 1..27 for a nakshatra name (tolerates spelling variants such as Dhanishta), 0 if unknown. */
+    public static int nakshatraIndex(String name) {
+        String k = key(name);
+        if (k.isEmpty()) return 0;
+        for (int i = 0; i < NAMES.length; i++) {
+            if (key(NAMES[i]).equals(k)) return i + 1;
+        }
+        if (k.equals("dhanishta")) return 23;
+        return 0;
+    }
+
+    /** 1..12 for a rashi given in Sanskrit (Mesha) or English (Aries) form, 0 if unknown. */
+    public static int rashiIndex(String name) {
+        String k = key(name);
+        if (k.isEmpty()) return 0;
+        for (int i = 1; i <= 12; i++) {
+            if (key(rashiName(i)).equals(k) || RASHI_SANSKRIT[i - 1].equals(k)) return i;
+        }
+        return 0;
+    }
+
     public static String rashiName(int rashi) {
         return new String[]{"","Aries","Taurus","Gemini","Cancer","Leo","Virgo",
                 "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"}[rashi];

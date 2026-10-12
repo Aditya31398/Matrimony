@@ -1,0 +1,3 @@
+soulsync-app.indiasouthcentral.cloudapp.azure.com {
+    reverse_proxy backend:8080
+}

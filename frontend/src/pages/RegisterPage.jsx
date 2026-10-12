@@ -4,9 +4,16 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useRegisterProfile } from '../hooks/useProfiles'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
-import { NAKSHATRA_NAMES, RASHI_NAMES } from '../utils/astrology'
+import { NAKSHATRAS, rashisForNakshatra, rashiLabel } from '../utils/astro'
 
 const TOTAL_STEPS = 5
+
+// Latest birth date that makes someone 18 today (yyyy-mm-dd for <input type="date" max>)
+const MAX_DOB = (() => {
+  const d = new Date()
+  d.setFullYear(d.getFullYear() - 18)
+  return d.toISOString().slice(0, 10)
+})()
 
 const STEP_META = [
   { label: 'The Journey Begins', title: 'Tell us about yourself', subtitle: 'Let\'s start your story. We\'ll use these details to help you find someone who truly resonates with your soul.' },
@@ -20,8 +27,6 @@ const INTERESTS_OPTIONS = ['Yoga', 'Travel', 'Music', 'Reading', 'Cooking', 'Tec
 const RELIGIONS = ['Hindu', 'Muslim', 'Christian', 'Sikh', 'Jain', 'Buddhist', 'Jewish', 'Other']
 const LANGUAGES = ['Hindi', 'Bengali', 'Telugu', 'Marathi', 'Tamil', 'Gujarati', 'Kannada', 'Malayalam', 'Punjabi', 'Odia', 'Urdu', 'English', 'Other']
 const DIET_OPTIONS = ['Vegetarian', 'Non-Vegetarian', 'Vegan', 'Jain', 'Eggetarian', 'Occasionally Non-Veg']
-const NAKSHATRAS = NAKSHATRA_NAMES.map((n, i) => `${i + 1} — ${n}`)
-const RASHIS = RASHI_NAMES.map((r, i) => `${i + 1} — ${r}`)
 const HEIGHT_OPTIONS = [
   `4'9" (145cm)`, `4'10" (147cm)`, `4'11" (150cm)`,
   `5'0" (152cm)`, `5'1" (155cm)`, `5'2" (157cm)`, `5'3" (160cm)`, `5'4" (163cm)`,
@@ -45,9 +50,9 @@ export default function RegisterPage() {
   const [dir, setDir] = useState(1)
   const [form, setForm] = useState({
     firstName: '', lastName: '', gender: '', dateOfBirth: '',
-    email: '', password: '',
+    email: '', password: '', phone: '',
     city: '', state: '', religion: '', caste: '', education: '', profession: '',
-    height: '', motherTongue: '', dietaryPreference: '', nakshatra: '', rashi: '', isManglik: false,
+    height: '', motherTongue: '', dietaryPreference: '', nakshatra: '', rashi: '',
     photos: [],
     interests: [], bio: '',
     lookingForGender: '', ageMin: 22, ageMax: 35, partnerDescription: '',
@@ -69,8 +74,10 @@ export default function RegisterPage() {
       if (!form.firstName.trim()) { toast.error('Please enter your first name'); return false }
       if (!form.gender) { toast.error('Please select your gender'); return false }
       if (!form.dateOfBirth) { toast.error('Please enter your date of birth'); return false }
+      if (form.dateOfBirth > MAX_DOB) { toast.error('You must be at least 18 years old'); return false }
       if (!form.email.trim()) { toast.error('Please enter your email'); return false }
-      if (!form.password || form.password.length < 6) { toast.error('Password must be at least 6 characters'); return false }
+      if (!form.password || form.password.length < 8) { toast.error('Password must be at least 8 characters'); return false }
+      if (form.phone && !/^\+?[0-9 ]{10,15}$/.test(form.phone.trim())) { toast.error('Please enter a valid phone number'); return false }
     }
     if (step === 2 && !form.city.trim()) { toast.error('Please enter your city'); return false }
     if (step === 3 && form.photos.length === 0) { toast.error('Please add at least 1 photo'); return false }
@@ -86,12 +93,9 @@ export default function RegisterPage() {
   const handleSubmit = async () => {
     if (!validateStep()) return
     try {
-      await register.mutateAsync({
-        ...form,
-        nakshatra: form.nakshatra || undefined,
-        rashi: form.rashi || undefined,
-      })
-      setRegisteredEmail(form.email)
+      const email = form.email.trim()
+      await register.mutateAsync({ ...form, email, phone: form.phone.trim() })
+      setRegisteredEmail(email)
     } catch (err) {
       toast.error(err.message || 'Registration failed. Please try again.')
     }
@@ -167,14 +171,18 @@ export default function RegisterPage() {
                   </div>
                 </Field>
                 <Field label="When were you born?" icon="calendar_month">
-                  <FormInput type="date" value={form.dateOfBirth} onChange={(v) => set('dateOfBirth', v)} />
+                  <FormInput type="date" value={form.dateOfBirth} max={MAX_DOB} onChange={(v) => set('dateOfBirth', v)} />
                   <p className="text-xs font-semibold text-on-surface-variant mt-2 px-1">You must be 18 or older to join SoulSync.</p>
                 </Field>
                 <Field label="Your email address" icon="email">
                   <FormInput type="email" placeholder="you@example.com" value={form.email} onChange={(v) => set('email', v)} />
                 </Field>
+                <Field label="Phone number (optional)" icon="call">
+                  <FormInput type="tel" placeholder="+91 98765 43210" value={form.phone} maxLength={20} onChange={(v) => set('phone', v)} />
+                  <p className="text-xs font-semibold text-on-surface-variant mt-2 px-1">Only Premium members can see your number.</p>
+                </Field>
                 <Field label="Create a password" icon="lock">
-                  <FormInput type="password" placeholder="Min. 6 characters" value={form.password} onChange={(v) => set('password', v)} />
+                  <FormInput type="password" placeholder="Min. 8 characters" value={form.password} onChange={(v) => set('password', v)} />
                 </Field>
               </>
             )}
@@ -231,30 +239,30 @@ export default function RegisterPage() {
                       {DIET_OPTIONS.map((d) => <option key={d}>{d}</option>)}
                     </select>
                   </Field>
+                  <div />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <Field label="Birth Star (Nakshatra)" icon="star">
-                    <select value={form.nakshatra} onChange={(e) => set('nakshatra', e.target.value ? Number(e.target.value) : '')}
-                      className={SELECT_CLS}>
-                      <option value="">Select nakshatra</option>
-                      {NAKSHATRAS.map((n, i) => <option key={i + 1} value={i + 1}>{n}</option>)}
+                  <Field label="Star (Nakshatra)" icon="auto_awesome">
+                    <select value={form.nakshatra} className={SELECT_CLS}
+                      onChange={(e) => {
+                        const n = e.target.value
+                        set('nakshatra', n)
+                        const options = rashisForNakshatra(n)
+                        // Keep the rashi only if it's still possible for this star
+                        set('rashi', options.length === 1 ? options[0] : (options.includes(form.rashi) ? form.rashi : ''))
+                      }}>
+                      <option value="">Don't know</option>
+                      {NAKSHATRAS.map((n) => <option key={n}>{n}</option>)}
                     </select>
                   </Field>
-                  <Field label="Moon Sign (Rashi)" icon="nightlight">
-                    <select value={form.rashi} onChange={(e) => set('rashi', e.target.value ? Number(e.target.value) : '')}
-                      className={SELECT_CLS}>
-                      <option value="">Auto (from nakshatra)</option>
-                      {RASHIS.map((r, i) => <option key={i + 1} value={i + 1}>{r}</option>)}
+                  <Field label="Rashi (Moon sign)" icon="dark_mode">
+                    <select value={form.rashi} onChange={(e) => set('rashi', e.target.value)} className={SELECT_CLS}>
+                      <option value="">Don't know</option>
+                      {rashisForNakshatra(form.nakshatra).map((r) => <option key={r} value={r}>{rashiLabel(r)}</option>)}
                     </select>
                   </Field>
                 </div>
-                <Field label="Manglik" icon="warning">
-                  <select value={form.isManglik ? 'yes' : 'no'} onChange={(e) => set('isManglik', e.target.value === 'yes')}
-                    className={SELECT_CLS}>
-                    <option value="no">Not Manglik</option>
-                    <option value="yes">Manglik</option>
-                  </select>
-                </Field>
+                <p className="text-xs font-semibold text-on-surface-variant -mt-2 px-1">Used for astro matching (Guna Milan). You can add these later.</p>
               </>
             )}
 
@@ -538,7 +546,7 @@ function Field({ label, children }) {
   )
 }
 
-function FormInput({ type = 'text', placeholder, value, onChange, maxLength }) {
+function FormInput({ type = 'text', placeholder, value, onChange, maxLength, max }) {
   const resolvedMax = maxLength ?? (
     type === 'email' ? 150 : type === 'password' ? 128 : type === 'number' ? undefined : 200
   )
@@ -546,6 +554,7 @@ function FormInput({ type = 'text', placeholder, value, onChange, maxLength }) {
     <input type={type} placeholder={placeholder} value={value}
       onChange={(e) => onChange(e.target.value)}
       maxLength={resolvedMax}
+      max={max}
       className="w-full bg-white border-2 border-transparent focus:border-primary-container rounded-[24px] px-7 py-5 text-lg font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none placeholder:text-surface-variant"
     />
   )

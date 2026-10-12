@@ -71,9 +71,9 @@ public class Profile {
     @Column(length = 120)
     private String education;
 
-    // Vedic astrology — used by the horoscope matching engine
-    private Integer nakshatra;   // 1–27 (Ashwini to Revati)
-    private Integer rashi;       // 1–12 (Aries to Pisces); if null, derived from nakshatra
+    @Column(length = 80)
+    private String horoscope;
+
     private Boolean isManglik;
 
     // Optional family tradition override: ASHTAKOOTA | DASHAKOOTA; null = decide from language
@@ -82,6 +82,17 @@ public class Profile {
 
     // Optional Papasamyam points taken from the jathakam (Kerala-style matching)
     private Integer papaPoints;
+
+    @Column(length = 20)
+    private String phone;
+
+    /** Birth star — one of Astrology.NAKSHATRAS; used for Guna Milan */
+    @Column(length = 30)
+    private String nakshatra;
+
+    /** Moon sign — one of Astrology.RASHIS */
+    @Column(length = 20)
+    private String rashi;
 
     @Column(columnDefinition = "TEXT")
     private String bio;
@@ -97,6 +108,8 @@ public class Profile {
 
     @Builder.Default
     private Boolean isPremium = false;
+
+    private LocalDateTime premiumUntil;
 
     // Interests stored as comma-separated for simplicity; a join-table can replace this
     @Column(columnDefinition = "TEXT")
@@ -126,6 +139,12 @@ public class Profile {
 
     public int getAge() {
         if (dateOfBirth == null) return 0;
-        return LocalDate.now().getYear() - dateOfBirth.getYear();
+        return java.time.Period.between(dateOfBirth, LocalDate.now()).getYears();
+    }
+
+    /** True while a paid plan is running; isPremium alone may lag until the expiry job runs. */
+    public boolean hasActivePremium() {
+        return Boolean.TRUE.equals(isPremium)
+                && (premiumUntil == null || premiumUntil.isAfter(LocalDateTime.now()));
     }
 }

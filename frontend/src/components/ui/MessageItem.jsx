@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { formatLastSeen } from '../../utils/lastSeen'
-
-const PLACEHOLDER = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80'
+import { AVATAR_PLACEHOLDER, showPlaceholderOnError } from '../../utils/placeholder'
 
 export default function MessageItem({ conversation, isActive, onClick }) {
   if (!conversation) return null
@@ -17,7 +16,8 @@ export default function MessageItem({ conversation, isActive, onClick }) {
     >
       <div className="relative flex-shrink-0">
         <img
-          src={otherProfile?.photoUrl || PLACEHOLDER}
+          src={otherProfile?.photoUrl || AVATAR_PLACEHOLDER}
+          onError={showPlaceholderOnError}
           alt={otherProfile?.firstName}
           className="w-14 h-14 rounded-full object-cover"
           loading="lazy"

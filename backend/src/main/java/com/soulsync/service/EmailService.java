@@ -31,6 +31,23 @@ public class EmailService {
 
     @Async
     public void sendOtpEmail(String toEmail, String firstName, String otp) {
+        send(toEmail, firstName,
+             "Your SoulSync verification code: " + otp,
+             buildOtpHtml(firstName, otp,
+                     "Use the code below to verify your email address.",
+                     "If you didn't create a SoulSync account, ignore this email."));
+    }
+
+    @Async
+    public void sendPasswordResetEmail(String toEmail, String firstName, String otp) {
+        send(toEmail, firstName,
+             "Your SoulSync password reset code: " + otp,
+             buildOtpHtml(firstName, otp,
+                     "Use the code below to reset your password.",
+                     "If you didn't ask to reset your password, ignore this email — your password stays the same."));
+    }
+
+    private void send(String toEmail, String firstName, String subject, String html) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("api-key", apiKey);
@@ -38,8 +55,8 @@ public class EmailService {
         Map<String, Object> body = Map.of(
             "sender",      Map.of("name", fromName, "email", fromAddress),
             "to",          List.of(Map.of("email", toEmail, "name", firstName)),
-            "subject",     "Your SoulSync verification code: " + otp,
-            "htmlContent", buildOtpHtml(firstName, otp)
+            "subject",     subject,
+            "htmlContent", html
         );
 
         try {
@@ -48,13 +65,13 @@ public class EmailService {
                 new HttpEntity<>(body, headers),
                 String.class
             );
-            log.info("OTP email sent to {}", toEmail);
+            log.info("Email sent to {}", toEmail);
         } catch (Exception e) {
-            log.error("Failed to send OTP email to {}: {}", toEmail, e.getMessage());
+            log.error("Failed to send email to {}: {}", toEmail, e.getMessage());
         }
     }
 
-    private String buildOtpHtml(String firstName, String otp) {
+    private String buildOtpHtml(String firstName, String otp, String intro, String footer) {
         StringBuilder digits = new StringBuilder();
         for (char c : otp.toCharArray()) {
             digits.append(
@@ -80,11 +97,11 @@ public class EmailService {
                       <td style="padding:48px;text-align:center;">
                         <h2 style="margin:0 0 8px;color:#1a1a1a;font-size:22px;font-weight:800;">Hi %s! 👋</h2>
                         <p style="margin:0 0 32px;color:#666;font-size:15px;line-height:1.6;">
-                          Use the code below to verify your email address.<br>It expires in <strong>10 minutes</strong>.
+                          %s<br>It expires in <strong>10 minutes</strong>.
                         </p>
                         <div style="margin:0 auto 32px;letter-spacing:4px;">%s</div>
                         <p style="margin:0;color:#999;font-size:12px;">
-                          If you didn't create a SoulSync account, ignore this email.
+                          %s
                         </p>
                       </td>
                     </tr>
@@ -98,6 +115,6 @@ public class EmailService {
               </table>
             </body>
             </html>
-            """.formatted(firstName, digits.toString());
+            """.formatted(firstName, intro, digits.toString(), footer);
     }
 }

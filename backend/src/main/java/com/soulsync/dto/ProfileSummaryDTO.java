@@ -19,11 +19,15 @@ public class ProfileSummaryDTO {
     private String city;
     private String state;
     private String photoUrl;
+    private String religion;
+    private String caste;
     private Boolean isVerified;
     private Boolean isPremium;
     private List<String> interests;
     private Boolean isOnline;
     private LocalDateTime lastSeenAt;
+    /** True when details were withheld because the viewer isn't premium */
+    private boolean restricted;
 
     public static ProfileSummaryDTO from(Profile p) {
         boolean online = p.getLastSeenAt() != null &&
@@ -37,11 +41,34 @@ public class ProfileSummaryDTO {
                 .city(p.getCity())
                 .state(p.getState())
                 .photoUrl(p.getPhotoUrl())
+                .religion(p.getReligion())
+                .caste(p.getCaste())
                 .isVerified(p.getIsVerified())
-                .isPremium(p.getIsPremium())
+                .isPremium(p.hasActivePremium())
                 .interests(splitTags(p.getInterests()))
                 .isOnline(online)
                 .lastSeenAt(p.getLastSeenAt())
+                .build();
+    }
+
+    public static ProfileSummaryDTO from(Profile p, boolean viewerIsPremium) {
+        return viewerIsPremium ? from(p) : limited(p);
+    }
+
+    /** Free members only see photo, name, age, caste and religion. */
+    public static ProfileSummaryDTO limited(Profile p) {
+        return ProfileSummaryDTO.builder()
+                .id(p.getId())
+                .firstName(p.getFirstName())
+                .lastName(p.getLastName())
+                .age(p.getAge())
+                .photoUrl(p.getPhotoUrl())
+                .religion(p.getReligion())
+                .caste(p.getCaste())
+                .isVerified(p.getIsVerified())
+                .isPremium(p.hasActivePremium())
+                .interests(List.of())
+                .restricted(true)
                 .build();
     }
 

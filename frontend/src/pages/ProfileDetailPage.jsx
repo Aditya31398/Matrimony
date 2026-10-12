@@ -3,184 +3,33 @@ import { motion } from 'framer-motion'
 import { useProfile } from '../hooks/useProfile'
 import { useConnect, useShortlist } from '../hooks/useMatches'
 import { useStartConversation } from '../hooks/useMessages'
-import { useCompatibility } from '../hooks/useCompatibility'
 import { VerifiedBadge, PremiumBadge } from '../components/ui/Badge'
+import PremiumLock from '../components/ui/PremiumLock'
+import AstroMatchCard from '../components/ui/AstroMatchCard'
+import { usePremium } from '../hooks/usePremium'
+import { useAuth } from '../context/AuthContext'
+import { rashiLabel } from '../utils/astro'
+import { AVATAR_PLACEHOLDER, showPlaceholderOnError } from '../utils/placeholder'
 import toast from 'react-hot-toast'
-import { nakshatraName, rashiName } from '../utils/astrology'
-
-const FALLBACK = {
-  id: 1,
-  firstName: 'Ananya', lastName: 'Sharma', age: 28, profession: 'Product Designer',
-  city: 'Mumbai', state: 'Maharashtra', isVerified: true, isPremium: true,
-  photoUrl: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&q=85',
-  religion: 'Hindu (Brahmin)', height: "5'6\" (168cm)", motherTongue: 'Hindi, Marathi',
-  dietaryPreference: 'Vegetarian', education: 'Masters in Design', nakshatra: 10, rashi: 5,
-  bio: "I'm a curious soul who finds joy in the intersection of technology and human emotion. By day, I design digital experiences that make life easier; by night, I'm usually found experimenting with fusion recipes in my kitchen or lost in a classic Murakami novel.\n\nGrowing up in a household that balanced tradition with modern values, I've learned to appreciate the quiet moments as much as the grand milestones.",
-  interests: ['UI/UX Design', 'Oil Painting', 'Architecture', 'Podcasts'],
-  lifestyle: ['Yoga', 'Trekking', 'Early Bird', 'Travel Enthusiast'],
-  lookingFor: [
-    'Someone who values kindness and emotional intelligence as much as professional ambition.',
-    'A partner who enjoys deep conversations about life, philosophy, and the future.',
-  ],
-}
-
-const TIER_CONFIG = {
-  EXCELLENT:    { color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200', label: 'Excellent' },
-  GOOD:         { color: 'text-blue-600',    bg: 'bg-blue-50',    border: 'border-blue-200',    label: 'Good' },
-  AVERAGE:      { color: 'text-amber-600',   bg: 'bg-amber-50',   border: 'border-amber-200',   label: 'Average' },
-  POOR:         { color: 'text-orange-600',  bg: 'bg-orange-50',  border: 'border-orange-200',  label: 'Poor' },
-  INCOMPATIBLE: { color: 'text-red-600',     bg: 'bg-red-50',     border: 'border-red-200',     label: 'Challenging' },
-}
-
-function CompatibilityCard({ compat }) {
-  if (!compat) return null
-
-  if (compat.algorithm === 'NONE') {
-    return (
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.4 }}
-        className="bg-white rounded-[32px] p-7 shadow-card border border-slate-100">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center">
-            <span className="material-symbols-outlined text-slate-400">stars</span>
-          </div>
-          <h3 className="text-lg font-black text-on-surface">Horoscope Match</h3>
-        </div>
-        <p className="text-sm text-on-surface-variant">{compat.summary}</p>
-      </motion.div>
-    )
-  }
-
-  const cfg = TIER_CONFIG[compat.tier] ?? TIER_CONFIG.AVERAGE
-  const isAshta = compat.algorithm === 'ASHTAKOOTA'
-  const isDasha = compat.algorithm === 'DASHAKOOTA'
-  const isBasic = compat.algorithm === 'BASIC_ZODIAC'
-  const scoreLabel = isBasic
-    ? `${compat.totalScore.toFixed(1)} / ${compat.maxScore}`
-    : isDasha
-      ? `${Math.round(compat.totalScore)} / ${compat.maxScore} poruthams`
-      : `${compat.totalScore.toFixed(1)} / ${compat.maxScore} pts`
-
-  return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.4 }}
-      className={`rounded-[32px] p-7 border ${cfg.bg} ${cfg.border}`}>
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-white/70 flex items-center justify-center">
-            <span className={`material-symbols-outlined ${cfg.color}`}>stars</span>
-          </div>
-          <h3 className="text-lg font-black text-on-surface">
-            {isAshta ? 'Ashtakoota Match' : isDasha ? 'Dashakoota Match' : 'Star Compatibility'}
-          </h3>
-        </div>
-        <div className="text-right">
-          {isDasha && compat.rajjuDosha
-            ? <div className={`text-lg font-black ${cfg.color}`}>Not advised</div>
-            : <div className={`text-2xl font-black ${cfg.color}`}>{compat.percentage}%</div>}
-          <div className="text-xs text-on-surface-variant font-medium">{scoreLabel}</div>
-        </div>
-      </div>
-
-      {/* Progress bar */}
-      <div className="h-2 rounded-full bg-white/60 mb-4 overflow-hidden">
-        <div className={`h-full rounded-full transition-all ${cfg.color.replace('text-', 'bg-')}`}
-          style={{ width: `${compat.percentage}%` }} />
-      </div>
-
-      <p className="text-sm text-on-surface-variant mb-4">{compat.summary}</p>
-
-      {compat.region?.includes('/') && (
-        <p className="text-xs text-on-surface-variant mb-4">
-          Mixed traditions ({compat.region.replace('/', ' & ').toLowerCase()}) — both systems are shown.
-        </p>
-      )}
-
-      {/* Dosha alerts */}
-      {(compat.nadiDosha || compat.manglikDosha || compat.rajjuDosha) && (
-        <div className="flex flex-wrap gap-2 mb-4">
-          {compat.nadiDosha && <DoshaTag label="Nadi Dosha" />}
-          {compat.rajjuDosha && <DoshaTag label="Rajju Dosha" />}
-          {compat.manglikDosha && <DoshaTag label="Manglik Mismatch" />}
-        </div>
-      )}
-
-      {(compat.advisories ?? []).length > 0 && (
-        <ul className="mb-4 space-y-1.5">
-          {compat.advisories.map((note, i) => (
-            <li key={i} className="flex items-start gap-2 text-xs text-on-surface-variant">
-              <span className="material-symbols-outlined text-[14px] mt-0.5">info</span>
-              <span>{note}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {compat.alternate && compat.alternate.algorithm !== 'NONE' && (
-        <div className="flex items-center justify-between rounded-2xl bg-white/60 px-4 py-3 mb-4 text-sm">
-          <span className="font-bold text-on-surface">
-            {compat.alternate.algorithm === 'ASHTAKOOTA' ? 'Ashtakoota (North Indian)' : 'Dashakoota (South Indian)'}
-          </span>
-          <span className="font-black text-on-surface">
-            {compat.alternate.algorithm === 'DASHAKOOTA'
-              ? `${Math.round(compat.alternate.totalScore)} / ${compat.alternate.maxScore}`
-              : `${compat.alternate.totalScore.toFixed(1)} / ${compat.alternate.maxScore}`}
-            <span className="ml-2 text-xs font-bold text-on-surface-variant">{compat.alternate.percentage}%</span>
-          </span>
-        </div>
-      )}
-
-      {/* Koota breakdown (collapsed by default) */}
-      {compat.kootas && compat.kootas.length > 0 && (
-        <details className="group">
-          <summary className="text-xs font-bold text-on-surface-variant cursor-pointer select-none hover:text-primary list-none flex items-center gap-1">
-            <span className="material-symbols-outlined text-[16px] group-open:rotate-90 transition-transform">chevron_right</span>
-            View breakdown
-          </summary>
-          <div className="mt-3 space-y-2">
-            {compat.kootas.map((k) => (
-              <div key={k.name} className="flex items-center gap-3 text-sm">
-                <span className="w-28 font-bold text-on-surface text-xs shrink-0">{k.name}</span>
-                <div className="flex-1 h-1.5 rounded-full bg-white/60 overflow-hidden">
-                  <div className={`h-full rounded-full ${k.scored > 0 ? cfg.color.replace('text-', 'bg-') : 'bg-red-300'}`}
-                    style={{ width: `${(k.scored / k.max) * 100}%` }} />
-                </div>
-                <span className={`w-10 text-right text-xs font-bold shrink-0 ${k.scored > 0 ? cfg.color : 'text-red-500'}`}>
-                  {k.scored}/{k.max}
-                </span>
-                <span className="text-xs text-on-surface-variant hidden sm:block truncate max-w-[140px]">{k.detail}</span>
-              </div>
-            ))}
-          </div>
-        </details>
-      )}
-    </motion.div>
-  )
-}
-
-function DoshaTag({ label }) {
-  return (
-    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-bold border border-red-200">
-      <span className="material-symbols-outlined text-[14px]">warning</span>
-      {label}
-    </span>
-  )
-}
 
 const INFO_FIELDS = [
   ['Religion', 'religion'], ['Caste', 'caste'], ['Height', 'height'],
   ['Mother Tongue', 'motherTongue'], ['Dietary Pref', 'dietaryPreference'],
-  ['Education', 'education'], ['Birth Star', 'nakshatra'], ['Moon Sign', 'rashi'],
+  ['Education', 'education'], ['Star (Nakshatra)', 'nakshatra'], ['Rashi', 'rashi'],
 ]
+
+// Free members only receive these fields from the API
+const FREE_FIELDS = new Set(['religion', 'caste'])
 
 export default function ProfileDetailPage() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { data, isLoading, isError } = useProfile(id)
+  const { data: profile, isLoading } = useProfile(id)
+  const { auth } = useAuth()
+  const { isPremium } = usePremium()
   const connect = useConnect()
   const shortlist = useShortlist()
   const startConversation = useStartConversation()
-
-  const profile = data ?? (isError ? FALLBACK : null)
-  const { data: compat } = useCompatibility(profile?.id)
 
   if (isLoading) {
     return (
@@ -202,6 +51,9 @@ export default function ProfileDetailPage() {
     )
   }
 
+  const isOwn = auth?.profileId === profile.id
+  const restricted = profile.restricted
+
   const handleConnect = () => {
     connect.mutate(profile.id, {
       onSuccess: () => toast.success(`Connection request sent to ${profile.firstName}!`),
@@ -217,9 +69,14 @@ export default function ProfileDetailPage() {
   }
 
   const handleMessage = () => {
+    if (!isPremium) {
+      toast('Chatting is a Premium feature', { icon: '🔒' })
+      navigate('/premium')
+      return
+    }
     startConversation.mutate(profile.id, {
       onSuccess: (conv) => navigate(`/messages/${conv.id}`),
-      onError: () => toast.error('Could not open chat'),
+      onError: (e) => toast.error(e.message || 'Could not open chat'),
     })
   }
 
@@ -241,22 +98,29 @@ export default function ProfileDetailPage() {
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
               className="relative group">
               <div className="aspect-[4/5] rounded-[40px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.10)] group-hover:scale-[1.01] transition-transform duration-500">
-                <img src={profile.photoUrl} alt={profile.firstName} className="w-full h-full object-cover" />
+                <img src={profile.photoUrl || AVATAR_PLACEHOLDER} alt={profile.firstName}
+                  onError={showPlaceholderOnError} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-8 text-white">
                   {profile.isPremium && <div className="mb-3"><PremiumBadge /></div>}
                   <h1 className="text-[40px] font-black leading-tight">
                     {profile.firstName} {profile.lastName}, {profile.age}
                   </h1>
-                  <div className="flex items-center gap-5 mt-2 opacity-90 text-sm">
-                    <div className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[18px]">location_on</span>
-                      {profile.city}, India
+                  {!restricted && (
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-1 mt-2 opacity-90 text-sm">
+                      {profile.city && (
+                        <div className="flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[18px]">location_on</span>
+                          {profile.city}, India
+                        </div>
+                      )}
+                      {profile.profession && (
+                        <div className="flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[18px]">work</span>
+                          {profile.profession}
+                        </div>
+                      )}
                     </div>
-                    <div className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[18px]">work</span>
-                      {profile.profession}
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -265,18 +129,43 @@ export default function ProfileDetailPage() {
               className="bg-white rounded-[32px] p-8 shadow-card border border-slate-100">
               <h3 className="text-xl font-black text-on-surface mb-5">Basic Info</h3>
               <div className="grid grid-cols-2 gap-y-5 gap-x-4">
-                {INFO_FIELDS.map(([label, key]) => (
-                  <div key={key} className="flex flex-col gap-1">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{label}</span>
-                    <span className="font-semibold text-on-surface text-sm">{(key === 'nakshatra' ? nakshatraName(profile.nakshatra) : key === 'rashi' ? rashiName(profile.rashi) : profile[key]) ?? '—'}</span>
-                  </div>
-                ))}
+                {INFO_FIELDS.map(([label, key]) => {
+                  const locked = restricted && !FREE_FIELDS.has(key)
+                  const value = key === 'rashi' && profile.rashi ? rashiLabel(profile.rashi) : profile[key]
+                  return (
+                    <div key={key} className="flex flex-col gap-1">
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{label}</span>
+                      {locked
+                        ? <span className="flex items-center gap-1 text-sm font-semibold text-slate-400">
+                            <span className="material-symbols-outlined text-[16px]">lock</span>Premium
+                          </span>
+                        : <span className="font-semibold text-on-surface text-sm">{value ?? '—'}</span>}
+                    </div>
+                  )
+                })}
+              </div>
+
+              <div className="mt-5 pt-5 border-t border-slate-100 flex items-center gap-3">
+                <span className="material-symbols-outlined text-primary">call</span>
+                {restricted
+                  ? <span className="text-sm font-semibold text-slate-400 flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[16px]">lock</span>Phone number visible to Premium members
+                    </span>
+                  : profile.phone
+                    ? <a href={`tel:${profile.phone}`} className="text-sm font-bold text-on-surface hover:text-primary">{profile.phone}</a>
+                    : <span className="text-sm text-on-surface-variant">Phone not shared</span>}
               </div>
             </motion.div>
           </div>
 
           {/* ── Right: Story, Interests, Looking For ─────────────────── */}
           <div className="lg:col-span-7 space-y-5">
+            {restricted ? (
+              <PremiumLock
+                title={`See ${profile.firstName}'s full profile`}
+                text="Phone number, star & rashi, profession, education, story, interests and partner preferences are visible to Premium members."
+              />
+            ) : (<>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }}
               className="bg-white rounded-[32px] p-9 shadow-card border border-slate-100">
               <div className="flex items-center gap-3 mb-5">
@@ -315,9 +204,6 @@ export default function ProfileDetailPage() {
               </div>
             </motion.div>
 
-            {/* Horoscope compatibility card */}
-            <CompatibilityCard compat={compat} />
-
             {(profile.lookingFor ?? []).length > 0 && (
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.4 }}
                 className="bg-primary-fixed rounded-[32px] p-9 border border-orange-100/50">
@@ -337,12 +223,17 @@ export default function ProfileDetailPage() {
                 </div>
               </motion.div>
             )}
+            </>)}
+
+            {!isOwn && (
+              <AstroMatchCard profileId={profile.id} firstName={profile.firstName} isPremium={isPremium} />
+            )}
           </div>
         </div>
       </main>
 
       {/* ── Floating Action Bar ──────────────────────────────────────── */}
-      <motion.div
+      {!isOwn && <motion.div
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.4 }}
@@ -357,7 +248,7 @@ export default function ProfileDetailPage() {
             className="flex-1 h-14 rounded-2xl bg-white border-2 border-slate-100 text-slate-700 font-bold flex items-center justify-center gap-2 hover:bg-slate-50 active:scale-95 transition-all disabled:opacity-60">
             {startConversation.isPending
               ? <span className="w-5 h-5 border-2 border-slate-300 border-t-slate-700 rounded-full animate-spin" />
-              : <><span className="material-symbols-outlined fill-icon text-[20px]">chat</span>Message</>
+              : <><span className="material-symbols-outlined fill-icon text-[20px]">{isPremium ? 'chat' : 'lock'}</span>Message</>
             }
           </button>
           <button onClick={handleConnect} disabled={connect.isPending}
@@ -369,7 +260,7 @@ export default function ProfileDetailPage() {
             }
           </button>
         </div>
-      </motion.div>
+      </motion.div>}
     </motion.div>
   )
 }

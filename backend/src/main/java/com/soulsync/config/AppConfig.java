@@ -1,7 +1,5 @@
 package com.soulsync.config;
 
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -24,21 +23,13 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableAsync
+@EnableScheduling
 @EnableCaching
 @RequiredArgsConstructor
 public class AppConfig implements WebMvcConfigurer {
 
     @Value("${app.upload.dir:uploads}")
     private String uploadDir;
-
-    @Value("${cloudinary.cloud-name}")
-    private String cloudName;
-
-    @Value("${cloudinary.api-key}")
-    private String apiKey;
-
-    @Value("${cloudinary.api-secret}")
-    private String apiSecret;
 
     private final LastSeenInterceptor lastSeenInterceptor;
 
@@ -47,17 +38,7 @@ public class AppConfig implements WebMvcConfigurer {
         return new RestTemplate();
     }
 
-    @Bean
-    public Cloudinary cloudinary() {
-        return new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", cloudName,
-                "api_key", apiKey,
-                "api_secret", apiSecret,
-                "secure", true
-        ));
-    }
-
-    /** Dedicated thread pool for blocking Cloudinary uploads — keeps servlet threads free. */
+    /** Dedicated thread pool for blocking photo uploads — keeps servlet threads free. */
     @Bean(name = "uploadExecutor")
     public TaskExecutor uploadExecutor() {
         ThreadPoolTaskExecutor exec = new ThreadPoolTaskExecutor();

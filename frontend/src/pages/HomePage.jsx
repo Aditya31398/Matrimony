@@ -29,13 +29,6 @@ const HOW_IT_WORKS = [
   },
 ]
 
-const STATS = [
-  { value: '2M+', label: 'Verified Profiles' },
-  { value: '50K+', label: 'Successful Matches' },
-  { value: '98%', label: 'Satisfaction Rate' },
-  { value: '12+', label: 'Years of Trust' },
-]
-
 const stagger = {
   hidden: {},
   show: { transition: { staggerChildren: 0.12 } },
@@ -152,24 +145,6 @@ export default function HomePage() {
               </button>
             </motion.div>
           </motion.div>
-        </div>
-      </section>
-
-      {/* ── Stats bar ─────────────────────────────────────────────────── */}
-      <section className="bg-white border-y border-orange-50">
-        <div className="page-container py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
-          {STATS.map(({ value, label }) => (
-            <motion.div
-              key={label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center"
-            >
-              <div className="text-3xl md:text-4xl font-black text-gradient mb-1">{value}</div>
-              <div className="text-sm text-on-surface-variant font-medium">{label}</div>
-            </motion.div>
-          ))}
         </div>
       </section>
 

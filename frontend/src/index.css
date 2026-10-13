@@ -3,57 +3,60 @@
 @tailwind utilities;
 
 :root {
+  /* Brand gradient used on primary buttons and accents */
+  --gradient-primary: linear-gradient(135deg, #6A1834 0%, #9E3654 100%);
+  --gradient-gold: linear-gradient(135deg, #B8893B 0%, #E2C27D 100%);
   /* Brand colors — overridden at runtime by TenantContext */
-  --color-primary: #ae3115;
-  --color-primary-container: #ff6b4a;
+  --color-primary: #7A1F3D;
+  --color-primary-container: #A8445E;
   --color-on-primary: #ffffff;
-  --color-on-primary-container: #661000;
-  --color-primary-fixed: #ffdad2;
-  --color-primary-fixed-dim: #ffb4a3;
-  --color-on-primary-fixed: #3d0600;
-  --color-on-primary-fixed-variant: #8c1900;
-  --color-inverse-primary: #ffb4a3;
-  --color-secondary: #9a433f;
-  --color-secondary-container: #ff928b;
+  --color-on-primary-container: #3E0A1C;
+  --color-primary-fixed: #F6E6EA;
+  --color-primary-fixed-dim: #E8C6CF;
+  --color-on-primary-fixed: #2E0614;
+  --color-on-primary-fixed-variant: #5E1730;
+  --color-inverse-primary: #E8C6CF;
+  --color-secondary: #9A7330;
+  --color-secondary-container: #D9B878;
   --color-on-secondary: #ffffff;
-  --color-on-secondary-container: #772926;
-  --color-secondary-fixed: #ffdad7;
-  --color-secondary-fixed-dim: #ffb3ae;
-  --color-on-secondary-fixed: #400104;
-  --color-on-secondary-fixed-variant: #7c2c29;
-  --color-tertiary: #8a4778;
-  --color-tertiary-container: #cd82b6;
+  --color-on-secondary-container: #4A3510;
+  --color-secondary-fixed: #F5ECDA;
+  --color-secondary-fixed-dim: #E8D3A8;
+  --color-on-secondary-fixed: #2B1E05;
+  --color-on-secondary-fixed-variant: #6B4F1E;
+  --color-tertiary: #6E4A63;
+  --color-tertiary-container: #B593AA;
   --color-on-tertiary: #ffffff;
-  --color-on-tertiary-container: #561a49;
-  --color-tertiary-fixed: #ffd7ef;
-  --color-tertiary-fixed-dim: #feade4;
-  --color-on-tertiary-fixed: #3a0130;
-  --color-on-tertiary-fixed-variant: #6e305f;
-  --color-surface: #f8f9fa;
-  --color-surface-dim: #d9dadb;
-  --color-surface-bright: #f8f9fa;
-  --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f3f4f5;
-  --color-surface-container: #edeeef;
-  --color-surface-container-high: #e7e8e9;
-  --color-surface-container-highest: #e1e3e4;
-  --color-surface-variant: #e1e3e4;
-  --color-on-surface: #191c1d;
-  --color-on-surface-variant: #59413c;
-  --color-inverse-surface: #2e3132;
-  --color-inverse-on-surface: #f0f1f2;
-  --color-outline: #8d716a;
-  --color-outline-variant: #e1bfb8;
-  --color-surface-tint: #ae3115;
-  --color-background: #f8f9fa;
-  --color-on-background: #191c1d;
+  --color-on-tertiary-container: #3A2233;
+  --color-tertiary-fixed: #F2E8EF;
+  --color-tertiary-fixed-dim: #E0CCDA;
+  --color-on-tertiary-fixed: #2A1424;
+  --color-on-tertiary-fixed-variant: #57384E;
+  --color-surface: #FAF7F2;
+  --color-surface-dim: #E9E3DA;
+  --color-surface-bright: #FFFDFA;
+  --color-surface-container-lowest: #FFFFFF;
+  --color-surface-container-low: #F6F1EA;
+  --color-surface-container: #F0E9E0;
+  --color-surface-container-high: #E9E1D6;
+  --color-surface-container-highest: #E2D9CC;
+  --color-surface-variant: #ECE3D7;
+  --color-on-surface: #1F1A1C;
+  --color-on-surface-variant: #5F5357;
+  --color-inverse-surface: #2F2A2C;
+  --color-inverse-on-surface: #F6F1EA;
+  --color-outline: #9A8B84;
+  --color-outline-variant: #E3D6CC;
+  --color-surface-tint: #7A1F3D;
+  --color-background: #FAF7F2;
+  --color-on-background: #1F1A1C;
   --color-error: #ba1a1a;
   --color-on-error: #ffffff;
   --color-error-container: #ffdad6;
   --color-on-error-container: #93000a;
-  --shadow-btn-primary: 0 15px 35px rgba(255, 107, 74, 0.30);
-  --shadow-btn-primary-hover: 0 20px 45px rgba(255, 107, 74, 0.40);
-  --shadow-float: 0 20px 50px rgba(255, 107, 74, 0.15);
+  --shadow-btn-primary: 0 8px 24px rgba(122,31,61,0.22);
+  --shadow-btn-primary-hover: 0 12px 32px rgba(122,31,61,0.30);
+  --shadow-float: 0 24px 60px rgba(46,6,20,0.12);
 }
 
 @layer base {
@@ -69,13 +72,25 @@
 
   body {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color: #f8f9fa;
-    color: #191c1d;
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+  }
+
+  /* Elegant serif for page and section headings; body text stays sans for readability */
+  h1, h2, .font-display {
+    font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    letter-spacing: -0.005em;
   }
 
   ::selection {
-    background-color: #ffdad2;
-    color: #3d0600;
+    background-color: #F6E6EA;
+    color: #2E0614;
+  }
+
+  :focus-visible {
+    outline: 2px solid #B8893B;
+    outline-offset: 2px;
   }
 
   .material-symbols-outlined {
@@ -110,11 +125,11 @@
   }
 
   .gradient-primary {
-    background: linear-gradient(135deg, #ae3115 0%, #ff6b4a 100%);
+    background: var(--gradient-primary);
   }
 
   .gradient-sunset {
-    background: linear-gradient(135deg, #ff6b4a 0%, #ff928b 50%, #ffd7ef 100%);
+    background: linear-gradient(135deg, #7A1F3D 0%, #B5627A 50%, #F2E8EF 100%);
   }
 
   .blob {
@@ -148,14 +163,14 @@
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, #ae3115 0%, #ff6b4a 100%);
+    background: var(--gradient-primary);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .shimmer {
-    background: linear-gradient(90deg, #f3f4f5 25%, #e7e8e9 50%, #f3f4f5 75%);
+    background: linear-gradient(90deg, #F6F1EA 25%, #ECE3D7 50%, #F6F1EA 75%);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
   }

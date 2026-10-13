@@ -5,13 +5,13 @@ import { profileCompleteness } from '../../utils/completeness'
 export default function CompletenessRing({ profile, compact = false }) {
   const { percent, missing } = profileCompleteness(profile)
   if (compact && percent >= 100) return null
-  const color = percent >= 80 ? '#16a34a' : percent >= 50 ? '#d97706' : '#ae3115'
+  const color = percent >= 80 ? '#16a34a' : percent >= 50 ? '#B8893B' : '#7A1F3D'
 
   return (
     <div className="bg-white rounded-[28px] p-5 shadow-card border border-slate-100 flex items-center gap-5">
       <div className="relative w-20 h-20 flex-shrink-0">
         <svg viewBox="0 0 36 36" className="w-20 h-20 -rotate-90">
-          <circle cx="18" cy="18" r="15.5" fill="none" stroke="#f3ece8" strokeWidth="3.5" />
+          <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F0E9E0" strokeWidth="3.5" />
           <circle cx="18" cy="18" r="15.5" fill="none" stroke={color} strokeWidth="3.5" strokeLinecap="round"
             strokeDasharray={`${percent * 0.974} 100`} style={{ transition: 'stroke-dasharray 600ms ease' }} />
         </svg>

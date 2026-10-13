@@ -13,8 +13,8 @@ export default function MatchScoreCard({ profileId, firstName }) {
       <div className="flex items-center gap-4 mb-5">
         <div className="relative w-16 h-16 flex-shrink-0">
           <svg viewBox="0 0 36 36" className="w-16 h-16 -rotate-90">
-            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#f3ece8" strokeWidth="4" />
-            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#ae3115" strokeWidth="4" strokeLinecap="round"
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#F0E9E0" strokeWidth="4" />
+            <circle cx="18" cy="18" r="15.5" fill="none" stroke="#7A1F3D" strokeWidth="4" strokeLinecap="round"
               strokeDasharray={`${data.percent * 0.974} 100`} />
           </svg>
           <span className="absolute inset-0 flex items-center justify-center text-sm font-black text-on-surface">{data.percent}%</span>

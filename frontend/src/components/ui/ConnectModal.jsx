@@ -38,7 +38,7 @@ export default function ConnectModal({ open, onClose, firstName, onSend, sending
         </button>
         <button type="button" onClick={() => send(true)} disabled={sending || !note.trim()}
           className="flex-[1.4] py-3 rounded-2xl text-white font-bold text-sm shadow-btn-primary disabled:opacity-60"
-          style={{ background: 'linear-gradient(135deg, #ae3115, #ff6b4a)' }}>
+          style={{ background: 'var(--gradient-primary)' }}>
           {sending ? 'Sending…' : 'Send with note'}
         </button>
       </div>

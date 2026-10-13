@@ -403,7 +403,7 @@ export default function EditProfilePage() {
         {/* Save */}
         <button onClick={handleSave} disabled={saving}
           className="w-full h-16 rounded-[24px] text-white font-black text-lg flex items-center justify-center gap-3 shadow-btn-primary hover:shadow-btn-primary-hover active:scale-[0.98] transition-all disabled:opacity-60"
-          style={{ background: 'linear-gradient(135deg, #ae3115 0%, #ff6b4a 100%)' }}>
+          style={{ background: 'var(--gradient-primary)' }}>
           {saving
             ? <span className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             : <><span className="material-symbols-outlined fill-icon">save</span>Save Changes</>

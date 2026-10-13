@@ -73,12 +73,12 @@ export default function DiscoverPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="max-w-[1440px] mx-auto px-6 py-10 flex gap-10 pb-32"
+      className="w-full max-w-[1280px] mx-auto px-4 sm:px-6 py-10 flex gap-10 pb-32"
     >
       {/* ── Sidebar ─────────────────────────────────────────────────── */}
-      <aside className="hidden lg:block w-72 flex-shrink-0 space-y-8">
-        <div>
-          <h3 className="text-xl font-black text-on-background mb-6">Advanced Search</h3>
+      <aside className="hidden lg:block w-72 flex-shrink-0 space-y-6 self-start sticky top-24">
+        <div className="bg-white rounded-[24px] border border-outline-variant/70 p-6">
+          <h2 className="text-2xl text-on-background mb-6">Refine</h2>
           <div className="space-y-7">
             <div className="space-y-3">
               <label className="text-sm font-bold text-on-surface-variant flex items-center gap-2">
@@ -86,7 +86,7 @@ export default function DiscoverPage() {
                 Education
               </label>
               <select value={education} onChange={(e) => setEducation(e.target.value)}
-                className="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none">
+                className="w-full bg-surface-container-low border border-outline-variant/70 rounded-xl py-3 px-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none">
                 {EDUCATION_OPTIONS.map((o) => <option key={o}>{o}</option>)}
               </select>
             </div>
@@ -109,29 +109,38 @@ export default function DiscoverPage() {
         </div>
 
         {!myProfile?.isPremium && (
-          <div className="p-6 rounded-3xl bg-primary-fixed border border-primary/10">
-            <p className="text-xs font-bold text-on-primary-fixed-variant tracking-widest uppercase mb-1">Premium</p>
-            <p className="text-lg font-black text-on-primary-fixed-variant mb-4 leading-snug">See full profiles, chat and check astro matches</p>
-            <Link to="/premium" className="block text-center w-full bg-gradient-to-r from-primary to-primary-container text-white py-3 rounded-2xl text-sm font-bold shadow-btn-primary hover:shadow-btn-primary-hover active:scale-95 transition-all">
-              Upgrade Now
+          <div className="p-6 rounded-[24px] text-white relative overflow-hidden" style={{ background: 'var(--gradient-primary)' }}>
+            <span className="material-symbols-outlined fill-icon absolute -right-3 -top-3 text-[96px] text-white/10">workspace_premium</span>
+            <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-gold-400 mb-2">Premium</p>
+            <p className="font-display text-2xl leading-snug mb-5">See full profiles, chat freely and check horoscope matches</p>
+            <Link to="/premium" className="block text-center w-full py-3 rounded-xl text-sm font-bold text-[#2B1E05] active:scale-95 transition-all"
+              style={{ background: 'var(--gradient-gold)' }}>
+              Upgrade now
             </Link>
           </div>
         )}
       </aside>
 
       {/* ── Main feed ───────────────────────────────────────────────── */}
-      <section className="flex-grow min-w-0">
+      <section className="flex-1 min-w-0">
+        <header className="mb-6">
+          <h1 className="text-[40px] leading-tight text-on-surface">Discover</h1>
+          <p className="text-sm text-on-surface-variant">
+            {profiles ? `${data?.pages?.[0]?.totalElements ?? profiles.length} profiles match your preferences` : 'Finding people who share your values'}
+          </p>
+        </header>
+
         {/* Filter chips */}
-        <div className="flex items-center gap-3 mb-10 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex items-center gap-2.5 mb-8 overflow-x-auto pb-2 scrollbar-hide">
           {FILTER_CHIPS.map(({ label, icon, value }) => (
             <button key={value} onClick={() => setActiveChip(value)}
               aria-pressed={activeChip === value}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-semibold whitespace-nowrap border transition-colors ${
                 activeChip === value
-                  ? 'bg-primary text-white shadow-btn-primary'
-                  : 'bg-white text-on-surface-variant border border-surface-variant hover:bg-orange-50 hover:border-primary/30'
+                  ? 'bg-primary text-white border-primary'
+                  : 'bg-white text-on-surface-variant border-outline-variant hover:border-primary/40 hover:text-primary'
               }`}>
-              <span className="material-symbols-outlined text-lg">{icon}</span>
+              <span className="material-symbols-outlined text-[18px]">{icon}</span>
               {label}
             </button>
           ))}

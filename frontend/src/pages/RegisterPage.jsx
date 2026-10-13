@@ -136,7 +136,7 @@ export default function RegisterPage() {
           <div className="h-2 w-full bg-surface-container rounded-full overflow-hidden">
             <motion.div
               className="h-full rounded-full"
-              style={{ background: 'linear-gradient(90deg, #ae3115, #ff928b)' }}
+              style={{ background: 'var(--gradient-primary)' }}
               initial={{ width: `${((step - 1) / TOTAL_STEPS) * 100}%` }}
               animate={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
               transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -350,7 +350,7 @@ export default function RegisterPage() {
               )}
               <button type="submit" disabled={register.isPending}
                 className="order-1 md:order-2 w-full md:w-64 font-bold text-lg py-4 px-8 rounded-[24px] text-white shadow-btn-primary hover:shadow-btn-primary-hover hover:-translate-y-0.5 transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-60"
-                style={{ background: 'linear-gradient(135deg, #ff6b4a, #ff928b)' }}>
+                style={{ background: 'var(--gradient-primary)' }}>
                 {register.isPending ? (
                   <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
@@ -520,13 +520,13 @@ function OtpScreen({ email }) {
             value={otp}
             onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
             placeholder="000000"
-            className="w-full text-center text-3xl font-black tracking-[0.5em] bg-white border-2 border-transparent focus:border-primary-container rounded-[24px] px-7 py-5 text-on-surface shadow-card outline-none transition-all placeholder:text-surface-variant placeholder:tracking-[0.3em]"
+            className="w-full text-center text-3xl font-black tracking-[0.5em] bg-white border-2 border-transparent focus:border-primary-container rounded-[24px] px-7 py-5 text-on-surface shadow-card outline-none transition-all placeholder:text-slate-400 placeholder:tracking-[0.3em]"
             autoFocus
           />
 
           <button type="submit" disabled={loading || otp.length !== 6}
             className="w-full py-4 rounded-2xl text-white font-bold text-lg flex items-center justify-center gap-2 shadow-btn-primary hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-60"
-            style={{ background: 'linear-gradient(135deg, #ae3115, #ff6b4a)' }}>
+            style={{ background: 'var(--gradient-primary)' }}>
             {loading
               ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               : 'Verify & Continue'}
@@ -563,7 +563,7 @@ function FormInput({ type = 'text', placeholder, value, onChange, maxLength, max
       onChange={(e) => onChange(e.target.value)}
       maxLength={resolvedMax}
       max={max}
-      className="w-full bg-white border-2 border-transparent focus:border-primary-container rounded-[24px] px-7 py-5 text-lg font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none placeholder:text-surface-variant"
+      className="w-full bg-white border-2 border-transparent focus:border-primary-container rounded-[24px] px-7 py-5 text-lg font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none placeholder:text-slate-400"
     />
   )
 }

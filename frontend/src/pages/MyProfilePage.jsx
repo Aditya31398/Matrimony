@@ -9,7 +9,7 @@ import CompletenessRing from '../components/ui/CompletenessRing'
 import { useBlockedMembers, useBlockToggle } from '../hooks/useFeatures'
 import { shareWithFamily } from '../utils/share'
 import { AVATAR_PLACEHOLDER, showPlaceholderOnError } from '../utils/placeholder'
-import { nakshatraName, rashiName } from '../utils/astrology'
+import { nakshatraName, moonSign } from '../utils/astrology'
 
 const INFO_FIELDS = [
   ['Religion', 'religion'], ['Caste', 'caste'], ['Height', 'height'],
@@ -151,14 +151,14 @@ export default function MyProfilePage() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }}
               className="bg-white rounded-[28px] p-6 shadow-card border border-slate-100">
               <div className="flex items-center gap-2 mb-4">
-                <h3 className="text-lg font-black text-on-surface">Basic Info</h3>
+                <h3 className="font-display text-2xl font-bold text-on-surface">Basic Info</h3>
                 {profile.isVerified && <VerifiedBadge size="lg" />}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 {INFO_FIELDS.map(([label, key]) => {
                   const value = key === null
                     ? (profile.ageMin && profile.ageMax ? `${profile.ageMin} – ${profile.ageMax} yrs` : '—')
-                    : (key === 'nakshatra' ? nakshatraName(profile.nakshatra) : key === 'rashi' ? rashiName(profile.rashi) : profile[key]) ?? '—'
+                    : (key === 'nakshatra' ? nakshatraName(profile.nakshatra) : key === 'rashi' ? moonSign(profile) : profile[key]) ?? '—'
                   return (
                     <div key={label} className="flex flex-col gap-1">
                       <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{label}</span>

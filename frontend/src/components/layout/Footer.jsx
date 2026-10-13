@@ -15,12 +15,12 @@ export default function Footer() {
   ]
 
   return (
-    <footer className="bg-slate-50 border-t border-slate-200 mt-auto pb-20 md:pb-0">
+    <footer className="bg-surface-container-low border-t border-outline-variant/70 mt-auto pb-20 md:pb-0">
       <div className="max-w-[1280px] mx-auto py-12 px-8 flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="flex flex-col items-center md:items-start gap-1">
-          <span className="text-xl font-black tracking-tighter text-primary">{name}</span>
+          <span className="font-display text-2xl font-bold text-primary">{name}</span>
           <p className="text-sm text-slate-500">
-            {t('footer.tagline', { name, tagline })}
+            {t('footer.tagline', { name, tagline, year: new Date().getFullYear() })}
           </p>
         </div>
 

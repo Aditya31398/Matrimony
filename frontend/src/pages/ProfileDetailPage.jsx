@@ -17,7 +17,7 @@ import MatchScoreCard from '../components/ui/MatchScoreCard'
 import { useBlockToggle } from '../hooks/useFeatures'
 import { safetyService } from '../services/featureService'
 import { shareWithFamily } from '../utils/share'
-import { nakshatraName, rashiName } from '../utils/astrology'
+import { nakshatraName, moonSign } from '../utils/astrology'
 
 const TIER_CONFIG = {
   EXCELLENT:    { color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-200', label: 'Excellent' },
@@ -368,11 +368,11 @@ export default function ProfileDetailPage() {
 
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.4 }}
               className="bg-white rounded-[32px] p-8 shadow-card border border-slate-100">
-              <h3 className="text-xl font-black text-on-surface mb-5">Basic Info</h3>
+              <h3 className="font-display text-2xl font-bold text-on-surface mb-5">Basic Info</h3>
               <div className="grid grid-cols-2 gap-y-5 gap-x-4">
                 {INFO_FIELDS.map(([label, key]) => {
                   const locked = restricted && !FREE_FIELDS.has(key)
-                  const value = key === 'nakshatra' ? nakshatraName(profile.nakshatra) : key === 'rashi' ? rashiName(profile.rashi) : profile[key]
+                  const value = key === 'nakshatra' ? nakshatraName(profile.nakshatra) : key === 'rashi' ? moonSign(profile) : profile[key]
                   return (
                     <div key={key} className="flex flex-col gap-1">
                       <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{label}</span>
@@ -423,8 +423,10 @@ export default function ProfileDetailPage() {
               ))}
             </motion.div>
 
+            {((profile.interests ?? []).length > 0 || (profile.lifestyle ?? []).length > 0) && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.4 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              className={`grid grid-cols-1 gap-5 ${(profile.interests ?? []).length && (profile.lifestyle ?? []).length ? 'md:grid-cols-2' : ''}`}>
+              {(profile.interests ?? []).length > 0 && (
               <div className="bg-tertiary-fixed rounded-[32px] p-7">
                 <h3 className="text-lg font-black text-on-tertiary-fixed mb-4 flex items-center gap-2">
                   <span className="material-symbols-outlined">palette</span> Interests
@@ -435,6 +437,8 @@ export default function ProfileDetailPage() {
                   ))}
                 </div>
               </div>
+              )}
+              {(profile.lifestyle ?? []).length > 0 && (
               <div className="bg-secondary-fixed rounded-[32px] p-7">
                 <h3 className="text-lg font-black text-on-secondary-fixed-variant mb-4 flex items-center gap-2">
                   <span className="material-symbols-outlined">fitness_center</span> Lifestyle
@@ -445,7 +449,9 @@ export default function ProfileDetailPage() {
                   ))}
                 </div>
               </div>
+              )}
             </motion.div>
+            )}
 
             {/* Horoscope compatibility card */}
             <CompatibilityCard compat={compat} />
@@ -482,13 +488,14 @@ export default function ProfileDetailPage() {
       </main>
 
       {/* ── Floating Action Bar ──────────────────────────────────────── */}
-      {!isOwn && !profile.blockedByMe && <motion.div
+      {!isOwn && !profile.blockedByMe && <div className="fixed inset-x-0 bottom-24 md:bottom-8 z-[60] flex justify-center px-4 pointer-events-none">
+      <motion.div
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.4 }}
-        className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-[60]"
+        className="w-full max-w-md pointer-events-auto"
       >
-        <div className="bg-white/90 backdrop-blur-2xl rounded-[32px] p-4 shadow-float flex items-center gap-3 border border-orange-100/50">
+        <div className="bg-white/95 backdrop-blur-2xl rounded-[28px] p-3 shadow-float flex items-center gap-3 border border-outline-variant/70">
           <button onClick={handleShortlist} disabled={shortlist.isPending}
             className="h-14 w-14 rounded-2xl bg-white border-2 border-orange-100 text-orange-600 flex items-center justify-center hover:bg-orange-50 active:scale-95 transition-all disabled:opacity-60 flex-shrink-0">
             <span className="material-symbols-outlined">bookmark</span>
@@ -502,14 +509,15 @@ export default function ProfileDetailPage() {
           </button>
           <button onClick={handleConnect} disabled={connect.isPending}
             className="flex-[1.3] h-14 rounded-2xl text-white font-black flex items-center justify-center gap-2 shadow-btn-primary hover:shadow-btn-primary-hover active:scale-95 transition-all disabled:opacity-60"
-            style={{ background: 'linear-gradient(135deg, #ae3115 0%, #ff6b4a 100%)' }}>
+            style={{ background: 'var(--gradient-primary)' }}>
             {connect.isPending
               ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               : <><span className="material-symbols-outlined fill-icon">send</span>Connect</>
             }
           </button>
         </div>
-      </motion.div>}
+      </motion.div>
+      </div>}
     </motion.div>
   )
 }

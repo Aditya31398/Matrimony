@@ -19,3 +19,10 @@ export const NAKSHATRA_RASHI = [
 
 export const nakshatraName = (n) => NAKSHATRA_NAMES[n - 1] ?? null
 export const rashiName = (r) => RASHI_NAMES[r - 1] ?? null
+
+/** Moon sign label; when only the star is known, the rashi it falls in (matches the backend). */
+export const moonSign = (p) => {
+  if (p?.rashi) return rashiName(p.rashi)
+  if (p?.nakshatra) return `${rashiName(NAKSHATRA_RASHI[p.nakshatra - 1])} · from star`
+  return null
+}

@@ -39,7 +39,7 @@ const ProfileCard = memo(function ProfileCard({ profile, variant = 'grid' }) {
 
   const matchBadge = matchScore != null && (
     <div className={`absolute top-4 left-4 px-2.5 py-1 rounded-full text-[11px] font-black backdrop-blur-md flex items-center gap-1 ${
-      matchScore >= 75 ? 'bg-green-500/90 text-white' : matchScore >= 50 ? 'bg-white/90 text-primary' : 'bg-white/80 text-on-surface-variant'
+      matchScore >= 75 ? 'bg-primary/90 text-white' : matchScore >= 50 ? 'bg-white/95 text-primary' : 'bg-white/85 text-on-surface-variant'
     }`}>
       <span className="material-symbols-outlined fill-icon text-[13px]">favorite</span>
       {matchScore}% match
@@ -60,8 +60,8 @@ const ProfileCard = memo(function ProfileCard({ profile, variant = 'grid' }) {
   if (variant === 'compact') {
     return (
       <motion.div
-        whileHover={{ y: -4, boxShadow: '0 20px 50px rgba(0,0,0,0.10)' }}
-        className="group relative bg-white rounded-32 overflow-hidden shadow-card cursor-pointer"
+        whileHover={{ y: -4, boxShadow: '0 18px 44px rgba(46,6,20,0.12)' }}
+        className="group relative bg-white rounded-[28px] overflow-hidden border border-outline-variant/60 shadow-card cursor-pointer"
       >
         <Link to={`/profile/${id}`}>
           <div className="aspect-[4/5] relative overflow-hidden">
@@ -85,7 +85,7 @@ const ProfileCard = memo(function ProfileCard({ profile, variant = 'grid' }) {
             )}
             <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
               <div className="flex items-center gap-2 mb-0.5">
-                <h3 className="text-white font-semibold text-lg leading-tight">{firstName}, {age}</h3>
+                <h3 className="font-display text-white text-[24px] font-bold leading-tight">{firstName}, {age}</h3>
                 {isOnline && <span className="w-2 h-2 rounded-full bg-green-400 flex-shrink-0" />}
               </div>
               {subtitle && <p className="text-white/80 text-sm mt-0.5">{subtitle}</p>}
@@ -123,8 +123,8 @@ const ProfileCard = memo(function ProfileCard({ profile, variant = 'grid' }) {
   // Full grid variant (discover page)
   return (
     <motion.div
-      whileHover={{ y: -6, boxShadow: '0 25px 50px rgba(0,0,0,0.12)' }}
-      className="group relative bg-white rounded-24 overflow-hidden shadow-card cursor-pointer"
+      whileHover={{ y: -4, boxShadow: '0 18px 44px rgba(46,6,20,0.12)' }}
+      className="group relative bg-white rounded-[24px] overflow-hidden border border-outline-variant/60 shadow-card cursor-pointer"
     >
       <Link to={`/profile/${id}`}>
         <div className="relative aspect-[3/4] overflow-hidden">
@@ -153,9 +153,8 @@ const ProfileCard = memo(function ProfileCard({ profile, variant = 'grid' }) {
           </button>
           <div className="absolute bottom-4 left-4 right-4 text-white">
             <div className="flex items-center gap-2 mb-1">
-              <h4 className="font-bold text-xl leading-none">{firstName}, {age}</h4>
+              <h4 className="font-display text-[26px] font-bold leading-none">{firstName}, {age}</h4>
               {isVerified && <VerifiedBadge size="lg" />}
-              {isOnline && <span className="w-2.5 h-2.5 rounded-full bg-green-400 flex-shrink-0" />}
             </div>
             {subtitle && (
               <div className="flex items-center gap-1.5 text-white/90 text-sm font-semibold">
@@ -164,30 +163,27 @@ const ProfileCard = memo(function ProfileCard({ profile, variant = 'grid' }) {
               </div>
             )}
             {lastSeenLabel && (
-              <p className="text-white/60 text-[11px] mt-1">
-                {isOnline ? '● Online' : `Last seen ${lastSeenLabel}`}
+              <p className="flex items-center gap-1.5 text-white/70 text-[11px] mt-1">
+                {isOnline && <span className="w-2 h-2 rounded-full bg-green-400" />}
+                {isOnline ? 'Online now' : `Last seen ${lastSeenLabel}`}
               </p>
             )}
           </div>
         </div>
       </Link>
-      <div className="p-4 flex justify-between items-center bg-white">
+      <div className="px-4 py-3.5 flex justify-between items-center gap-3 bg-white">
         {restricted ? (
           <Link to="/premium" className="flex items-center gap-1.5 text-primary text-sm font-bold hover:underline">
             <span className="material-symbols-outlined text-lg">lock</span>
             See full profile
           </Link>
         ) : (
-          <div className="flex items-center gap-1.5 text-on-surface-variant text-sm font-semibold">
-            <span className="material-symbols-outlined text-primary text-lg">location_on</span>
-            {city ? `${city}, India` : 'India'}
+          <div className="flex items-center gap-1 min-w-0 text-on-surface-variant text-sm font-semibold">
+            <span className="material-symbols-outlined text-primary text-lg flex-shrink-0">location_on</span>
+            <span className="truncate">{city || 'India'}</span>
           </div>
         )}
-        <div className="flex gap-1.5">
-          {interests.slice(0, 2).map((tag, i) => (
-            <InterestTag key={i} label={tag} color={i === 0 ? 'secondary' : 'tertiary'} />
-          ))}
-        </div>
+        {interests[0] && <InterestTag label={interests[0]} color="secondary" />}
       </div>
     </motion.div>
   )

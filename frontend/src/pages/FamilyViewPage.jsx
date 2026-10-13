@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { shareService } from '../services/featureService'
-import { nakshatraName, rashiName } from '../utils/astrology'
+import { nakshatraName, moonSign } from '../utils/astrology'
 import { AVATAR_PLACEHOLDER, showPlaceholderOnError } from '../utils/placeholder'
 import { useTenant } from '../context/TenantContext'
 
@@ -40,7 +40,7 @@ export default function FamilyViewPage() {
     )
   }
 
-  const value = (key) => key === 'nakshatra' ? nakshatraName(p.nakshatra) : key === 'rashi' ? rashiName(p.rashi) : p[key]
+  const value = (key) => key === 'nakshatra' ? nakshatraName(p.nakshatra) : key === 'rashi' ? moonSign(p) : p[key]
   const rows = ROWS.filter(([, key]) => value(key))
   const location = [p.city, p.state].filter(Boolean).join(', ')
 

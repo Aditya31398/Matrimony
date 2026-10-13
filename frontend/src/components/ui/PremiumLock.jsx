@@ -1,16 +1,19 @@
 import { Link } from 'react-router-dom'
 
-/** Quiet upsell shown in place of premium-only content. */
-export default function PremiumLock({ title = 'For Premium members', text }) {
+/** Upsell shown in place of premium-only content. */
+export default function PremiumLock({ title = 'Premium members only', text, compact = false }) {
   return (
-    <div className="rounded-2xl border border-outline-variant/70 bg-surface-container-low px-6 py-6">
-      <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-gold-600">
-        <span className="material-symbols-outlined text-[15px]">lock</span> Premium
-      </p>
-      <p className="font-display text-[24px] leading-snug text-on-surface mt-1.5">{title}</p>
-      {text && <p className="text-[14px] text-on-surface-variant mt-1 max-w-md">{text}</p>}
-      <Link to="/premium" className="inline-flex items-center mt-4 h-10 px-5 rounded-lg bg-primary text-white text-[13px] font-semibold hover:bg-primary/90 transition-colors">
-        View plans
+    <div className={`rounded-[28px] border border-orange-200 bg-gradient-to-br from-orange-50 to-white text-center ${compact ? 'p-5' : 'p-8'}`}>
+      <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-white shadow-card flex items-center justify-center text-primary">
+        <span className="material-symbols-outlined fill-icon">lock</span>
+      </div>
+      <h3 className="font-black text-on-surface mb-1">{title}</h3>
+      {text && <p className="text-sm text-on-surface-variant mb-4 max-w-sm mx-auto">{text}</p>}
+      <Link to="/premium"
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-white text-sm font-bold shadow-btn-primary active:scale-95 transition-all"
+        style={{ background: 'var(--gradient-primary)' }}>
+        <span className="material-symbols-outlined text-[18px]">workspace_premium</span>
+        Upgrade to Premium
       </Link>
     </div>
   )

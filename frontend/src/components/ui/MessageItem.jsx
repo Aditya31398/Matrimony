@@ -10,7 +10,7 @@ export default function MessageItem({ conversation, isActive, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-4 p-4 rounded-xl text-left transition-colors ${
+      className={`w-full flex items-center gap-4 p-4 rounded-[16px] text-left transition-colors ${
         isActive ? 'bg-primary-container/10' : 'hover:bg-surface'
       }`}
     >
@@ -40,7 +40,7 @@ export default function MessageItem({ conversation, isActive, onClick }) {
       </div>
       {unreadCount > 0 && (
         <div className="min-w-[20px] h-5 bg-primary rounded-full flex items-center justify-center px-1 flex-shrink-0">
-          <span className="text-[11px] font-semibold text-white">{unreadCount > 9 ? '9+' : unreadCount}</span>
+          <span className="text-[11px] font-black text-white">{unreadCount > 9 ? '9+' : unreadCount}</span>
         </div>
       )}
     </button>

@@ -36,7 +36,7 @@ const HEIGHT_OPTIONS = [
   `5'10" (178cm)`, `5'11" (180cm)`, `6'0" (183cm)`, `6'1" (185cm)`, `6'2" (188cm)`,
   `6'3" (191cm)`, `6'4" (193cm)`, `6'5" (196cm)`,
 ]
-const SELECT_CLS = 'w-full bg-white border-2 border-transparent focus:border-primary-container rounded-2xl px-7 py-5 text-lg font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none'
+const SELECT_CLS = 'w-full bg-white border-2 border-transparent focus:border-primary-container rounded-[24px] px-7 py-5 text-lg font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none'
 
 const slideVariants = {
   enter: (dir) => ({ x: dir > 0 ? 80 : -80, opacity: 0 }),
@@ -148,7 +148,7 @@ export default function RegisterPage() {
         <AnimatePresence mode="wait" custom={dir}>
           <motion.div key={`header-${step}`} custom={dir} variants={slideVariants} initial="enter" animate="center" exit="exit"
             className="mb-10 text-center md:text-left">
-            <h1 className="text-display-xl font-semibold text-on-surface mb-3">{meta.title}</h1>
+            <h1 className="text-display-xl font-black text-on-surface mb-3">{meta.title}</h1>
             <p className="text-body-lg text-on-surface-variant max-w-md leading-relaxed">{meta.subtitle}</p>
           </motion.div>
         </AnimatePresence>
@@ -287,9 +287,9 @@ export default function RegisterPage() {
                   <div className="flex flex-wrap gap-3">
                     {INTERESTS_OPTIONS.map((tag) => (
                       <button type="button" key={tag} onClick={() => toggleInterest(tag)}
-                        className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all active:scale-[0.98] ${
+                        className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all active:scale-95 ${
                           form.interests.includes(tag)
-                            ? 'bg-primary text-white'
+                            ? 'bg-primary text-white shadow-btn-primary'
                             : 'bg-white border-2 border-surface-variant text-on-surface-variant hover:border-primary/40 hover:bg-orange-50'
                         }`}>
                         {tag}
@@ -300,7 +300,7 @@ export default function RegisterPage() {
                 <Field label="Write your story (bio)" icon="auto_awesome">
                   <textarea rows={5} placeholder="Tell potential partners a little about yourself…"
                     value={form.bio} onChange={(e) => set('bio', e.target.value)}
-                    className="w-full bg-white border-2 border-transparent focus:border-primary-container rounded-2xl px-7 py-5 text-base font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none resize-none" />
+                    className="w-full bg-white border-2 border-transparent focus:border-primary-container rounded-[24px] px-7 py-5 text-base font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none resize-none" />
                 </Field>
               </>
             )}
@@ -329,7 +329,7 @@ export default function RegisterPage() {
                 <Field label="Describe your ideal partner" icon="favorite">
                   <textarea rows={4} placeholder="What qualities matter most to you in a life partner?"
                     value={form.partnerDescription} onChange={(e) => set('partnerDescription', e.target.value)}
-                    className="w-full bg-white border-2 border-transparent focus:border-primary-container rounded-2xl px-7 py-5 text-base font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none resize-none" />
+                    className="w-full bg-white border-2 border-transparent focus:border-primary-container rounded-[24px] px-7 py-5 text-base font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none resize-none" />
                 </Field>
               </>
             )}
@@ -349,7 +349,7 @@ export default function RegisterPage() {
                 </p>
               )}
               <button type="submit" disabled={register.isPending}
-                className="order-1 md:order-2 w-full md:w-64 font-bold text-lg py-4 px-8 rounded-2xl text-white transition-all active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-60"
+                className="order-1 md:order-2 w-full md:w-64 font-bold text-lg py-4 px-8 rounded-[24px] text-white shadow-btn-primary hover:shadow-btn-primary-hover hover:-translate-y-0.5 transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-60"
                 style={{ background: 'var(--gradient-primary)' }}>
                 {register.isPending ? (
                   <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -402,10 +402,10 @@ function PhotoUploadStep({ photos, onChange }) {
     <div className="space-y-4">
       <div className="grid grid-cols-3 gap-3">
         {photos.map((url, i) => (
-          <div key={url} className="relative aspect-square rounded-xl overflow-hidden group shadow-card">
+          <div key={url} className="relative aspect-square rounded-[20px] overflow-hidden group shadow-card">
             <img src={url} alt="" className="w-full h-full object-cover" />
             {i === 0 && (
-              <div className="absolute top-2 left-2 bg-primary text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">
+              <div className="absolute top-2 left-2 bg-primary text-white text-[10px] font-black px-2 py-0.5 rounded-full">
                 PRIMARY
               </div>
             )}
@@ -417,13 +417,13 @@ function PhotoUploadStep({ photos, onChange }) {
         ))}
 
         {Object.keys(uploading).map((k) => (
-          <div key={'u' + k} className="aspect-square rounded-xl bg-surface-container flex items-center justify-center">
+          <div key={'u' + k} className="aspect-square rounded-[20px] bg-surface-container flex items-center justify-center">
             <span className="w-8 h-8 border-3 border-orange-100 border-t-orange-500 rounded-full animate-spin" />
           </div>
         ))}
 
         {photos.length + Object.keys(uploading).length < 5 && (
-          <label className={`aspect-square rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer transition-all border-2 border-dashed
+          <label className={`aspect-square rounded-[20px] flex flex-col items-center justify-center gap-2 cursor-pointer transition-all border-2 border-dashed
             ${photos.length === 0 ? 'border-primary bg-orange-50 hover:bg-orange-100' : 'border-surface-variant bg-white hover:bg-surface-container'}`}>
             <span className={`material-symbols-outlined text-3xl ${photos.length === 0 ? 'text-primary' : 'text-on-surface-variant'}`}>
               add_photo_alternate
@@ -505,7 +505,7 @@ function OtpScreen({ email }) {
         </motion.div>
 
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-semibold text-on-surface mb-2">Verify your email</h1>
+          <h1 className="text-3xl font-black text-on-surface mb-2">Verify your email</h1>
           <p className="text-on-surface-variant text-sm leading-relaxed">
             We sent a 6-digit code to<br />
             <span className="font-bold text-on-surface">{email}</span>
@@ -520,12 +520,12 @@ function OtpScreen({ email }) {
             value={otp}
             onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
             placeholder="000000"
-            className="w-full text-center text-3xl font-semibold tracking-[0.5em] bg-white border-2 border-transparent focus:border-primary-container rounded-2xl px-7 py-5 text-on-surface shadow-card outline-none transition-all placeholder:text-slate-400 placeholder:tracking-[0.3em]"
+            className="w-full text-center text-3xl font-black tracking-[0.5em] bg-white border-2 border-transparent focus:border-primary-container rounded-[24px] px-7 py-5 text-on-surface shadow-card outline-none transition-all placeholder:text-slate-400 placeholder:tracking-[0.3em]"
             autoFocus
           />
 
           <button type="submit" disabled={loading || otp.length !== 6}
-            className="w-full py-4 rounded-xl text-white font-bold text-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-all disabled:opacity-60"
+            className="w-full py-4 rounded-2xl text-white font-bold text-lg flex items-center justify-center gap-2 shadow-btn-primary hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-60"
             style={{ background: 'var(--gradient-primary)' }}>
             {loading
               ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -548,7 +548,7 @@ function OtpScreen({ email }) {
 function Field({ label, children }) {
   return (
     <div className="space-y-3">
-      <label className="text-xl font-semibold text-on-surface block">{label}</label>
+      <label className="text-xl font-black text-on-surface block">{label}</label>
       {children}
     </div>
   )
@@ -563,7 +563,7 @@ function FormInput({ type = 'text', placeholder, value, onChange, maxLength, max
       onChange={(e) => onChange(e.target.value)}
       maxLength={resolvedMax}
       max={max}
-      className="w-full bg-white border-2 border-transparent focus:border-primary-container rounded-2xl px-7 py-5 text-lg font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none placeholder:text-slate-400"
+      className="w-full bg-white border-2 border-transparent focus:border-primary-container rounded-[24px] px-7 py-5 text-lg font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none placeholder:text-slate-400"
     />
   )
 }
@@ -571,7 +571,7 @@ function FormInput({ type = 'text', placeholder, value, onChange, maxLength, max
 function RadioCard({ icon, label, selected, onClick }) {
   return (
     <button type="button" onClick={onClick}
-      className={`relative cursor-pointer w-full bg-white border-2 rounded-xl p-5 flex flex-col items-center gap-3 shadow-card transition-all active:scale-[0.98] ${
+      className={`relative cursor-pointer w-full bg-white border-2 rounded-[20px] p-5 flex flex-col items-center gap-3 shadow-card transition-all active:scale-95 ${
         selected ? 'border-primary-container bg-primary-fixed' : 'border-transparent hover:border-primary-container/30'
       }`}>
       <span className={`material-symbols-outlined text-4xl transition-colors ${selected ? 'text-primary' : 'text-on-surface-variant'}`}>{icon}</span>

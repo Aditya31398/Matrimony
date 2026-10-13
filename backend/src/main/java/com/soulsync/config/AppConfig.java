@@ -9,6 +9,7 @@ import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.CacheControl;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -42,8 +44,9 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean(name = "uploadExecutor")
     public TaskExecutor uploadExecutor() {
         ThreadPoolTaskExecutor exec = new ThreadPoolTaskExecutor();
-        exec.setCorePoolSize(4);
-        exec.setMaxPoolSize(10);
+        // Resizing a large photo needs ~50 MB of heap; two at a time is plenty on a 1 GB server
+        exec.setCorePoolSize(2);
+        exec.setMaxPoolSize(2);
         exec.setQueueCapacity(50);
         exec.setThreadNamePrefix("upload-");
         exec.initialize();
@@ -70,8 +73,10 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // Photo files get unique names and never change, so browsers may keep them for a year
         registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:" + uploadDir + "/");
+                .addResourceLocations("file:" + uploadDir + "/")
+                .setCacheControl(CacheControl.maxAge(Duration.ofDays(365)).cachePublic().immutable());
     }
 
     @Override

@@ -8,10 +8,10 @@ import { paymentService } from '../services/paymentService'
 import { useTenant } from '../context/TenantContext'
 
 const PERKS = [
-  ['Full profiles', 'Phone number, horoscope, profession, education, story and preferences.'],
-  ['Unlimited conversations', 'Start a chat with anyone and reply to every message.'],
-  ['Kundli matching', 'Ashtakoota and Dashakoota compatibility with every profile you view.'],
-  ['Stand out', 'A Premium badge, and your profile shown first in Discover.'],
+  { icon: 'visibility', title: 'Full profile details', text: 'Phone number, star, rashi, profession, education, family and lifestyle.' },
+  { icon: 'chat', title: 'Chat with anyone', text: 'Start conversations and reply to every member.' },
+  { icon: 'auto_awesome', title: 'Astro matching', text: '36-point Guna Milan with every profile you view.' },
+  { icon: 'workspace_premium', title: 'Premium badge', text: 'Stand out and appear first in Discover and Top Picks.' },
 ]
 
 const CHECKOUT_SRC = 'https://checkout.razorpay.com/v1/checkout.js'
@@ -57,7 +57,7 @@ export default function PremiumPage() {
         name: brand,
         description: `Premium · ${order.planLabel}`,
         prefill: { name: order.name, email: order.email, contact: order.phone },
-        theme: { color: '#1F2A44' },
+        theme: { color: '#5B2A4E' },
         handler: async (resp) => {
           try {
             const result = await paymentService.verify({
@@ -86,74 +86,86 @@ export default function PremiumPage() {
   }
 
   return (
-    <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}
-      className="max-w-[1000px] mx-auto px-4 sm:px-6 pt-12 pb-32">
-      <header className="text-center mb-12">
-        <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-gold-600">{brand} Premium</p>
-        <h1 className="text-[44px] sm:text-[56px] leading-[1.02] text-on-surface mt-2">See every detail.<br className="sm:hidden" /> Chat freely.</h1>
-        <p className="text-[16px] text-on-surface-variant max-w-lg mx-auto mt-4">
-          Free members see a photo, name, age, caste and religion. Premium opens up everything else.
+    <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      className="max-w-[1080px] mx-auto px-4 sm:px-6 py-10 pb-32">
+      <header className="text-center mb-10">
+        <p className="text-xs font-bold tracking-widest uppercase text-primary mb-2">{brand} Premium</p>
+        <h1 className="text-3xl sm:text-4xl font-black text-on-surface mb-3">See every detail. Chat freely.</h1>
+        <p className="text-on-surface-variant max-w-xl mx-auto">
+          Free members see only photo, name, age, caste and religion. Premium unlocks everything else.
         </p>
-        {isPremium && premiumUntil && (
-          <p className="text-[14px] text-on-surface mt-5">
-            You're Premium until <strong className="font-semibold">{formatDate(premiumUntil)}</strong> — a new plan extends it.
-          </p>
-        )}
       </header>
 
-      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-6 max-w-3xl mx-auto mb-14">
-        {PERKS.map(([title, text]) => (
-          <li key={title} className="flex gap-3">
-            <span className="material-symbols-outlined text-[20px] text-primary mt-0.5">check</span>
-            <div>
-              <p className="text-[15px] font-semibold text-on-surface">{title}</p>
-              <p className="text-[14px] text-on-surface-variant mt-0.5">{text}</p>
+      {isPremium && premiumUntil && (
+        <div className="mb-8 flex items-center gap-3 rounded-2xl bg-green-50 border border-green-200 px-5 py-4 text-green-800">
+          <span className="material-symbols-outlined fill-icon">verified</span>
+          <p className="text-sm font-semibold">
+            You're Premium until {formatDate(premiumUntil)}. Buying another plan extends it.
+          </p>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+        {PERKS.map(({ icon, title, text }) => (
+          <div key={title} className="flex gap-4 bg-white rounded-[24px] p-5 shadow-card border border-slate-100">
+            <div className="w-11 h-11 rounded-2xl bg-orange-50 text-primary flex items-center justify-center flex-shrink-0">
+              <span className="material-symbols-outlined">{icon}</span>
             </div>
-          </li>
+            <div>
+              <h3 className="font-black text-on-surface">{title}</h3>
+              <p className="text-sm text-on-surface-variant">{text}</p>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
 
       {isLoading ? (
         <div className="flex justify-center py-10">
-          <div className="w-8 h-8 border-2 border-outline-variant border-t-primary rounded-full animate-spin" />
+          <div className="w-10 h-10 border-4 border-orange-100 border-t-primary rounded-full animate-spin" />
         </div>
       ) : (
         <>
-          <div role="radiogroup" aria-label="Plans" className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             {plans.map((plan) => {
               const active = selected === plan.id
               const best = plan.id === 'MONTH_3'
               return (
-                <button key={plan.id} type="button" role="radio" aria-checked={active} onClick={() => setSelected(plan.id)}
-                  className={`relative text-left rounded-2xl p-6 border bg-white transition-colors ${
-                    active ? 'border-primary ring-1 ring-primary' : 'border-outline-variant/80 hover:border-on-surface/30'
+                <button key={plan.id} type="button" onClick={() => setSelected(plan.id)}
+                  className={`relative text-left rounded-[28px] p-6 border-2 transition-all active:scale-[0.98] ${
+                    active ? 'border-primary bg-orange-50 shadow-btn-primary' : 'border-slate-100 bg-white shadow-card hover:border-primary/40'
                   }`}>
-                  <div className="flex items-center justify-between">
-                    <p className="text-[14px] font-medium text-on-surface">{plan.label}</p>
-                    {best && <span className="text-[11px] font-semibold uppercase tracking-[0.1em] text-gold-600">Most chosen</span>}
-                  </div>
-                  <p className="font-display text-[40px] leading-none text-on-surface mt-4">₹{plan.amount.toLocaleString('en-IN')}</p>
-                  <p className="text-[13px] text-on-surface-variant mt-2">₹{plan.perMonth.toLocaleString('en-IN')} per month</p>
+                  {best && (
+                    <span className="absolute -top-3 left-6 bg-primary text-white text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full">
+                      Most popular
+                    </span>
+                  )}
+                  <p className="font-bold text-on-surface-variant mb-1">{plan.label}</p>
+                  <p className="text-3xl font-black text-on-surface">₹{plan.amount.toLocaleString('en-IN')}</p>
+                  <p className="text-sm text-on-surface-variant mt-1">₹{plan.perMonth.toLocaleString('en-IN')} / month</p>
+                  <span className={`absolute top-6 right-6 material-symbols-outlined ${active ? 'text-primary fill-icon' : 'text-slate-300'}`}>
+                    {active ? 'check_circle' : 'radio_button_unchecked'}
+                  </span>
                 </button>
               )
             })}
           </div>
 
           {configured === false && (
-            <p className="text-center text-[13px] text-on-surface-variant mb-4">Online payments are being set up. Please check back soon.</p>
+            <p className="text-center text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 mb-4">
+              Online payments are being set up. Please check back soon.
+            </p>
           )}
 
-          <div className="text-center">
-            <button onClick={handlePay} disabled={paying || !configured}
-              className="w-full max-w-sm h-12 inline-flex items-center justify-center rounded-lg bg-primary text-white text-[15px] font-semibold hover:bg-primary/90 transition-colors disabled:opacity-60">
-              {paying
-                ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                : 'Continue to payment'}
-            </button>
-            <p className="text-[12px] text-on-surface-variant mt-3">
-              Secured by Razorpay · UPI, cards, net banking and wallets · One-time payment, no auto-renewal
-            </p>
-          </div>
+          <button onClick={handlePay} disabled={paying || !configured}
+            className="w-full max-w-md mx-auto flex py-4 rounded-2xl text-white font-bold text-lg items-center justify-center gap-2 shadow-btn-primary hover:shadow-btn-primary-hover active:scale-95 transition-all disabled:opacity-60"
+            style={{ background: 'var(--gradient-primary)' }}>
+            {paying
+              ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              : <><span className="material-symbols-outlined">lock</span>Pay securely with Razorpay</>}
+          </button>
+          <p className="text-center text-xs text-on-surface-variant mt-3">
+            UPI, cards, net banking and wallets. One-time payment — no auto-renewal.
+          </p>
         </>
       )}
     </motion.main>

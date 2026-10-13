@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { Toaster } from 'react-hot-toast'
@@ -40,7 +40,22 @@ function ProtectedRoute({ children }) {
   return isLoggedIn ? children : <Navigate to="/login" replace />
 }
 
+// The pages people open next; fetched in the background once the first screen is idle
+const preloadCommonPages = () => {
+  import('./pages/DiscoverPage')
+  import('./pages/DashboardPage')
+  import('./pages/ProfileDetailPage')
+  import('./pages/MessagesPage')
+  import('./pages/MyProfilePage')
+}
+
 export default function App() {
+  useEffect(() => {
+    const idle = window.requestIdleCallback ?? ((cb) => setTimeout(cb, 1500))
+    const id = idle(preloadCommonPages)
+    return () => (window.cancelIdleCallback ?? clearTimeout)(id)
+  }, [])
+
   return (
     <TenantProvider>
       <AuthProvider>
@@ -51,7 +66,7 @@ export default function App() {
             toastOptions={{
               duration: 3000,
               style: { borderRadius: '16px', fontWeight: 600, fontSize: '14px' },
-              success: { iconTheme: { primary: '#1F2A44', secondary: '#fff' } },
+              success: { iconTheme: { primary: '#5B2A4E', secondary: '#fff' } },
             }}
           />
           <Navbar />

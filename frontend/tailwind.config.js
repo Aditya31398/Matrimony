@@ -9,12 +9,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Soft gold tints; replaces Tailwind's bright orange used for tints and borders
+        // Blush / rose-gold scale; replaces Tailwind's bright orange used for tints and borders
         orange: {
-          50: '#FBF8F1', 100: '#F5EEDC', 200: '#EADDBF', 300: '#DCC798', 400: '#D4B57A',
-          500: '#C6A15B', 600: '#9C7C3A', 700: '#7C622C', 800: '#5C4920', 900: '#3D3015',
+          50: '#FDF5F3', 100: '#F9E8E3', 200: '#F0D3CA', 300: '#E4B8AA', 400: '#CC9583',
+          500: '#B07A6B', 600: '#8F5F52', 700: '#704940', 800: '#52352E', 900: '#36231E',
         },
-        gold: { 400: '#D4B57A', 500: '#C6A15B', 600: '#9C7C3A' },
+        gold: { 400: '#D3A595', 500: '#B88474', 600: '#8F5F52' },
+        // Warm greys so neutral text/borders sit naturally on the ivory background
+        slate: {
+          50: '#F8F5F1', 100: '#F0EBE5', 200: '#E3DBD2', 300: '#CFC4B9', 400: '#A89C93',
+          500: '#857971', 600: '#645A54', 700: '#4A423E', 800: '#312B29', 900: '#1F1A1C',
+        },
         primary: themeColor('--color-primary'),
         'primary-container': themeColor('--color-primary-container'),
         'on-primary': themeColor('--color-on-primary'),
@@ -104,10 +109,9 @@ export default {
         base: '8px',
       },
       boxShadow: {
-        // Hairline-first: surfaces rely on borders, shadows stay barely there
-        card: '0 1px 2px rgba(17,24,39,0.04)',
-        'card-hover': '0 6px 20px rgba(17,24,39,0.07)',
-        nav: '0 1px 0 rgba(46,6,20,0.06)',
+        card: '0 1px 2px rgba(42,16,36,0.04), 0 8px 24px rgba(42,16,36,0.05)',
+        'card-hover': '0 2px 4px rgba(42,16,36,0.05), 0 18px 44px rgba(42,16,36,0.10)',
+        nav: '0 1px 0 rgba(42,16,36,0.06)',
         float: 'var(--shadow-float)',
         'btn-primary': 'var(--shadow-btn-primary)',
         'btn-primary-hover': 'var(--shadow-btn-primary-hover)',

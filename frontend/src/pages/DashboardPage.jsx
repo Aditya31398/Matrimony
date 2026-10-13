@@ -2,43 +2,32 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import ProfileCard from '../components/ui/ProfileCard'
 import InterestCard from '../components/ui/InterestCard'
-import SectionHeader from '../components/ui/SectionHeader'
-import CompletenessRing from '../components/ui/CompletenessRing'
+import { NewBadge } from '../components/ui/Badge'
 import { SkeletonProfileCard, SkeletonInterestCard } from '../components/ui/SkeletonCard'
 import { useViewers, useMyProfile } from '../hooks/useProfiles'
 import { useDailyPicks } from '../hooks/useFeatures'
+import CompletenessRing from '../components/ui/CompletenessRing'
 import { useInterested, useMatches } from '../hooks/useMatches'
 import { useConversations } from '../hooks/useMessages'
 import { AVATAR_PLACEHOLDER, showPlaceholderOnError } from '../utils/placeholder'
 
-function greeting() {
-  const h = new Date().getHours()
-  return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening'
-}
-
-function Empty({ children }) {
+function EmptyState({ icon, title, children }) {
   return (
-    <div className="col-span-full rounded-2xl border border-dashed border-outline-variant px-6 py-10 text-center text-[13px] text-on-surface-variant">
-      {children}
+    <div className="col-span-full flex flex-col items-center justify-center text-center gap-2 py-10 px-6 rounded-[24px] border-2 border-dashed border-surface-variant text-on-surface-variant">
+      <span className="material-symbols-outlined text-4xl opacity-40">{icon}</span>
+      <p className="font-bold text-on-surface">{title}</p>
+      {children && <p className="text-sm">{children}</p>}
     </div>
   )
 }
 
-function PersonRow({ people, caption }) {
-  return (
-    <div className="flex gap-5 overflow-x-auto pb-1 scrollbar-hide">
-      {people.map((p) => (
-        <Link key={p.id} to={`/profile/${p.id}`} className="flex-shrink-0 w-[76px] text-center group">
-          <div className="w-[76px] h-[76px] rounded-full overflow-hidden ring-1 ring-outline-variant group-hover:ring-primary/40 transition">
-            <img src={p.photoUrl || AVATAR_PLACEHOLDER} onError={showPlaceholderOnError} alt={p.firstName}
-              className="w-full h-full object-cover" loading="lazy" />
-          </div>
-          <p className="mt-2 text-[13px] font-medium text-on-surface truncate">{p.firstName}</p>
-          {caption && <p className="text-[11px] text-on-surface-variant truncate">{caption(p)}</p>}
-        </Link>
-      ))}
-    </div>
-  )
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08 } },
+}
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4 } },
 }
 
 export default function DashboardPage() {
@@ -47,98 +36,184 @@ export default function DashboardPage() {
   const { data: interestedList = [], isLoading: intLoading } = useInterested()
   const { data: convList = [], isLoading: convLoading } = useConversations()
   const { data: matches = [] } = useMatches()
-  const { data: viewers = [] } = useViewers()
-  const today = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })
+  const { data: viewers } = useViewers()
 
   return (
-    <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}
-      className="max-w-[1200px] mx-auto px-4 sm:px-6 pt-10 pb-32">
-      <header className="mb-8">
-        <p className="text-[12px] uppercase tracking-[0.14em] text-on-surface-variant">{today}</p>
-        <h1 className="text-[40px] sm:text-[48px] leading-[1.05] text-on-surface mt-1">
-          {greeting()}{me?.firstName ? `, ${me.firstName}` : ''}
+    <motion.main
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="max-w-[1280px] mx-auto px-6 py-8 pb-32"
+    >
+      {/* Header */}
+      <header className="mb-10">
+        <h1 className="text-display-xl font-black text-on-surface mb-2">
+          {me?.firstName ? `Hi ${me.firstName}` : 'Find your SoulSync'}
         </h1>
+        <p className="text-body-lg text-on-surface-variant">Here are your personalized matches for today.</p>
       </header>
 
-      {me && <div className="mb-12"><CompletenessRing profile={me} compact /></div>}
-
-      <section className="mb-14">
-        <SectionHeader overline="Curated daily" title="Today's top five"
-          subtitle="Chosen for your preferences. A new selection arrives every morning." to="/discover" linkLabel="Browse all" />
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5">
-          {picksLoading
-            ? [...Array(5)].map((_, i) => <SkeletonProfileCard key={i} />)
-            : topPicks.length === 0
-              ? <Empty>New members join every day — your selection will appear here.</Empty>
-              : topPicks.map((p) => <ProfileCard key={p.id} profile={p} variant="compact" />)}
-        </div>
-      </section>
-
-      {(matches.length > 0 || viewers.length > 0) && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-12 mb-14">
-          {matches.length > 0 && (
-            <section>
-              <SectionHeader title="Your connections" subtitle={`${matches.length} accepted`} />
-              <PersonRow people={matches.map((m) => m.profile)} caption={(p) => `${p.age}`} />
-            </section>
-          )}
-          {viewers.length > 0 && (
-            <section>
-              <SectionHeader title="Recently viewed you" subtitle={`${viewers.length} ${viewers.length === 1 ? 'visitor' : 'visitors'}`} />
-              <PersonRow people={viewers} caption={(p) => (p.restricted ? p.religion : p.profession) ?? ''} />
-            </section>
-          )}
+      {me && (
+        <div className="mb-12 max-w-2xl">
+          <CompletenessRing profile={me} compact />
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-x-10 gap-y-12">
-        <section>
-          <SectionHeader title="Interested in you"
-            subtitle={interestedList.length ? `${interestedList.length} waiting for your reply` : undefined} />
-          <div className="space-y-3">
+      {/* ── Top Picks ───────────────────────────────────────────────── */}
+      <section className="mb-16">
+        <div className="flex justify-between items-end mb-6">
+          <div>
+            <h2 className="text-headline-lg font-black text-on-surface">Today's Top 5</h2>
+            <p className="text-sm text-on-surface-variant">Best matches for your preferences · refreshes every day</p>
+          </div>
+          <Link to="/discover" className="text-sm font-bold text-primary hover:underline">View All</Link>
+        </div>
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
+          variants={stagger}
+          initial="hidden"
+          animate="show"
+        >
+          {picksLoading
+            ? [...Array(5)].map((_, i) => (
+                <motion.div key={i} variants={fadeUp}><SkeletonProfileCard /></motion.div>
+              ))
+            : topPicks.length === 0
+              ? <EmptyState icon="person_search" title="No profiles yet">New members join every day — check back soon.</EmptyState>
+              : topPicks.map((p) => (
+                <motion.div key={p.id} variants={fadeUp}>
+                  <ProfileCard profile={p} variant="compact" />
+                </motion.div>
+              ))}
+        </motion.div>
+      </section>
+
+      {/* ── Your Matches (accepted connections) ─────────────────────── */}
+      {matches.length > 0 && (
+        <section className="mb-16">
+          <div className="flex justify-between items-end mb-6">
+            <h2 className="text-headline-lg font-black text-on-surface">Your Matches</h2>
+            <span className="text-sm font-bold text-on-surface-variant">{matches.length} connected</span>
+          </div>
+          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+            {matches.map(({ id, profile: p }) => (
+              <Link key={id} to={`/profile/${p.id}`} className="flex-shrink-0">
+                <motion.div whileHover={{ y: -4 }} className="flex flex-col items-center gap-2 w-24 cursor-pointer">
+                  <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-primary">
+                    <img src={p.photoUrl || AVATAR_PLACEHOLDER} onError={showPlaceholderOnError} alt={p.firstName}
+                      className="w-full h-full object-cover" />
+                  </div>
+                  <span className="text-xs font-bold text-on-surface text-center truncate w-full">{p.firstName}, {p.age}</span>
+                </motion.div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── Who Viewed Me ───────────────────────────────────────────── */}
+      {viewers && viewers.length > 0 && (
+        <section className="mb-16">
+          <div className="flex justify-between items-end mb-6">
+            <h2 className="text-headline-lg font-black text-on-surface">Who Viewed Your Profile</h2>
+            <span className="text-sm font-bold text-on-surface-variant">{viewers.length} visitor{viewers.length !== 1 ? 's' : ''}</span>
+          </div>
+          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+            {viewers.map((p) => (
+              <Link key={p.id} to={`/profile/${p.id}`} className="flex-shrink-0">
+                <motion.div whileHover={{ y: -4 }} className="flex flex-col items-center gap-2 w-24 cursor-pointer">
+                  <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-orange-200">
+                    <img src={p.photoUrl || AVATAR_PLACEHOLDER} alt={p.firstName}
+                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                      onError={showPlaceholderOnError}
+                    />
+                  </div>
+                  <span className="text-xs font-bold text-on-surface text-center truncate w-full">{p.firstName}</span>
+                  <span className="text-[10px] text-on-surface-variant truncate w-full text-center">
+                    {p.restricted ? [p.caste, p.religion].filter(Boolean).join(' • ') : p.profession}
+                  </span>
+                </motion.div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── Bento grid: Interested + Recent ─────────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Interested in You */}
+        <section className="lg:col-span-2">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-headline-lg font-black text-on-surface">Interested in You</h2>
+            {interestedList.length > 0 && <NewBadge count={interestedList.length} />}
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {intLoading
-              ? [...Array(2)].map((_, i) => <SkeletonInterestCard key={i} />)
+              ? [...Array(4)].map((_, i) => <SkeletonInterestCard key={i} />)
               : interestedList.length === 0
-                ? <Empty>When someone sends you an interest, it will appear here.</Empty>
-                : interestedList.map((match) => <InterestCard key={match.id} match={match} />)}
+                ? <EmptyState icon="favorite" title="No requests yet">When someone sends you a connect request, it shows up here.</EmptyState>
+                : interestedList.map((match) => (
+                  <InterestCard key={match.id} match={match} />
+                ))}
           </div>
         </section>
 
+        {/* Recent Messages */}
         <section>
-          <SectionHeader title="Messages" to="/messages" linkLabel="Open inbox" />
-          <div className="bg-white rounded-2xl border border-outline-variant/70 divide-y divide-outline-variant/60">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-headline-lg font-black text-on-surface">Recent</h2>
+            <Link to="/messages">
+              <button className="p-2 text-primary hover:bg-orange-50 rounded-full transition-colors">
+                <span className="material-symbols-outlined">chat_bubble</span>
+              </button>
+            </Link>
+          </div>
+          <div className="bg-white rounded-[24px] p-2 shadow-card">
             {convLoading ? (
-              <div className="p-5 space-y-4">
+              <div className="p-4 space-y-3">
                 {[1, 2, 3].map((k) => (
-                  <div key={k} className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-full shimmer" />
-                    <div className="flex-1 space-y-2"><div className="h-3 w-24 rounded shimmer" /><div className="h-3 w-36 rounded shimmer" /></div>
+                  <div key={k} className="flex items-center gap-3 animate-pulse">
+                    <div className="w-12 h-12 rounded-full bg-surface-container shimmer flex-shrink-0" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-3 w-24 bg-surface-container rounded shimmer" />
+                      <div className="h-3 w-36 bg-surface-container rounded shimmer" />
+                    </div>
                   </div>
                 ))}
               </div>
             ) : convList.length === 0 ? (
-              <p className="px-5 py-8 text-center text-[13px] text-on-surface-variant">No conversations yet.</p>
+              <p className="p-6 text-center text-sm text-on-surface-variant">No conversations yet.</p>
             ) : (
               convList.slice(0, 5).map((conv) => (
-                <Link key={conv.id} to={`/messages/${conv.id}`}
-                  className="flex items-center gap-3 px-5 py-3.5 hover:bg-surface-container-low transition-colors first:rounded-t-2xl last:rounded-b-2xl">
-                  <div className="relative flex-shrink-0">
-                    <img src={conv.otherProfile?.photoUrl || AVATAR_PLACEHOLDER} onError={showPlaceholderOnError}
-                      alt={conv.otherProfile?.firstName} className="w-11 h-11 rounded-full object-cover" loading="lazy" />
-                    {conv.isOnline && <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full" />}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-baseline gap-2">
-                      <p className={`text-[14px] truncate ${conv.unreadCount ? 'font-semibold text-on-surface' : 'font-medium text-on-surface'}`}>
-                        {conv.otherProfile?.firstName}
-                      </p>
-                      <span className="text-[11px] text-on-surface-variant flex-shrink-0">{conv.lastMessageTime}</span>
+                <Link key={conv.id} to={`/messages/${conv.id}`}>
+                  <div className="flex items-center gap-4 p-4 hover:bg-surface-container rounded-[18px] transition-colors cursor-pointer">
+                    <div className="relative flex-shrink-0">
+                      <div className="w-12 h-12 rounded-full overflow-hidden">
+                        <img src={conv.otherProfile?.photoUrl || AVATAR_PLACEHOLDER} onError={showPlaceholderOnError}
+                          alt={conv.otherProfile?.firstName} className="w-full h-full object-cover" loading="lazy" />
+                      </div>
+                      {conv.isOnline && (
+                        <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />
+                      )}
                     </div>
-                    <p className={`text-[13px] truncate ${conv.unreadCount ? 'text-on-surface' : 'text-on-surface-variant'}`}>{conv.lastMessage}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-baseline">
+                        <h4 className="text-sm font-bold text-on-surface truncate">{conv.otherProfile?.firstName}</h4>
+                        <span className="text-[10px] text-on-surface-variant font-bold">{conv.lastMessageTime}</span>
+                      </div>
+                      <p className="text-sm text-on-surface-variant truncate mt-0.5">{conv.lastMessage}</p>
+                    </div>
                   </div>
                 </Link>
               ))
             )}
+            <div className="p-3">
+              <Link to="/messages">
+                <button className="w-full py-3 text-center text-primary text-sm font-bold hover:bg-orange-50 rounded-xl transition-colors">
+                  View All Messages
+                </button>
+              </Link>
+            </div>
           </div>
         </section>
       </div>

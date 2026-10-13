@@ -24,13 +24,13 @@ const HEIGHT_OPTIONS = Array.from({ length: 21 }, (_, i) => {
 const INTERESTS_OPTIONS = ['Reading', 'Cooking', 'Travel', 'Music', 'Photography', 'Fitness', 'Art', 'Technology', 'Fashion', 'Gaming', 'Dance', 'Writing', 'Sports', 'Movies', 'Nature']
 const LIFESTYLE_OPTIONS = ['Yoga', 'Trekking', 'Early Bird', 'Night Owl', 'Travel Enthusiast', 'Foodie', 'Gym', 'Meditation', 'Cycling', 'Swimming']
 
-const SELECT_CLS = 'w-full bg-white border border-outline-variant rounded-xl px-4 py-3 text-[15px] text-on-surface outline-none transition-colors focus:border-primary/50 focus:ring-2 focus:ring-primary/10 appearance-none'
-const INPUT_CLS = 'w-full bg-white border border-outline-variant rounded-xl px-4 py-3 text-[15px] text-on-surface outline-none transition-colors focus:border-primary/50 focus:ring-2 focus:ring-primary/10 placeholder:text-on-surface-variant/50'
+const SELECT_CLS = 'w-full bg-white border-2 border-transparent focus:border-primary-container rounded-[18px] px-5 py-4 text-base font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none appearance-none'
+const INPUT_CLS = 'w-full bg-white border-2 border-transparent focus:border-primary-container rounded-[18px] px-5 py-4 text-base font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none'
 
 function Field({ label, icon, children }) {
   return (
     <div className="space-y-2">
-      <label className="text-sm font-semibold text-on-surface flex items-center gap-2">
+      <label className="text-sm font-black text-on-surface flex items-center gap-2">
         {icon && <span className="material-symbols-outlined text-primary text-[18px]">{icon}</span>}
         {label}
       </label>
@@ -46,9 +46,9 @@ function TagToggle({ options, selected, onChange }) {
     <div className="flex flex-wrap gap-2">
       {options.map((tag) => (
         <button type="button" key={tag} onClick={() => toggle(tag)}
-          className={`px-4 py-2 rounded-full text-sm font-bold transition-all active:scale-[0.98] ${
+          className={`px-4 py-2 rounded-full text-sm font-bold transition-all active:scale-95 ${
             selected.includes(tag)
-              ? 'bg-primary text-white'
+              ? 'bg-primary text-white shadow-btn-primary'
               : 'bg-white border-2 border-surface-variant text-on-surface-variant hover:border-primary/40 hover:bg-orange-50'
           }`}>
           {tag}
@@ -161,7 +161,7 @@ export default function EditProfilePage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-semibold text-on-surface">Edit Profile</h1>
+            <h1 className="text-3xl font-black text-on-surface">Edit Profile</h1>
             <p className="text-sm text-on-surface-variant mt-1">Changes are saved immediately</p>
           </div>
           <button onClick={() => navigate('/my-profile')}
@@ -171,8 +171,8 @@ export default function EditProfilePage() {
         </div>
 
         {/* Photo */}
-        <div className="bg-white rounded-2xl p-6 shadow-card border border-slate-100">
-          <h3 className="font-display text-[24px] text-on-surface mb-4 flex items-center gap-2">
+        <div className="bg-white rounded-[28px] p-6 shadow-card border border-slate-100">
+          <h3 className="text-lg font-black text-on-surface mb-4 flex items-center gap-2">
             <span className="material-symbols-outlined text-primary">photo_camera</span> Profile Photo
           </h3>
           <div className="flex items-center gap-6">
@@ -190,7 +190,7 @@ export default function EditProfilePage() {
               )}
             </div>
             <label className="cursor-pointer flex flex-col gap-2">
-              <span className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border-2 border-orange-200 text-primary font-bold text-sm hover:bg-orange-50 transition-colors">
+              <span className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border-2 border-orange-200 text-primary font-bold text-sm hover:bg-orange-50 transition-colors">
                 <span className="material-symbols-outlined text-lg">upload</span>
                 {uploading ? 'Uploading…' : 'Change Photo'}
               </span>
@@ -198,7 +198,7 @@ export default function EditProfilePage() {
               <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" disabled={uploading} />
             </label>
           </div>
-          <label className="mt-5 flex items-start gap-3 rounded-xl bg-surface px-4 py-3 cursor-pointer">
+          <label className="mt-5 flex items-start gap-3 rounded-2xl bg-surface px-4 py-3 cursor-pointer">
             <input type="checkbox" checked={form.photoPrivate} onChange={(e) => set('photoPrivate', e.target.checked)}
               className="accent-primary w-5 h-5 mt-0.5" />
             <span>
@@ -211,8 +211,8 @@ export default function EditProfilePage() {
         </div>
 
         {/* Basic Info */}
-        <div className="bg-white rounded-2xl p-6 shadow-card border border-slate-100 space-y-5">
-          <h3 className="font-display text-[24px] text-on-surface">Basic Info</h3>
+        <div className="bg-white rounded-[28px] p-6 shadow-card border border-slate-100 space-y-5">
+          <h3 className="text-lg font-black text-on-surface">Basic Info</h3>
           <div className="grid grid-cols-2 gap-4">
             <Field label="First Name" icon="person">
               <input className={INPUT_CLS} value={form.firstName} onChange={(e) => set('firstName', e.target.value)} placeholder="First name" />
@@ -242,8 +242,8 @@ export default function EditProfilePage() {
         </div>
 
         {/* Background */}
-        <div className="bg-white rounded-2xl p-6 shadow-card border border-slate-100 space-y-5">
-          <h3 className="font-display text-[24px] text-on-surface">Background</h3>
+        <div className="bg-white rounded-[28px] p-6 shadow-card border border-slate-100 space-y-5">
+          <h3 className="text-lg font-black text-on-surface">Background</h3>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Religion" icon="church">
               <select className={SELECT_CLS} value={form.religion} onChange={(e) => set('religion', e.target.value)}>
@@ -284,9 +284,9 @@ export default function EditProfilePage() {
         </div>
 
         {/* Vedic Matching */}
-        <div className="bg-white rounded-2xl p-6 shadow-card border border-slate-100 space-y-5">
+        <div className="bg-white rounded-[28px] p-6 shadow-card border border-slate-100 space-y-5">
           <div>
-            <h3 className="font-display text-[24px] text-on-surface flex items-center gap-2">
+            <h3 className="text-lg font-black text-on-surface flex items-center gap-2">
               <span className="material-symbols-outlined text-primary">stars</span> Vedic Horoscope Matching
             </h3>
             <p className="text-xs text-on-surface-variant mt-1">Used for Kundali / Porutham matching. Optional — leave blank if you prefer not to share.</p>
@@ -324,9 +324,9 @@ export default function EditProfilePage() {
               {[['Not Manglik', false], ['Manglik', true]].map(([label, val]) => (
                 <button key={label} type="button"
                   onClick={() => set('isManglik', val)}
-                  className={`flex-1 py-3 px-4 rounded-xl text-sm font-bold transition-all border-2 ${
+                  className={`flex-1 py-3 px-4 rounded-[18px] text-sm font-bold transition-all border-2 ${
                     form.isManglik === val
-                      ? 'bg-primary text-white border-primary'
+                      ? 'bg-primary text-white border-primary shadow-btn-primary'
                       : 'bg-white border-surface-variant text-on-surface-variant hover:border-primary/40'
                   }`}>
                   {label}
@@ -337,34 +337,34 @@ export default function EditProfilePage() {
         </div>
 
         {/* Bio */}
-        <div className="bg-white rounded-2xl p-6 shadow-card border border-slate-100">
-          <h3 className="font-display text-[24px] text-on-surface mb-4 flex items-center gap-2">
+        <div className="bg-white rounded-[28px] p-6 shadow-card border border-slate-100">
+          <h3 className="text-lg font-black text-on-surface mb-4 flex items-center gap-2">
             <span className="material-symbols-outlined text-primary">auto_awesome</span> My Story
           </h3>
           <textarea rows={5} value={form.bio} onChange={(e) => set('bio', e.target.value)}
             placeholder="Tell potential partners about yourself…"
-            className="w-full bg-surface border-2 border-transparent focus:border-primary-container rounded-xl px-5 py-4 text-base font-medium text-on-surface outline-none resize-none transition-all" />
+            className="w-full bg-surface border-2 border-transparent focus:border-primary-container rounded-[18px] px-5 py-4 text-base font-medium text-on-surface outline-none resize-none transition-all" />
         </div>
 
         {/* Interests */}
-        <div className="bg-tertiary-fixed rounded-2xl p-6">
-          <h3 className="text-lg font-semibold text-on-tertiary-fixed mb-4 flex items-center gap-2">
+        <div className="bg-tertiary-fixed rounded-[28px] p-6">
+          <h3 className="text-lg font-black text-on-tertiary-fixed mb-4 flex items-center gap-2">
             <span className="material-symbols-outlined">palette</span> Interests
           </h3>
           <TagToggle options={INTERESTS_OPTIONS} selected={form.interests} onChange={(v) => set('interests', v)} />
         </div>
 
         {/* Lifestyle */}
-        <div className="bg-secondary-fixed rounded-2xl p-6">
-          <h3 className="text-lg font-semibold text-on-secondary-fixed-variant mb-4 flex items-center gap-2">
+        <div className="bg-secondary-fixed rounded-[28px] p-6">
+          <h3 className="text-lg font-black text-on-secondary-fixed-variant mb-4 flex items-center gap-2">
             <span className="material-symbols-outlined">fitness_center</span> Lifestyle
           </h3>
           <TagToggle options={LIFESTYLE_OPTIONS} selected={form.lifestyle} onChange={(v) => set('lifestyle', v)} />
         </div>
 
         {/* Partner Preferences */}
-        <div className="bg-white rounded-2xl p-6 shadow-card border border-slate-100 space-y-5">
-          <h3 className="font-display text-[24px] text-on-surface flex items-center gap-2">
+        <div className="bg-white rounded-[28px] p-6 shadow-card border border-slate-100 space-y-5">
+          <h3 className="text-lg font-black text-on-surface flex items-center gap-2">
             <span className="material-symbols-outlined text-primary fill-icon">favorite</span> Partner Preferences
           </h3>
           <Field label="Looking for">
@@ -372,7 +372,7 @@ export default function EditProfilePage() {
               {[['Woman', 'female'], ['Man', 'male']].map(([label, icon]) => (
                 <button type="button" key={label}
                   onClick={() => set('lookingForGender', label)}
-                  className={`h-14 rounded-xl border-2 font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${
+                  className={`h-14 rounded-2xl border-2 font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-95 ${
                     form.lookingForGender === label
                       ? 'border-primary bg-orange-50 text-primary'
                       : 'border-surface-variant text-on-surface-variant hover:border-primary/40'
@@ -396,13 +396,13 @@ export default function EditProfilePage() {
             <textarea rows={3} value={form.partnerDescription}
               onChange={(e) => set('partnerDescription', e.target.value)}
               placeholder="What qualities matter most to you?"
-              className="w-full bg-surface border-2 border-transparent focus:border-primary-container rounded-xl px-5 py-4 text-base font-medium text-on-surface outline-none resize-none transition-all" />
+              className="w-full bg-surface border-2 border-transparent focus:border-primary-container rounded-[18px] px-5 py-4 text-base font-medium text-on-surface outline-none resize-none transition-all" />
           </Field>
         </div>
 
         {/* Save */}
         <button onClick={handleSave} disabled={saving}
-          className="w-full h-16 rounded-2xl text-white font-semibold text-lg flex items-center justify-center gap-3 active:scale-[0.98] transition-all disabled:opacity-60"
+          className="w-full h-16 rounded-[24px] text-white font-black text-lg flex items-center justify-center gap-3 shadow-btn-primary hover:shadow-btn-primary-hover active:scale-[0.98] transition-all disabled:opacity-60"
           style={{ background: 'var(--gradient-primary)' }}>
           {saving
             ? <span className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />

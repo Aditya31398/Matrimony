@@ -53,7 +53,7 @@ export default function FamilyViewPage() {
           : <><strong className="text-on-surface">{p.sharedBy}</strong> would like your opinion on this {brand} profile</>}
       </p>
 
-      <div className="bg-white rounded-2xl shadow-card border border-slate-100 overflow-hidden">
+      <div className="bg-white rounded-[32px] shadow-card border border-slate-100 overflow-hidden">
         <div className="relative aspect-[4/3] sm:aspect-[16/10] bg-surface">
           <img src={p.photoUrl || AVATAR_PLACEHOLDER} onError={showPlaceholderOnError} alt={p.firstName}
             className="w-full h-full object-cover" />
@@ -63,7 +63,7 @@ export default function FamilyViewPage() {
             </span>
           )}
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
-            <h1 className="text-3xl font-semibold">{p.firstName} {p.lastName}, {p.age}</h1>
+            <h1 className="text-3xl font-black">{p.firstName} {p.lastName}, {p.age}</h1>
             {location && <p className="text-sm opacity-90 mt-1">{location}, India</p>}
           </div>
         </div>
@@ -81,7 +81,7 @@ export default function FamilyViewPage() {
           )}
           {p.bio && (
             <div>
-              <h2 className="text-sm font-semibold text-on-surface mb-1">About</h2>
+              <h2 className="text-sm font-black text-on-surface mb-1">About</h2>
               <p className="text-sm text-on-surface-variant leading-relaxed whitespace-pre-line">{p.bio}</p>
             </div>
           )}
@@ -93,7 +93,7 @@ export default function FamilyViewPage() {
             </div>
           )}
           {p.limited && (
-            <p className="text-xs text-on-surface-variant bg-surface rounded-xl px-4 py-3">
+            <p className="text-xs text-on-surface-variant bg-surface rounded-2xl px-4 py-3">
               Only basic details are shown. Contact details are never shared through family links.
             </p>
           )}

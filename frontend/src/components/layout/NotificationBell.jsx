@@ -46,10 +46,10 @@ export default function NotificationBell() {
   return (
     <div className="relative" ref={ref}>
       <button onClick={() => setOpen((o) => !o)} aria-label={`Notifications${unread ? `, ${unread} unread` : ''}`}
-        className="relative p-2 rounded-full hover:bg-primary/5 transition-all duration-300 active:scale-[0.98]">
+        className="relative p-2 rounded-full hover:bg-primary/5 transition-all duration-300 active:scale-95">
         <span className="material-symbols-outlined text-slate-600">notifications</span>
         {unread > 0 && (
-          <span className="absolute top-0.5 right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-primary text-white text-[10px] font-semibold flex items-center justify-center">
+          <span className="absolute top-0.5 right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-primary text-white text-[10px] font-black flex items-center justify-center">
             {unread > 9 ? '9+' : unread}
           </span>
         )}
@@ -58,9 +58,9 @@ export default function NotificationBell() {
       <AnimatePresence>
         {open && (
           <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
-            className="absolute right-0 mt-2 w-[min(360px,calc(100vw-2rem))] bg-white rounded-2xl shadow-float border border-slate-100 overflow-hidden z-[70]">
+            className="absolute right-0 mt-2 w-[min(360px,calc(100vw-2rem))] bg-white rounded-[24px] shadow-float border border-slate-100 overflow-hidden z-[70]">
             <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
-              <h3 className="font-semibold text-on-surface">Notifications</h3>
+              <h3 className="font-black text-on-surface">Notifications</h3>
               {unread > 0 && (
                 <button onClick={markAll} className="text-xs font-bold text-primary hover:underline">Mark all read</button>
               )}

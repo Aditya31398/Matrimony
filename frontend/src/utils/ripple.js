@@ -14,9 +14,9 @@ function hasFill(el, style) {
 function rippleColor(style) {
   if (style.backgroundImage !== 'none') return 'rgba(255, 255, 255, 0.45)'
   const [r, g, b, a = 1] = (style.backgroundColor.match(/[\d.]+/g) || []).map(Number)
-  if (a === 0) return 'rgba(31, 42, 68, 0.10)'
+  if (a === 0) return 'rgba(91, 42, 78, 0.12)'
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-  return luminance < 0.6 ? 'rgba(255, 255, 255, 0.45)' : 'rgba(31, 42, 68, 0.12)'
+  return luminance < 0.6 ? 'rgba(255, 255, 255, 0.45)' : 'rgba(91, 42, 78, 0.14)'
 }
 
 function spawn(e) {

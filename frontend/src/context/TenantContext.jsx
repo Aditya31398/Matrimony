@@ -60,8 +60,8 @@ const COLOR_VAR_MAP = {
   onError: '--color-on-error',
   errorContainer: '--color-error-container',
   onErrorContainer: '--color-on-error-container',
-  shadowBtnPrimary: '--',
-  shadowBtnPrimaryHover: '---hover',
+  shadowBtnPrimary: '--shadow-btn-primary',
+  shadowBtnPrimaryHover: '--shadow-btn-primary-hover',
   shadowFloat: '--shadow-float',
 }
 

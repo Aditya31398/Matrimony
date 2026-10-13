@@ -19,6 +19,7 @@ const EDUCATION_OPTIONS = ['Any Education', 'Masters Degree', 'PhD / Doctorate',
 export default function DiscoverPage() {
   const [activeChip, setActiveChip] = useState('for_you')
   const [education,  setEducation]  = useState('Any Education')
+  const [distance,   setDistance]   = useState(50)
 
   // Own profile — used to resolve city (near_me) and interests (shared interests)
   const { data: myProfile } = useMyProfile()
@@ -38,6 +39,12 @@ export default function DiscoverPage() {
 
   const queryParams = {
     education: educationParam,
+    // Distance slider only makes sense when "Near Me" is active; passes
+    // city of the logged-in user (exact match). A future geo enhancement
+    // can replace this with radius + coordinates.
+    ...(activeChip === 'near_me' && distance < 500 && myCity
+      ? { city: myCity }
+      : {}),
     ...chipParams[activeChip],
   }
 
@@ -61,89 +68,141 @@ export default function DiscoverPage() {
     ? data.pages.flatMap((page) => page?.content ?? (Array.isArray(page) ? page : []))
     : null
 
-  const total = data?.pages?.[0]?.totalElements ?? profiles?.length
-
   return (
-    <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}
-      className="w-full max-w-[1200px] mx-auto px-4 sm:px-6 pt-10 pb-32">
-      <header className="mb-7">
-        <p className="text-[12px] uppercase tracking-[0.14em] text-on-surface-variant">Discover</p>
-        <h1 className="text-[40px] sm:text-[48px] leading-[1.05] text-on-surface mt-1">People you may like</h1>
-        <p className="text-[14px] text-on-surface-variant mt-2">
-          {profiles ? `${total} ${total === 1 ? 'profile' : 'profiles'} for your preferences` : 'Finding people who share your values'}
-        </p>
-      </header>
+    <motion.main
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="w-full max-w-[1280px] mx-auto px-4 sm:px-6 py-10 flex gap-10 pb-32"
+    >
+      {/* ── Sidebar ─────────────────────────────────────────────────── */}
+      <aside className="hidden lg:block w-72 flex-shrink-0 space-y-6 self-start sticky top-24">
+        <div className="bg-white rounded-[24px] border border-outline-variant/70 p-6">
+          <h2 className="text-2xl text-on-background mb-6">Refine</h2>
+          <div className="space-y-7">
+            <div className="space-y-3">
+              <label className="text-sm font-bold text-on-surface-variant flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-lg">school</span>
+                Education
+              </label>
+              <select value={education} onChange={(e) => setEducation(e.target.value)}
+                className="w-full bg-surface-container-low border border-outline-variant/70 rounded-xl py-3 px-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none">
+                {EDUCATION_OPTIONS.map((o) => <option key={o}>{o}</option>)}
+              </select>
+            </div>
 
-      {/* Filters: quick views on the left, education on the right */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-8 pb-6 border-b border-outline-variant/70">
-        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide -mx-1 px-1 flex-1">
+            <div className="space-y-3">
+              <label className="text-sm font-bold text-on-surface-variant flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary text-lg">distance</span>
+                Distance ({distance}km)
+                {activeChip !== 'near_me' && (
+                  <span className="text-[10px] font-normal text-on-surface-variant/50">(activate Near Me)</span>
+                )}
+              </label>
+              <input
+                type="range" min={10} max={500} value={distance}
+                onChange={(e) => { setDistance(Number(e.target.value)); setActiveChip('near_me') }}
+                className="w-full accent-primary"
+              />
+            </div>
+          </div>
+        </div>
+
+        {!myProfile?.isPremium && (
+          <div className="p-6 rounded-[24px] text-white relative overflow-hidden" style={{ background: 'var(--gradient-primary)' }}>
+            <span className="material-symbols-outlined fill-icon absolute -right-3 -top-3 text-[96px] text-white/10">workspace_premium</span>
+            <p className="text-[11px] font-bold tracking-[0.2em] uppercase text-gold-400 mb-2">Premium</p>
+            <p className="font-display text-2xl leading-snug mb-5">See full profiles, chat freely and check horoscope matches</p>
+            <Link to="/premium" className="block text-center w-full py-3 rounded-xl text-sm font-bold text-[#3A1F1A] active:scale-95 transition-all"
+              style={{ background: 'var(--gradient-gold)' }}>
+              Upgrade now
+            </Link>
+          </div>
+        )}
+      </aside>
+
+      {/* ── Main feed ───────────────────────────────────────────────── */}
+      <section className="flex-1 min-w-0">
+        <header className="mb-6">
+          <h1 className="text-[40px] leading-tight text-on-surface">Discover</h1>
+          <p className="text-sm text-on-surface-variant">
+            {profiles ? `${data?.pages?.[0]?.totalElements ?? profiles.length} profiles match your preferences` : 'Finding people who share your values'}
+          </p>
+        </header>
+
+        {/* Filter chips */}
+        <div className="flex items-center gap-2.5 mb-8 overflow-x-auto pb-2 scrollbar-hide">
           {FILTER_CHIPS.map(({ label, icon, value }) => (
             <button key={value} onClick={() => setActiveChip(value)}
               aria-pressed={activeChip === value}
-              className={`flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[13px] font-medium whitespace-nowrap border transition-colors ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-semibold whitespace-nowrap border transition-colors ${
                 activeChip === value
                   ? 'bg-primary text-white border-primary'
-                  : 'bg-white text-on-surface-variant border-outline-variant hover:text-on-surface hover:border-on-surface/30'
+                  : 'bg-white text-on-surface-variant border-outline-variant hover:border-primary/40 hover:text-primary'
               }`}>
-              <span className="material-symbols-outlined text-[17px]">{icon}</span>
+              <span className="material-symbols-outlined text-[18px]">{icon}</span>
               {label}
             </button>
           ))}
         </div>
-        <select value={education} onChange={(e) => setEducation(e.target.value)} aria-label="Education"
-          className="h-9 rounded-full border border-outline-variant bg-white pl-3.5 pr-8 text-[13px] font-medium text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary/20">
-          {EDUCATION_OPTIONS.map((o) => <option key={o}>{o}</option>)}
-        </select>
-      </div>
 
-      {activeChip === 'near_me' && !myCity && !isLoading && (
-        <p className="mb-6 text-[13px] text-on-surface-variant">
-          Add your city in <Link to="/edit-profile" className="text-primary underline underline-offset-4">your profile</Link> to see people near you.
-        </p>
-      )}
-      {activeChip === 'interests' && myInterests.length === 0 && !isLoading && (
-        <p className="mb-6 text-[13px] text-on-surface-variant">
-          Add interests in <Link to="/edit-profile" className="text-primary underline underline-offset-4">your profile</Link> to find shared hobbies.
-        </p>
-      )}
-
-      {!myProfile?.isPremium && (
-        <Link to="/premium"
-          className="mb-8 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 rounded-2xl bg-primary px-6 py-5 text-white hover:bg-primary/95 transition-colors">
-          <div className="flex-1">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gold-400">Premium</p>
-            <p className="font-display text-[22px] leading-snug mt-0.5">See full profiles, chat freely and check horoscope compatibility</p>
+        {/* Near Me + no city warning */}
+        {activeChip === 'near_me' && !myCity && !isLoading && (
+          <div className="mb-6 flex items-center gap-2 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3">
+            <span className="material-symbols-outlined text-lg">info</span>
+            Add your city to your profile to see matches near you.
           </div>
-          <span className="text-[13px] font-semibold text-primary bg-gold-500 rounded-lg px-4 py-2 self-start sm:self-auto">View plans</span>
-        </Link>
-      )}
+        )}
 
-      {isLoading ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-          {[...Array(8)].map((_, i) => <SkeletonProfileCard key={i} />)}
-        </div>
-      ) : isError ? (
-        <div className="py-24 text-center text-on-surface-variant">
-          <p className="font-display text-[26px] text-on-surface">We couldn't load profiles</p>
-          <p className="text-[14px] mt-1">Check your connection and refresh the page.</p>
-        </div>
-      ) : profiles && profiles.length > 0 ? (
-        <>
-          <motion.div key={`${activeChip}-${education}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {profiles.map((p) => <ProfileCard key={p.id} profile={p} variant="grid" />)}
-          </motion.div>
-          <div ref={sentinelRef} className="h-8 mt-8 flex items-center justify-center">
-            {isFetchingNextPage && <div className="w-6 h-6 border-2 border-outline-variant border-t-primary rounded-full animate-spin" />}
-            {!hasNextPage && profiles.length > 8 && <p className="text-[13px] text-on-surface-variant">You've seen everyone for now</p>}
+        {/* Shared Interests + no interests warning */}
+        {activeChip === 'interests' && myInterests.length === 0 && !isLoading && (
+          <div className="mb-6 flex items-center gap-2 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3">
+            <span className="material-symbols-outlined text-lg">info</span>
+            Add interests to your profile to find people with shared hobbies.
           </div>
-        </>
-      ) : (
-        <div className="py-24 text-center text-on-surface-variant">
-          <p className="font-display text-[26px] text-on-surface">No one here yet</p>
-          <p className="text-[14px] mt-1">Try another filter — new members join every day.</p>
-        </div>
-      )}
+        )}
+
+        {/* Profile grid */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, i) => <SkeletonProfileCard key={i} />)}
+          </div>
+        ) : isError ? (
+          <div className="flex flex-col items-center justify-center py-24 gap-4 text-on-surface-variant">
+            <span className="material-symbols-outlined text-6xl opacity-30">cloud_off</span>
+            <p className="text-lg font-bold">Couldn't load profiles</p>
+            <p className="text-sm">Check your connection and refresh the page.</p>
+          </div>
+        ) : profiles && profiles.length > 0 ? (
+          <>
+            <motion.div
+              key={`${activeChip}-${education}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8"
+            >
+              {profiles.map((p) => <ProfileCard key={p.id} profile={p} variant="grid" />)}
+            </motion.div>
+
+            {/* Infinite scroll sentinel */}
+            <div ref={sentinelRef} className="h-8 mt-6 flex items-center justify-center">
+              {isFetchingNextPage && (
+                <div className="w-8 h-8 border-4 border-orange-100 border-t-primary rounded-full animate-spin" />
+              )}
+              {!hasNextPage && profiles.length > 6 && (
+                <p className="text-sm text-on-surface-variant">You've seen all profiles</p>
+              )}
+            </div>
+          </>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-24 gap-4 text-on-surface-variant">
+            <span className="material-symbols-outlined text-6xl opacity-30">search_off</span>
+            <p className="text-lg font-bold">No profiles found</p>
+            <p className="text-sm">Try adjusting your filters</p>
+          </div>
+        )}
+      </section>
     </motion.main>
   )
 }

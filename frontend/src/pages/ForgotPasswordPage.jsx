@@ -5,7 +5,7 @@ import api from '../services/api'
 import toast from 'react-hot-toast'
 
 const inputClass =
-  'w-full bg-surface-container-low border-2 border-transparent focus:border-primary-container rounded-xl pl-12 pr-5 py-4 text-base font-medium text-on-surface outline-none transition-all'
+  'w-full bg-surface-container-low border-2 border-transparent focus:border-primary-container rounded-2xl pl-12 pr-5 py-4 text-base font-medium text-on-surface outline-none transition-all'
 
 export default function ForgotPasswordPage() {
   const navigate = useNavigate()
@@ -72,7 +72,7 @@ export default function ForgotPasswordPage() {
       <div className="max-w-md w-full relative z-10">
         <div className="text-center mb-10">
           <Link to="/" className="font-display text-[40px] leading-none font-bold text-primary inline-block mb-6">SoulSync</Link>
-          <h1 className="text-3xl font-semibold text-on-surface mb-2">Reset your password</h1>
+          <h1 className="text-3xl font-black text-on-surface mb-2">Reset your password</h1>
           <p className="text-on-surface-variant">
             {step === 'email'
               ? "Enter your email and we'll send you a 6-digit code"
@@ -84,7 +84,7 @@ export default function ForgotPasswordPage() {
           {step === 'email' ? (
             <motion.form key="email" onSubmit={sendCode}
               initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-              className="bg-white rounded-2xl p-8 shadow-card border border-slate-100 space-y-5">
+              className="bg-white rounded-[32px] p-8 shadow-card border border-slate-100 space-y-5">
               <div className="space-y-2">
                 <label className="text-sm font-bold text-on-surface-variant block">Email address</label>
                 <div className="relative">
@@ -112,7 +112,7 @@ export default function ForgotPasswordPage() {
           ) : (
             <motion.form key="reset" onSubmit={resetPassword}
               initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-              className="bg-white rounded-2xl p-8 shadow-card border border-slate-100 space-y-5">
+              className="bg-white rounded-[32px] p-8 shadow-card border border-slate-100 space-y-5">
               <div className="space-y-2">
                 <label className="text-sm font-bold text-on-surface-variant block">6-digit code</label>
                 <input
@@ -122,7 +122,7 @@ export default function ForgotPasswordPage() {
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                   placeholder="000000"
-                  className="w-full text-center text-2xl font-semibold tracking-[0.5em] bg-surface-container-low border-2 border-transparent focus:border-primary-container rounded-xl px-5 py-3 outline-none transition-all placeholder:text-slate-300 placeholder:tracking-[0.3em]"
+                  className="w-full text-center text-2xl font-black tracking-[0.5em] bg-surface-container-low border-2 border-transparent focus:border-primary-container rounded-2xl px-5 py-3 outline-none transition-all placeholder:text-slate-300 placeholder:tracking-[0.3em]"
                   autoComplete="one-time-code"
                   autoFocus
                 />
@@ -188,7 +188,7 @@ function SubmitButton({ loading, children }) {
     <button
       type="submit"
       disabled={loading}
-      className="w-full py-4 rounded-xl text-white font-bold text-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-all disabled:opacity-60"
+      className="w-full py-4 rounded-2xl text-white font-bold text-lg flex items-center justify-center gap-2 shadow-btn-primary hover:shadow-btn-primary-hover hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-60"
       style={{ background: 'var(--gradient-primary)' }}
     >
       {loading

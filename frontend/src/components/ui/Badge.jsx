@@ -3,7 +3,7 @@ export function VerifiedBadge({ size = 'sm' }) {
   return (
     <span
       className={`material-symbols-outlined text-primary ${cls}`}
-      style={{ fontVariationSettings: "'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}
+      style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}
     >
       verified
     </span>
@@ -12,7 +12,7 @@ export function VerifiedBadge({ size = 'sm' }) {
 
 export function PremiumBadge() {
   return (
-    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-bold tracking-[0.12em] uppercase text-primary"
+    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-bold tracking-[0.12em] uppercase text-[#3A1F1A]"
       style={{ background: 'var(--gradient-gold)' }}>
       <span className="material-symbols-outlined fill-icon text-[13px]">workspace_premium</span>
       Premium

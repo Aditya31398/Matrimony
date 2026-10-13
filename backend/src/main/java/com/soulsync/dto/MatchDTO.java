@@ -12,30 +12,16 @@ public class MatchDTO {
     private Long id;
     private ProfileSummaryDTO profile;   // the OTHER profile (context-dependent)
     private String status;
+    private String note;
     private LocalDateTime createdAt;
 
-    public static MatchDTO fromReceived(Match m) {
-        return fromReceived(m, true);
-    }
-
-    public static MatchDTO fromReceived(Match m, boolean viewerIsPremium) {
+    /** @param other the other member's card, already prepared for the viewer */
+    public static MatchDTO of(Match m, ProfileSummaryDTO other) {
         return MatchDTO.builder()
                 .id(m.getId())
-                .profile(ProfileSummaryDTO.from(m.getSenderProfile(), viewerIsPremium))
+                .profile(other)
                 .status(m.getStatus().name())
-                .createdAt(m.getCreatedAt())
-                .build();
-    }
-
-    public static MatchDTO fromSent(Match m) {
-        return fromSent(m, true);
-    }
-
-    public static MatchDTO fromSent(Match m, boolean viewerIsPremium) {
-        return MatchDTO.builder()
-                .id(m.getId())
-                .profile(ProfileSummaryDTO.from(m.getReceiverProfile(), viewerIsPremium))
-                .status(m.getStatus().name())
+                .note(m.getNote())
                 .createdAt(m.getCreatedAt())
                 .build();
     }

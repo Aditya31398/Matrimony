@@ -80,6 +80,7 @@ export default function EditProfilePage() {
         motherTongue: profile.motherTongue ?? '',
         dietaryPreference: profile.dietaryPreference ?? '',
         phone: profile.phone ?? '',
+        photoPrivate: profile.photoPrivate ?? false,
         education: profile.education ?? '',
         bio: profile.bio ?? '',
         photoUrl: profile.photoUrl ?? '',
@@ -197,6 +198,16 @@ export default function EditProfilePage() {
               <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" disabled={uploading} />
             </label>
           </div>
+          <label className="mt-5 flex items-start gap-3 rounded-2xl bg-surface px-4 py-3 cursor-pointer">
+            <input type="checkbox" checked={form.photoPrivate} onChange={(e) => set('photoPrivate', e.target.checked)}
+              className="accent-primary w-5 h-5 mt-0.5" />
+            <span>
+              <span className="block text-sm font-bold text-on-surface flex items-center gap-1">
+                <span className="material-symbols-outlined text-[18px] text-primary">lock</span> Keep my photos private
+              </span>
+              <span className="block text-xs text-on-surface-variant">Only members you've accepted (or who accepted you) can see your photos.</span>
+            </span>
+          </label>
         </div>
 
         {/* Basic Info */}

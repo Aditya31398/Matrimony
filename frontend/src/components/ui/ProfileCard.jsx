@@ -16,7 +16,7 @@ const ProfileCard = memo(function ProfileCard({ profile, variant = 'grid' }) {
   if (!profile) return null
 
   const { id, firstName, age, profession, city, photoUrl, isVerified, isOnline, lastSeenAt, interests = [],
-          caste, religion, restricted } = profile
+          caste, religion, restricted, photoHidden, matchScore } = profile
   const lastSeenLabel = formatLastSeen(lastSeenAt, isOnline)
   // Free members only get caste and religion, so show those instead of job and city
   const subtitle = restricted
@@ -36,6 +36,22 @@ const ProfileCard = memo(function ProfileCard({ profile, variant = 'grid' }) {
       onError: (e) => { setLiked(false); toast.error(e.message || 'Could not shortlist') },
     })
   }
+
+  const matchBadge = matchScore != null && (
+    <div className={`absolute top-4 left-4 px-2.5 py-1 rounded-full text-[11px] font-black backdrop-blur-md flex items-center gap-1 ${
+      matchScore >= 75 ? 'bg-green-500/90 text-white' : matchScore >= 50 ? 'bg-white/90 text-primary' : 'bg-white/80 text-on-surface-variant'
+    }`}>
+      <span className="material-symbols-outlined fill-icon text-[13px]">favorite</span>
+      {matchScore}% match
+    </div>
+  )
+  // Shown instead of the photo when the member keeps photos private until connected
+  const privatePhoto = photoHidden && (
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/20 backdrop-blur-[2px] text-white text-center px-4">
+      <span className="material-symbols-outlined fill-icon text-3xl">lock</span>
+      <span className="text-xs font-bold">Photo visible after they accept</span>
+    </div>
+  )
 
   // Serve the right Cloudinary size; fall back to original URL for non-Cloudinary sources
   const imgSrc    = cloudinaryUrl(photoUrl || AVATAR_PLACEHOLDER, 'w_600,q_auto,f_auto')
@@ -59,6 +75,8 @@ const ProfileCard = memo(function ProfileCard({ profile, variant = 'grid' }) {
               decoding="async"
               onError={showPlaceholderOnError}
             />
+            {privatePhoto}
+            {matchBadge}
             {isVerified && (
               <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1">
                 <VerifiedBadge />
@@ -121,6 +139,8 @@ const ProfileCard = memo(function ProfileCard({ profile, variant = 'grid' }) {
             onError={showPlaceholderOnError}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-70" />
+          {privatePhoto}
+          {matchBadge}
           <button
             onClick={(e) => { e.preventDefault(); handleShortlist() }}
             aria-label={`Shortlist ${firstName}`}

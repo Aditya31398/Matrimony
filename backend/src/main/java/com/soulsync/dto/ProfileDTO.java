@@ -44,6 +44,12 @@ public class ProfileDTO {
     private LocalDateTime premiumUntil;
     /** True when details were withheld because the viewer isn't premium */
     private boolean restricted;
+    /** Own profile only: whether photos are hidden until connected */
+    private Boolean photoPrivate;
+    /** True when the member keeps photos private and the viewer isn't connected */
+    private boolean photoHidden;
+    /** The viewer has blocked this member */
+    private boolean blockedByMe;
 
     public static ProfileDTO from(Profile p) {
         return ProfileDTO.builder()

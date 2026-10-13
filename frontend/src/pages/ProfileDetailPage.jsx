@@ -10,6 +10,13 @@ import { usePremium } from '../hooks/usePremium'
 import { useAuth } from '../context/AuthContext'
 import { AVATAR_PLACEHOLDER, showPlaceholderOnError } from '../utils/placeholder'
 import toast from 'react-hot-toast'
+import { useState } from 'react'
+import ConnectModal from '../components/ui/ConnectModal'
+import ReportModal from '../components/ui/ReportModal'
+import MatchScoreCard from '../components/ui/MatchScoreCard'
+import { useBlockToggle } from '../hooks/useFeatures'
+import { safetyService } from '../services/featureService'
+import { shareWithFamily } from '../utils/share'
 import { nakshatraName, rashiName } from '../utils/astrology'
 
 const TIER_CONFIG = {
@@ -172,6 +179,11 @@ export default function ProfileDetailPage() {
   const shortlist = useShortlist()
   const startConversation = useStartConversation()
 
+  const blockToggle = useBlockToggle()
+  const [connectOpen, setConnectOpen] = useState(false)
+  const [reportOpen, setReportOpen] = useState(false)
+  const [reporting, setReporting] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const { data: compat } = useCompatibility(isPremium && profile && profile.id !== auth?.profileId ? profile.id : null)
 
   if (isLoading) {
@@ -197,11 +209,44 @@ export default function ProfileDetailPage() {
   const isOwn = auth?.profileId === profile.id
   const restricted = profile.restricted
 
-  const handleConnect = () => {
-    connect.mutate(profile.id, {
-      onSuccess: () => toast.success(`Connection request sent to ${profile.firstName}!`),
+  const handleConnect = () => setConnectOpen(true)
+
+  const sendInterest = (note) => {
+    connect.mutate({ profileId: profile.id, note }, {
+      onSuccess: (m) => {
+        setConnectOpen(false)
+        toast.success(m?.status === 'ACCEPTED'
+          ? `It's a match! You and ${profile.firstName} are connected`
+          : `Interest sent to ${profile.firstName}`)
+      },
       onError: (e) => toast.error(e.message || 'Already connected or request pending'),
     })
+  }
+
+  const toggleBlock = () => {
+    const block = !profile.blockedByMe
+    if (block && !window.confirm(`Block ${profile.firstName}? They won't see you or be able to contact you.`)) return
+    blockToggle.mutate({ profileId: profile.id, block }, {
+      onSuccess: () => {
+        toast.success(block ? `${profile.firstName} blocked` : `${profile.firstName} unblocked`)
+        if (block) navigate('/discover')
+      },
+      onError: (e) => toast.error(e.message || 'Something went wrong'),
+    })
+  }
+
+  const submitReport = async (payload) => {
+    setReporting(true)
+    try {
+      const res = await safetyService.report(profile.id, payload)
+      toast.success(res.message)
+      setReportOpen(false)
+      if (payload.block) navigate('/discover')
+    } catch (e) {
+      toast.error(e.message || 'Could not send report')
+    } finally {
+      setReporting(false)
+    }
   }
 
   const handleShortlist = () => {
@@ -225,14 +270,59 @@ export default function ProfileDetailPage() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pb-40">
-      {/* Back button */}
-      <div className="max-w-[1280px] mx-auto px-6 pt-6">
+      {/* Back button + actions menu */}
+      <div className="max-w-[1280px] mx-auto px-6 pt-6 flex items-center justify-between">
         <button onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-sm font-bold text-on-surface-variant hover:text-primary transition-colors">
           <span className="material-symbols-outlined text-lg">arrow_back</span>
           Back
         </button>
+        <div className="relative">
+          <button onClick={() => setMenuOpen((o) => !o)} aria-label="More options"
+            className="p-2 rounded-full hover:bg-surface text-on-surface-variant">
+            <span className="material-symbols-outlined">more_vert</span>
+          </button>
+          {menuOpen && (
+            <div className="absolute right-0 mt-1 w-56 bg-white rounded-2xl shadow-float border border-slate-100 overflow-hidden z-50"
+              onClick={() => setMenuOpen(false)}>
+              <button onClick={() => shareWithFamily(profile.id, profile.firstName, isOwn)}
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-on-surface hover:bg-surface">
+                <span className="material-symbols-outlined text-[20px] text-green-600">family_restroom</span>
+                Share with family
+              </button>
+              {!isOwn && (
+                <>
+                  <button onClick={toggleBlock}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-on-surface hover:bg-surface">
+                    <span className="material-symbols-outlined text-[20px]">block</span>
+                    {profile.blockedByMe ? 'Unblock' : 'Block'}
+                  </button>
+                  <button onClick={() => setReportOpen(true)}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50">
+                    <span className="material-symbols-outlined text-[20px]">flag</span>
+                    Report profile
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+        </div>
       </div>
+
+      {profile.blockedByMe && (
+        <div className="max-w-[1280px] mx-auto px-6 mt-4">
+          <div className="flex flex-col sm:flex-row items-center gap-3 rounded-2xl bg-slate-100 px-5 py-4">
+            <span className="material-symbols-outlined text-slate-500">block</span>
+            <p className="flex-1 text-sm text-on-surface">You've blocked {profile.firstName}. They can't see your profile or contact you.</p>
+            <button onClick={toggleBlock} className="text-sm font-bold text-primary hover:underline">Unblock</button>
+          </div>
+        </div>
+      )}
+
+      <ConnectModal open={connectOpen} onClose={() => setConnectOpen(false)} firstName={profile.firstName}
+        onSend={sendInterest} sending={connect.isPending} />
+      <ReportModal open={reportOpen} onClose={() => setReportOpen(false)} firstName={profile.firstName}
+        onSubmit={submitReport} submitting={reporting} />
 
       <main className="max-w-[1280px] mx-auto px-6 py-6 md:py-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -243,6 +333,14 @@ export default function ProfileDetailPage() {
               <div className="aspect-[4/5] rounded-[40px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.10)] group-hover:scale-[1.01] transition-transform duration-500">
                 <img src={profile.photoUrl || AVATAR_PLACEHOLDER} alt={profile.firstName}
                   onError={showPlaceholderOnError} className="w-full h-full object-cover" />
+                {profile.photoHidden && (
+                  <div className="absolute inset-x-0 top-0 flex justify-center pt-8">
+                    <span className="flex items-center gap-2 bg-black/50 backdrop-blur text-white text-xs font-bold px-4 py-2 rounded-full">
+                      <span className="material-symbols-outlined fill-icon text-[16px]">lock</span>
+                      {profile.firstName} shares photos after accepting your interest
+                    </span>
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-8 text-white">
                   {profile.isPremium && <div className="mb-3"><PremiumBadge /></div>}
                   <h1 className="text-[40px] font-black leading-tight">
@@ -303,6 +401,8 @@ export default function ProfileDetailPage() {
 
           {/* ── Right: Story, Interests, Looking For ─────────────────── */}
           <div className="lg:col-span-7 space-y-5">
+            {!isOwn && !profile.blockedByMe && <MatchScoreCard profileId={profile.id} firstName={profile.firstName} />}
+
             {restricted ? (
               <PremiumLock
                 title={`See ${profile.firstName}'s full profile`}
@@ -382,7 +482,7 @@ export default function ProfileDetailPage() {
       </main>
 
       {/* ── Floating Action Bar ──────────────────────────────────────── */}
-      {!isOwn && <motion.div
+      {!isOwn && !profile.blockedByMe && <motion.div
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.4 }}

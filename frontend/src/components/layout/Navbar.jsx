@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
 import { useTenant } from '../../context/TenantContext'
 import toast from 'react-hot-toast'
+import NotificationBell from './NotificationBell'
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -62,9 +63,7 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="hidden md:flex p-2 rounded-full hover:bg-primary/5 transition-all duration-300 active:scale-95">
-            <span className="material-symbols-outlined text-slate-600">notifications</span>
-          </button>
+          {isLoggedIn && <NotificationBell />}
 
           {isLoggedIn ? (
             <button

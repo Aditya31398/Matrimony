@@ -6,6 +6,7 @@ import com.soulsync.exception.PremiumRequiredException;
 import com.soulsync.exception.ResourceNotFoundException;
 import com.soulsync.model.Conversation;
 import com.soulsync.model.Message;
+import com.soulsync.model.Notification;
 import com.soulsync.model.Profile;
 import com.soulsync.repository.ConversationRepository;
 import com.soulsync.repository.MessageRepository;
@@ -27,18 +28,20 @@ public class MessageService {
     private final MessageRepository msgRepo;
     private final ProfileRepository profileRepo;
     private final SimpMessagingTemplate messagingTemplate;
+    private final ViewerContextService viewerContextService;
+    private final ProfileCardMapper cardMapper;
+    private final SafetyService safetyService;
+    private final NotificationService notificationService;
 
     @Transactional(readOnly = true)
     public List<ConversationDTO> getConversations(Long profileId) {
-        Profile profile = getProfileOrThrow(profileId);
-        boolean premium = profile.hasActivePremium();
-        return convRepo.findByProfile(profile)
+        ViewerContext ctx = viewerContextService.forProfile(profileId);
+        return convRepo.findByProfile(ctx.viewer())
                 .stream()
                 .filter(c -> !c.getProfile1().getId().equals(c.getProfile2().getId()))
-                .map(c -> {
-                    int unread = (int) msgRepo.countUnread(c, profileId);
-                    return ConversationDTO.from(c, profileId, unread, premium);
-                })
+                .filter(c -> !ctx.isHidden(otherParticipant(c, profileId).getId()))
+                .map(c -> ConversationDTO.from(c, (int) msgRepo.countUnread(c, profileId),
+                        cardMapper.summary(otherParticipant(c, profileId), ctx)))
                 .toList();
     }
 
@@ -61,6 +64,8 @@ public class MessageService {
         assertParticipant(conv, senderProfileId);
         Profile sender = getProfileOrThrow(senderProfileId);
         requirePremium(sender);
+        Profile recipient = otherParticipant(conv, senderProfileId);
+        safetyService.assertNotBlocked(senderProfileId, recipient.getId());
 
         Message msg = Message.builder()
                 .conversation(conv)
@@ -88,6 +93,9 @@ public class MessageService {
         messagingTemplate.convertAndSend("/topic/inbox/" + conv.getProfile2().getId(),
                 Map.of("type", "new_message", "conversationId", conversationId));
 
+        notificationService.notify(recipient, sender, Notification.Type.MESSAGE,
+                sender.getFirstName() + ": " + preview, "/messages/" + conversationId);
+
         return dto;
     }
 
@@ -97,9 +105,10 @@ public class MessageService {
         Profile p1 = getProfileOrThrow(profileId1);
         Profile p2 = getProfileOrThrow(profileId2);
         requirePremium(p1);
+        safetyService.assertNotBlocked(profileId1, profileId2);
         Conversation conv = convRepo.findByProfiles(p1, p2)
                 .orElseGet(() -> convRepo.save(Conversation.builder().profile1(p1).profile2(p2).build()));
-        return ConversationDTO.from(conv, profileId1, 0, true);
+        return ConversationDTO.from(conv, 0, cardMapper.summary(p2, viewerContextService.forProfile(profileId1)));
     }
 
     public void assertParticipant(Long conversationId, Long profileId) {
@@ -126,6 +135,10 @@ public class MessageService {
         boolean isParticipant = conv.getProfile1().getId().equals(profileId)
                 || conv.getProfile2().getId().equals(profileId);
         if (!isParticipant) throw new AccessDeniedException("Not a participant in this conversation");
+    }
+
+    private static Profile otherParticipant(Conversation c, Long profileId) {
+        return c.getProfile1().getId().equals(profileId) ? c.getProfile2() : c.getProfile1();
     }
 
     private static void requirePremium(Profile profile) {

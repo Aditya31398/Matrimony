@@ -18,28 +18,18 @@ public class ConversationDTO {
     private Integer unreadCount;
 
     /**
-     * Build a DTO from denormalized conversation fields + a pre-computed unread count.
-     * Does NOT access conv.getMessages(), so no N+1 or full message load.
+     * Built from denormalized conversation fields and a pre-computed unread count, so it
+     * never loads the messages. {@code other} is the other participant's card, already
+     * prepared for the viewer.
      */
-    public static ConversationDTO from(Conversation conv, Long viewerProfileId, int unreadCount) {
-        return from(conv, viewerProfileId, unreadCount, true);
-    }
-
-    public static ConversationDTO from(Conversation conv, Long viewerProfileId, int unreadCount,
-                                       boolean viewerIsPremium) {
-        boolean viewerIsP1 = conv.getProfile1().getId().equals(viewerProfileId);
-        var other = viewerIsP1 ? conv.getProfile2() : conv.getProfile1();
-
+    public static ConversationDTO from(Conversation conv, int unreadCount, ProfileSummaryDTO other) {
         String lastMsg  = conv.getLastMessagePreview() != null ? conv.getLastMessagePreview() : "";
-        String lastTime = conv.getLastMessageAt() != null ? "Just now" : "";
-
-        ProfileSummaryDTO otherDTO = ProfileSummaryDTO.from(other);
         return ConversationDTO.builder()
                 .id(conv.getId().toString())
-                .otherProfile(otherDTO)
+                .otherProfile(other)
                 .lastMessage(lastMsg)
-                .lastMessageTime(lastTime)
-                .isOnline(viewerIsPremium && Boolean.TRUE.equals(otherDTO.getIsOnline()))
+                .lastMessageTime(formatTime(conv.getLastMessageAt()))
+                .isOnline(!other.isRestricted() && Boolean.TRUE.equals(other.getIsOnline()))
                 .unreadCount(unreadCount)
                 .build();
     }
@@ -52,10 +42,5 @@ public class ConversationDTO {
         if (at.toLocalDate().equals(now.toLocalDate())) return at.format(DateTimeFormatter.ofPattern("hh:mm a"));
         if (at.toLocalDate().equals(now.toLocalDate().minusDays(1))) return "Yesterday";
         return at.format(DateTimeFormatter.ofPattern("d MMM"));
-    }
-
-    /** Convenience overload for newly created conversations (no messages yet). */
-    public static ConversationDTO from(Conversation conv, Long viewerProfileId) {
-        return from(conv, viewerProfileId, 0);
     }
 }

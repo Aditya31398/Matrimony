@@ -17,6 +17,7 @@ const RegisterPage     = lazy(() => import('./pages/RegisterPage'))
 const LoginPage        = lazy(() => import('./pages/LoginPage'))
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'))
 const PremiumPage      = lazy(() => import('./pages/PremiumPage'))
+const FamilyViewPage   = lazy(() => import('./pages/FamilyViewPage'))
 const MessagesPage     = lazy(() => import('./pages/MessagesPage'))
 const MyProfilePage    = lazy(() => import('./pages/MyProfilePage'))
 const EditProfilePage  = lazy(() => import('./pages/EditProfilePage'))
@@ -60,6 +61,7 @@ export default function App() {
                 <Route path="/" element={<RootRedirect />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/family/:token" element={<FamilyViewPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
                 <Route path="/discover" element={<ProtectedRoute><DiscoverPage /></ProtectedRoute>} />

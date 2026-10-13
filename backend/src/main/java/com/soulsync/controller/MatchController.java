@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/matches")
@@ -29,8 +30,10 @@ public class MatchController {
     @PostMapping("/{profileId}/connect")
     public ResponseEntity<MatchDTO> connect(
             @PathVariable Long profileId,
+            @RequestBody(required = false) Map<String, String> body,
             HttpServletRequest request) {
-        return ResponseEntity.ok(matchService.sendConnect(currentProfileId(request), profileId));
+        String note = body == null ? null : body.get("note");
+        return ResponseEntity.ok(matchService.sendConnect(currentProfileId(request), profileId, note));
     }
 
     @PostMapping("/{profileId}/shortlist")

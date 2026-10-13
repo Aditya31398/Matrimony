@@ -4,6 +4,7 @@ import com.soulsync.dto.ProfileDTO;
 import com.soulsync.dto.ProfileSummaryDTO;
 import com.soulsync.dto.ProfileUpdateDTO;
 import com.soulsync.dto.RegisterRequestDTO;
+import com.soulsync.service.MatchScoreService;
 import com.soulsync.service.ProfileService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -52,15 +53,30 @@ public class ProfileController {
     public ResponseEntity<ProfileDTO> getById(
             @PathVariable Long id,
             HttpServletRequest request) {
-        Long viewerId = (Long) request.getAttribute("profileId");
-        if (viewerId != null) profileService.recordView(viewerId, id);
-        return ResponseEntity.ok(profileService.getById(id, viewerId));
+        Long viewerId = currentProfileId(request);
+        // Load first: a profile that blocked the viewer 404s and must not record a view
+        ProfileDTO dto = profileService.getById(id, viewerId);
+        profileService.recordView(viewerId, id);
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/top-picks")
     public ResponseEntity<List<ProfileSummaryDTO>> getTopPicks(HttpServletRequest request) {
         Long profileId = (Long) request.getAttribute("profileId");
         return ResponseEntity.ok(profileService.getTopPicks(profileId));
+    }
+
+    /** Five strong matches for today; rotates daily. */
+    @GetMapping("/daily-picks")
+    public ResponseEntity<List<ProfileSummaryDTO>> getDailyPicks(HttpServletRequest request) {
+        return ResponseEntity.ok(profileService.getDailyPicks(currentProfileId(request)));
+    }
+
+    @GetMapping("/{id}/match-score")
+    public ResponseEntity<MatchScoreService.Score> getMatchScore(
+            @PathVariable Long id,
+            HttpServletRequest request) {
+        return ResponseEntity.ok(profileService.getMatchScore(currentProfileId(request), id));
     }
 
     @GetMapping("/search")

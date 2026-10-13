@@ -8,6 +8,8 @@ import com.soulsync.exception.ResourceNotFoundException;
 import com.soulsync.model.Profile;
 import com.soulsync.model.ProfileView;
 import com.soulsync.model.User;
+import com.soulsync.repository.BlockRepository;
+import com.soulsync.repository.MatchRepository;
 import com.soulsync.repository.ProfileRepository;
 import com.soulsync.repository.ProfileViewRepository;
 import com.soulsync.repository.UserRepository;
@@ -26,7 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.springframework.data.domain.Page;
 
 @Slf4j
@@ -39,6 +44,11 @@ public class ProfileService {
     private final UserRepository userRepo;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final ViewerContextService viewerContextService;
+    private final ProfileCardMapper cardMapper;
+    private final MatchScoreService matchScoreService;
+    private final MatchRepository matchRepo;
+    private final BlockRepository blockRepo;
 
     // Self-injection via @Lazy proxy so @Cacheable on resolveGenderFilter goes through AOP
     @Autowired @Lazy
@@ -58,9 +68,9 @@ public class ProfileService {
                 : gender;
         String normalizedInterest = (interest == null || interest.isBlank()) ? null : interest.trim();
         String normalizedCity = (city == null || city.isBlank()) ? null : city.trim();
-        boolean premium = isPremium(excludeId);
-        return profileRepo.findWithFilters(excludeId, edu, gen, verified, normalizedCity, normalizedInterest, pageable)
-                .map(p -> ProfileSummaryDTO.from(p, premium));
+        ViewerContext ctx = viewerContextService.forProfile(excludeId);
+        return profileRepo.findWithFilters(excluded(ctx), edu, gen, verified, normalizedCity, normalizedInterest, pageable)
+                .map(p -> cardMapper.summary(p, ctx));
     }
 
     /** Free members see only photo, name, age, caste and religion of other profiles. */
@@ -68,8 +78,47 @@ public class ProfileService {
     public ProfileDTO getById(Long id, Long viewerId) {
         Profile profile = profileRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Profile", id));
-        boolean fullAccess = id.equals(viewerId) || isPremium(viewerId);
-        return fullAccess ? ProfileDTO.from(profile) : ProfileDTO.limited(profile);
+        // Someone who blocked you simply doesn't exist for you
+        if (blockRepo.existsByBlockerIdAndBlockedId(id, viewerId)) throw new ResourceNotFoundException("Profile", id);
+        ProfileDTO dto = cardMapper.detail(profile, viewerContextService.forProfile(viewerId));
+        dto.setBlockedByMe(blockRepo.existsByBlockerIdAndBlockedId(viewerId, id));
+        return dto;
+    }
+
+    /** Match % with a breakdown; free members get the score but not premium-only details. */
+    @Transactional(readOnly = true)
+    public MatchScoreService.Score getMatchScore(Long viewerId, Long id) {
+        Profile profile = profileRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Profile", id));
+        ViewerContext ctx = viewerContextService.forProfile(viewerId);
+        if (ctx.isHidden(id)) throw new ResourceNotFoundException("Profile", id);
+        return matchScoreService.score(ctx, profile);
+    }
+
+    /**
+     * Five strong matches per day. The best-scoring candidates the member hasn't already
+     * requested or answered are shuffled with a per-day seed, so the set rotates daily.
+     */
+    @Transactional(readOnly = true)
+    public List<ProfileSummaryDTO> getDailyPicks(Long viewerId) {
+        ViewerContext ctx = viewerContextService.forProfile(viewerId);
+        Set<Long> skip = new HashSet<>(excluded(ctx));
+        skip.addAll(matchRepo.findInteractedIds(viewerId));
+        String gender = self.resolveGenderFilter(viewerId);
+        long daySeed = LocalDate.now().toEpochDay() * 31 + viewerId;
+
+        return profileRepo.findWithFilters(skip, null, gender, false, null, null,
+                        PageRequest.of(0, 200, Sort.by("createdAt").descending()))
+                .stream()
+                .map(p -> cardMapper.summary(p, ctx))
+                .sorted(Comparator.comparing((ProfileSummaryDTO d) -> d.getMatchScore() == null ? -1 : d.getMatchScore())
+                        .reversed())
+                .limit(15)
+                .sorted(Comparator.comparingLong(d -> Long.hashCode(d.getId() * 2654435761L ^ daySeed)))
+                .limit(5)
+                .sorted(Comparator.comparing((ProfileSummaryDTO d) -> d.getMatchScore() == null ? -1 : d.getMatchScore())
+                        .reversed())
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -78,25 +127,20 @@ public class ProfileService {
         return profileRepo.findById(profileId).map(Profile::hasActivePremium).orElse(false);
     }
 
-    @Cacheable(value = "topPicks", key = "#excludeId")
     @Transactional(readOnly = true)
     public List<ProfileSummaryDTO> getTopPicks(Long excludeId) {
         Pageable pageable = PageRequest.of(0, 8, Sort.by("isPremium").descending().and(Sort.by("createdAt").descending()));
-        String genderFilter = self.resolveGenderFilter(excludeId);
-        boolean premium = isPremium(excludeId);
-        return (excludeId != null
-                ? profileRepo.findTopPicks(excludeId, genderFilter, pageable)
-                : profileRepo.findTopPicks(genderFilter, pageable))
+        ViewerContext ctx = viewerContextService.forProfile(excludeId);
+        return profileRepo.findTopPicks(excluded(ctx), self.resolveGenderFilter(excludeId), pageable)
                 .stream()
-                .map(p -> ProfileSummaryDTO.from(p, premium))
+                .map(p -> cardMapper.summary(p, ctx))
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public ProfileDTO getMe(Long profileId) {
-        return profileRepo.findById(profileId)
-                .map(ProfileDTO::from)
-                .orElseThrow(() -> new ResourceNotFoundException("Profile", profileId));
+        ViewerContext ctx = viewerContextService.forProfile(profileId);
+        return cardMapper.detail(ctx.viewer(), ctx);
     }
 
     @Transactional
@@ -117,10 +161,11 @@ public class ProfileService {
         Profile profile = profileRepo.findById(profileId)
                 .orElseThrow(() -> new ResourceNotFoundException("Profile", profileId));
         Pageable pageable = PageRequest.of(0, 20, Sort.by("viewedAt").descending());
-        boolean premium = profile.hasActivePremium();
+        ViewerContext ctx = viewerContextService.forProfile(profileId);
         return profileViewRepo.findViewers(profile, pageable)
                 .stream()
-                .map(v -> ProfileSummaryDTO.from(v.getViewer(), premium))
+                .filter(v -> !ctx.isHidden(v.getViewer().getId()))
+                .map(v -> cardMapper.summary(v.getViewer(), ctx))
                 .toList();
     }
 
@@ -139,6 +184,7 @@ public class ProfileService {
         if (req.getMotherTongue() != null)      profile.setMotherTongue(req.getMotherTongue());
         if (req.getDietaryPreference() != null) profile.setDietaryPreference(req.getDietaryPreference());
         if (req.getPhone() != null)             profile.setPhone(blankToNull(req.getPhone()));
+        if (req.getPhotoPrivate() != null)      profile.setPhotoPrivate(req.getPhotoPrivate());
         if (req.getEducation() != null)         profile.setEducation(req.getEducation());
         if (req.getBio() != null)               profile.setBio(req.getBio());
         if (req.getLookingForGender() != null)  profile.setLookingForGender(req.getLookingForGender());
@@ -158,16 +204,17 @@ public class ProfileService {
         if (req.getIsManglik() != null)  profile.setIsManglik(req.getIsManglik());
         if (req.getMatchingTradition() != null) profile.setMatchingTradition(normalizeTradition(req.getMatchingTradition()));
         if (req.getPapaPoints() != null) profile.setPapaPoints(req.getPapaPoints());
-        return ProfileDTO.from(profileRepo.save(profile));
+        profileRepo.save(profile);
+        return getMe(id);
     }
 
     @Transactional(readOnly = true)
     public List<ProfileSummaryDTO> search(String city, String education, String gender, int page, int size,
                                           Long viewerId) {
         Pageable pageable = PageRequest.of(page, size);
-        boolean premium = isPremium(viewerId);
-        return profileRepo.search(city, education, gender, pageable)
-                .map(p -> ProfileSummaryDTO.from(p, premium))
+        ViewerContext ctx = viewerContextService.forProfile(viewerId);
+        return profileRepo.search(excluded(ctx), city, education, gender, pageable)
+                .map(p -> cardMapper.summary(p, ctx))
                 .toList();
     }
 
@@ -272,6 +319,13 @@ public class ProfileService {
             case "high school" -> "High School";
             default -> education;
         };
+    }
+
+    /** The viewer plus everyone blocked either way — never empty, as JPQL NOT IN requires. */
+    private static Set<Long> excluded(ViewerContext ctx) {
+        Set<Long> ids = new HashSet<>(ctx.hiddenIds());
+        ids.add(ctx.viewerId());
+        return ids;
     }
 
     private static String blankToNull(String s) {

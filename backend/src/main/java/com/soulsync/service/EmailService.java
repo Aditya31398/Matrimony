@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,19 @@ public class EmailService {
              buildOtpHtml(firstName, otp,
                      "Use the code below to reset your password.",
                      "If you didn't ask to reset your password, ignore this email — your password stays the same."));
+    }
+
+    /** Lets the team know a member was reported; goes to the app's own sender address. */
+    @Async
+    public void sendReportAlert(Long reportId, Long reportedProfileId, String reportedName,
+                                String reason, String details) {
+        String safeDetails = details == null ? "(none)" : HtmlUtils.htmlEscape(details);
+        String html = """
+            <p>Report <strong>#%d</strong>: profile <strong>%d</strong> (%s) was reported for <strong>%s</strong>.</p>
+            <p>Details: %s</p>
+            <p>Review it in the database table <code>reports</code>.</p>
+            """.formatted(reportId, reportedProfileId, HtmlUtils.htmlEscape(reportedName), reason, safeDetails);
+        send(fromAddress, fromName, "[" + fromName + "] Member reported: " + reason, html);
     }
 
     private void send(String toEmail, String firstName, String subject, String html) {

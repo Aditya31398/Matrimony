@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,12 +28,14 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
     @Query("""
         SELECT p FROM Profile p
-        WHERE (:city IS NULL OR p.city = :city)
+        WHERE p.id NOT IN :excluded
+          AND (:city IS NULL OR p.city = :city)
           AND (:education IS NULL OR p.education LIKE CONCAT(:education, '%'))
           AND (:gender IS NULL OR CAST(p.gender AS string) = :gender)
         ORDER BY p.createdAt DESC
     """)
     Page<Profile> search(
+            @Param("excluded") Collection<Long> excluded,
             @Param("city") String city,
             @Param("education") String education,
             @Param("gender") String gender,
@@ -41,15 +44,16 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
     @Query("""
         SELECT p FROM Profile p
-        WHERE (:excludeId IS NULL OR p.id != :excludeId)
+        WHERE p.id NOT IN :excluded
           AND (:education IS NULL OR p.education LIKE CONCAT(:education, '%'))
           AND (:gender IS NULL OR CAST(p.gender AS string) = :gender)
           AND (:verified = false OR p.isVerified = true)
           AND (:city IS NULL OR p.city = :city)
           AND (:interest IS NULL OR p.interests LIKE CONCAT('%', :interest, '%'))
     """)
+    /** {@code excluded} must be non-empty: the viewer plus anyone blocked either way. */
     Page<Profile> findWithFilters(
-            @Param("excludeId") Long excludeId,
+            @Param("excluded") Collection<Long> excluded,
             @Param("education") String education,
             @Param("gender") String gender,
             @Param("verified") boolean verified,
@@ -60,16 +64,10 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
     @Query("""
         SELECT p FROM Profile p
-        WHERE p.id != :excludeId
+        WHERE p.id NOT IN :excluded
           AND (:gender IS NULL OR CAST(p.gender AS string) = :gender)
         ORDER BY p.isVerified DESC, p.createdAt DESC
     """)
-    List<Profile> findTopPicks(@Param("excludeId") Long excludeId, @Param("gender") String gender, Pageable pageable);
+    List<Profile> findTopPicks(@Param("excluded") Collection<Long> excluded, @Param("gender") String gender, Pageable pageable);
 
-    @Query("""
-        SELECT p FROM Profile p
-        WHERE (:gender IS NULL OR CAST(p.gender AS string) = :gender)
-        ORDER BY p.isPremium DESC, p.createdAt DESC
-    """)
-    List<Profile> findTopPicks(@Param("gender") String gender, Pageable pageable);
 }

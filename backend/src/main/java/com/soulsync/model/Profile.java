@@ -103,6 +103,10 @@ public class Profile {
 
     private LocalDateTime premiumUntil;
 
+    /** When true, photos are shown only to members this profile has connected with */
+    @Builder.Default
+    private Boolean photoPrivate = false;
+
     // Interests stored as comma-separated for simplicity; a join-table can replace this
     @Column(columnDefinition = "TEXT")
     private String interests;

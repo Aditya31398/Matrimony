@@ -1,6 +1,7 @@
 package com.soulsync.service;
 
 import com.soulsync.dto.ProfileDTO;
+import com.soulsync.dto.ProfileFilter;
 import com.soulsync.dto.ProfileSummaryDTO;
 import com.soulsync.dto.ProfileUpdateDTO;
 import com.soulsync.dto.RegisterRequestDTO;
@@ -55,24 +56,44 @@ public class ProfileService {
     @Autowired @Lazy
     private ProfileService self;
 
+    /**
+     * Discover search. Filters on details free members can't see (mother tongue, location,
+     * education, diet, Manglik) only apply for premium viewers; free members keep age,
+     * religion, caste, photo and the quick views.
+     */
     @Transactional(readOnly = true)
-    public Page<ProfileSummaryDTO> getAll(int page, int size, String education, String gender,
-                                          boolean verified, String sort, String city,
-                                          String interest, Long excludeId) {
-        Sort jpaSort = "recent".equalsIgnoreCase(sort)
+    public Page<ProfileSummaryDTO> getAll(DiscoverQuery q, Long viewerId) {
+        Sort jpaSort = "recent".equalsIgnoreCase(q.sort())
                 ? Sort.by("createdAt").descending()
                 : Sort.by("isPremium").descending().and(Sort.by("createdAt").descending());
-        Pageable pageable = PageRequest.of(page, size, jpaSort);
-        String edu = normalizeEducation(education);
-        String gen = (gender == null || gender.isBlank())
-                ? self.resolveGenderFilter(excludeId)
-                : gender;
-        String normalizedInterest = (interest == null || interest.isBlank()) ? null : interest.trim();
-        String normalizedCity = (city == null || city.isBlank()) ? null : city.trim();
-        ViewerContext ctx = viewerContextService.forProfile(excludeId);
-        return profileRepo.findWithFilters(excluded(ctx), edu, gen, verified, normalizedCity, normalizedInterest, pageable)
+        ViewerContext ctx = viewerContextService.forProfile(viewerId);
+        boolean premium = ctx.premium();
+        LocalDate today = LocalDate.now();
+
+        ProfileFilter filter = new ProfileFilter(
+                blankToNull(q.gender()) != null ? q.gender() : self.resolveGenderFilter(viewerId),
+                q.verified(),
+                blankToNull(q.city()),
+                blankToNull(q.interest()),
+                premium ? normalizeEducation(q.education()) : null,
+                q.ageMin() == null ? null : today.minusYears(q.ageMin()),
+                q.ageMax() == null ? null : today.minusYears(q.ageMax() + 1L),
+                blankToNull(q.religion()),
+                blankToNull(q.caste()),
+                premium ? blankToNull(q.motherTongue()) : null,
+                premium ? blankToNull(q.location()) : null,
+                premium ? blankToNull(q.diet()) : null,
+                premium ? q.manglik() : null,
+                q.withPhoto());
+        return profileRepo.findWithFilters(excluded(ctx), filter, PageRequest.of(q.page(), q.size(), jpaSort))
                 .map(p -> cardMapper.summary(p, ctx));
     }
+
+    public record DiscoverQuery(int page, int size, String sort, String gender, boolean verified,
+                                String city, String interest, String education,
+                                Integer ageMin, Integer ageMax, String religion, String caste,
+                                String motherTongue, String location, String diet, Boolean manglik,
+                                boolean withPhoto) {}
 
     /** Free members see only photo, name, age, caste and religion of other profiles. */
     @Transactional(readOnly = true)
@@ -108,7 +129,7 @@ public class ProfileService {
         String gender = self.resolveGenderFilter(viewerId);
         long daySeed = LocalDate.now().toEpochDay() * 31 + viewerId;
 
-        return profileRepo.findWithFilters(skip, null, gender, false, null, null,
+        return profileRepo.findWithFilters(skip, ProfileFilter.ofGender(gender),
                         PageRequest.of(0, 200, Sort.by("createdAt").descending()))
                 .stream()
                 .map(p -> cardMapper.summary(p, ctx))

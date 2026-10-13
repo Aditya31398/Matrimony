@@ -28,15 +28,25 @@ public class ProfileController {
     public ResponseEntity<Page<ProfileSummaryDTO>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(required = false) String education,
+            @RequestParam(required = false) String sort,         // "recent" | null (recommended)
             @RequestParam(required = false) String gender,
             @RequestParam(defaultValue = "false") boolean verified,
-            @RequestParam(required = false) String sort,     // "recent" | null (default = recommended)
-            @RequestParam(required = false) String city,     // filter by exact city (near_me chip)
-            @RequestParam(required = false) String interest,  // filter by shared interest tag
+            @RequestParam(required = false) String city,         // exact city ("Near me")
+            @RequestParam(required = false) String interest,     // shared interest tag
+            @RequestParam(required = false) String education,
+            @RequestParam(required = false) Integer ageMin,
+            @RequestParam(required = false) Integer ageMax,
+            @RequestParam(required = false) String religion,
+            @RequestParam(required = false) String caste,
+            @RequestParam(required = false) String motherTongue,
+            @RequestParam(required = false) String location,     // city or state
+            @RequestParam(required = false) String diet,
+            @RequestParam(required = false) Boolean manglik,
+            @RequestParam(defaultValue = "false") boolean withPhoto,
             HttpServletRequest request) {
-        Long profileId = (Long) request.getAttribute("profileId");
-        return ResponseEntity.ok(profileService.getAll(page, size, education, gender, verified, sort, city, interest, profileId));
+        var query = new ProfileService.DiscoverQuery(page, Math.min(size, 50), sort, gender, verified, city, interest,
+                education, ageMin, ageMax, religion, caste, motherTongue, location, diet, manglik, withPhoto);
+        return ResponseEntity.ok(profileService.getAll(query, currentProfileId(request)));
     }
 
     @GetMapping("/me")

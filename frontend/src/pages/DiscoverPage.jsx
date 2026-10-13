@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
+import { Link, useSearchParams } from 'react-router-dom'
 import ProfileCard from '../components/ui/ProfileCard'
 import { SkeletonProfileCard } from '../components/ui/SkeletonCard'
-import { Link } from 'react-router-dom'
+import Modal from '../components/ui/Modal'
+import FilterPanel from '../components/discover/FilterPanel'
 import { useInfiniteProfiles, useMyProfile } from '../hooks/useProfiles'
 
 const FILTER_CHIPS = [
@@ -14,20 +16,39 @@ const FILTER_CHIPS = [
   { label: 'Shared Interests', icon: 'interests',    value: 'interests' },
 ]
 
-const EDUCATION_OPTIONS = ['Any Education', 'Masters Degree', 'PhD / Doctorate', 'Bachelors Degree']
+// Filters kept in the URL so they survive back/refresh and can be shared
+const FILTER_KEYS = ['ageMin', 'ageMax', 'religion', 'caste', 'withPhoto', 'motherTongue', 'location', 'education', 'diet', 'manglik']
+const PREMIUM_KEYS = new Set(['motherTongue', 'location', 'education', 'diet', 'manglik'])
+
+const pillLabel = (key, value) => ({
+  ageMin: `From ${value} yrs`, ageMax: `Up to ${value} yrs`, withPhoto: 'With photo',
+  manglik: value === 'true' ? 'Manglik' : 'Not Manglik',
+}[key] ?? value)
 
 export default function DiscoverPage() {
-  const [activeChip, setActiveChip] = useState('for_you')
-  const [education,  setEducation]  = useState('Any Education')
-  const [distance,   setDistance]   = useState(50)
+  const [params, setParams] = useSearchParams()
+  const [sheetOpen, setSheetOpen] = useState(false)
+  const activeChip = params.get('view') ?? 'for_you'
 
-  // Own profile — used to resolve city (near_me) and interests (shared interests)
+  // Own profile — used to resolve city (near_me), interests (shared interests) and premium filters
   const { data: myProfile } = useMyProfile()
   const myCity      = myProfile?.city ?? null
   const myInterests = myProfile?.interests ?? []
+  const isPremium   = !!myProfile?.isPremium
 
-  // Build query params from active chip + sidebar controls
-  const educationParam = education === 'Any Education' ? undefined : education
+  const filters = Object.fromEntries(FILTER_KEYS.map((k) => [k, params.get(k) || undefined]))
+  const activeFilters = FILTER_KEYS.filter((k) => filters[k] && (isPremium || !PREMIUM_KEYS.has(k)))
+
+  const setParam = (key, value) => setParams((prev) => {
+    const next = new URLSearchParams(prev)
+    if (value) next.set(key, value); else next.delete(key)
+    return next
+  }, { replace: true })
+  const clearAll = () => setParams((prev) => {
+    const next = new URLSearchParams(prev)
+    FILTER_KEYS.forEach((k) => next.delete(k))
+    return next
+  }, { replace: true })
 
   const chipParams = {
     for_you:   {},
@@ -38,13 +59,7 @@ export default function DiscoverPage() {
   }
 
   const queryParams = {
-    education: educationParam,
-    // Distance slider only makes sense when "Near Me" is active; passes
-    // city of the logged-in user (exact match). A future geo enhancement
-    // can replace this with radius + coordinates.
-    ...(activeChip === 'near_me' && distance < 500 && myCity
-      ? { city: myCity }
-      : {}),
+    ...Object.fromEntries(activeFilters.map((k) => [k, filters[k]])),
     ...chipParams[activeChip],
   }
 
@@ -78,34 +93,8 @@ export default function DiscoverPage() {
       {/* ── Sidebar ─────────────────────────────────────────────────── */}
       <aside className="hidden lg:block w-72 flex-shrink-0 space-y-6 self-start sticky top-24">
         <div className="bg-white rounded-[24px] border border-outline-variant/70 p-6">
-          <h2 className="text-2xl text-on-background mb-6">Refine</h2>
-          <div className="space-y-7">
-            <div className="space-y-3">
-              <label className="text-sm font-bold text-on-surface-variant flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-lg">school</span>
-                Education
-              </label>
-              <select value={education} onChange={(e) => setEducation(e.target.value)}
-                className="w-full bg-surface-container-low border border-outline-variant/70 rounded-xl py-3 px-4 text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none">
-                {EDUCATION_OPTIONS.map((o) => <option key={o}>{o}</option>)}
-              </select>
-            </div>
-
-            <div className="space-y-3">
-              <label className="text-sm font-bold text-on-surface-variant flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-lg">distance</span>
-                Distance ({distance}km)
-                {activeChip !== 'near_me' && (
-                  <span className="text-[10px] font-normal text-on-surface-variant/50">(activate Near Me)</span>
-                )}
-              </label>
-              <input
-                type="range" min={10} max={500} value={distance}
-                onChange={(e) => { setDistance(Number(e.target.value)); setActiveChip('near_me') }}
-                className="w-full accent-primary"
-              />
-            </div>
-          </div>
+          <FilterPanel filters={filters} setFilter={setParam} clearAll={clearAll}
+            activeCount={activeFilters.length} isPremium={isPremium} />
         </div>
 
         {!myProfile?.isPremium && (
@@ -131,9 +120,14 @@ export default function DiscoverPage() {
         </header>
 
         {/* Filter chips */}
-        <div className="flex items-center gap-2.5 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex items-center gap-2.5 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+          <button onClick={() => setSheetOpen(true)}
+            className="lg:hidden flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-semibold whitespace-nowrap border border-primary text-primary bg-white">
+            <span className="material-symbols-outlined text-[18px]">tune</span>
+            Filters{activeFilters.length > 0 && ` (${activeFilters.length})`}
+          </button>
           {FILTER_CHIPS.map(({ label, icon, value }) => (
-            <button key={value} onClick={() => setActiveChip(value)}
+            <button key={value} onClick={() => setParam('view', value === 'for_you' ? '' : value)}
               aria-pressed={activeChip === value}
               className={`flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-semibold whitespace-nowrap border transition-colors ${
                 activeChip === value
@@ -145,6 +139,21 @@ export default function DiscoverPage() {
             </button>
           ))}
         </div>
+
+        {/* Active filters, each removable */}
+        {activeFilters.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 mb-6">
+            {activeFilters.map((k) => (
+              <button key={k} onClick={() => setParam(k, '')}
+                className="flex items-center gap-1 pl-3 pr-2 py-1 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-[12px] font-semibold hover:bg-primary-fixed-dim transition-colors">
+                {pillLabel(k, filters[k])}
+                <span className="material-symbols-outlined text-[16px]">close</span>
+              </button>
+            ))}
+            <button onClick={clearAll} className="text-[12px] font-semibold text-on-surface-variant hover:text-primary ml-1">Clear all</button>
+          </div>
+        )}
+        <div className="mb-4" />
 
         {/* Near Me + no city warning */}
         {activeChip === 'near_me' && !myCity && !isLoading && (
@@ -176,7 +185,7 @@ export default function DiscoverPage() {
         ) : profiles && profiles.length > 0 ? (
           <>
             <motion.div
-              key={`${activeChip}-${education}`}
+              key={`${activeChip}-${params.toString()}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
@@ -200,9 +209,22 @@ export default function DiscoverPage() {
             <span className="material-symbols-outlined text-6xl opacity-30">search_off</span>
             <p className="text-lg font-bold">No profiles found</p>
             <p className="text-sm">Try adjusting your filters</p>
+            {activeFilters.length > 0 && (
+              <button onClick={clearAll} className="mt-2 text-sm font-semibold text-primary hover:underline">Clear all filters</button>
+            )}
           </div>
         )}
       </section>
+
+      {/* Phones and tablets: same filters in a bottom sheet */}
+      <Modal open={sheetOpen} onClose={() => setSheetOpen(false)} title="Filters">
+        <FilterPanel filters={filters} setFilter={setParam} clearAll={clearAll}
+          activeCount={activeFilters.length} isPremium={isPremium} showTitle={false} />
+        <button onClick={() => setSheetOpen(false)}
+          className="mt-6 w-full py-3.5 rounded-xl text-white font-bold" style={{ background: 'var(--gradient-primary)' }}>
+          Show {data?.pages?.[0]?.totalElements ?? ''} results
+        </button>
+      </Modal>
     </motion.main>
   )
 }

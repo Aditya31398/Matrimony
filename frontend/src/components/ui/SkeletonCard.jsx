@@ -1,13 +1,10 @@
 export function SkeletonProfileCard() {
   return (
-    <div className="bg-white rounded-32 overflow-hidden shadow-card animate-pulse">
-      <div className="aspect-[3/4] bg-surface-container shimmer" />
-      <div className="p-4 flex justify-between items-center">
-        <div className="h-4 w-24 bg-surface-container rounded-full shimmer" />
-        <div className="flex gap-2">
-          <div className="h-6 w-12 bg-secondary-fixed rounded-full shimmer" />
-          <div className="h-6 w-14 bg-tertiary-fixed rounded-full shimmer" />
-        </div>
+    <div className="bg-white rounded-2xl overflow-hidden border border-outline-variant/70">
+      <div className="aspect-[4/5] shimmer" />
+      <div className="px-4 pt-3.5 pb-4 space-y-2">
+        <div className="h-5 w-28 rounded shimmer" />
+        <div className="h-3 w-36 rounded shimmer" />
       </div>
     </div>
   )
@@ -15,7 +12,7 @@ export function SkeletonProfileCard() {
 
 export function SkeletonStoryCard() {
   return (
-    <div className="bg-white rounded-24 overflow-hidden shadow-card animate-pulse">
+    <div className="bg-white rounded-2xl overflow-hidden shadow-card animate-pulse">
       <div className="h-[280px] bg-surface-container shimmer" />
       <div className="p-6 space-y-3">
         <div className="flex gap-1">
@@ -37,8 +34,8 @@ export function SkeletonStoryCard() {
 
 export function SkeletonInterestCard() {
   return (
-    <div className="flex items-center gap-4 p-4 bg-white rounded-[20px] shadow-card animate-pulse">
-      <div className="w-20 h-20 rounded-2xl bg-surface-container shimmer flex-shrink-0" />
+    <div className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-card animate-pulse">
+      <div className="w-20 h-20 rounded-xl bg-surface-container shimmer flex-shrink-0" />
       <div className="flex-1 space-y-2">
         <div className="h-4 w-24 bg-surface-container rounded-full shimmer" />
         <div className="h-3 w-32 bg-surface-container rounded-full shimmer" />

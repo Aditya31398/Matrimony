@@ -1,13 +1,16 @@
 import { memo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { VerifiedBadge, InterestTag } from './Badge'
+import { VerifiedBadge } from './Badge'
 import { useConnect, useShortlist } from '../../hooks/useMatches'
 import { formatLastSeen } from '../../utils/lastSeen'
 import { cloudinaryUrl, cloudinarySrcSet } from '../../utils/cloudinary'
 import { AVATAR_PLACEHOLDER, showPlaceholderOnError } from '../../utils/placeholder'
 import toast from 'react-hot-toast'
 
+/**
+ * Editorial profile card: an uncluttered photo with the details set beneath it.
+ * `compact` adds the interest/shortlist actions used on the dashboard.
+ */
 const ProfileCard = memo(function ProfileCard({ profile, variant = 'grid' }) {
   const [liked, setLiked] = useState(false)
   const connect   = useConnect()
@@ -15,177 +18,110 @@ const ProfileCard = memo(function ProfileCard({ profile, variant = 'grid' }) {
 
   if (!profile) return null
 
-  const { id, firstName, age, profession, city, photoUrl, isVerified, isOnline, lastSeenAt, interests = [],
+  const { id, firstName, age, profession, city, photoUrl, isVerified, isOnline, lastSeenAt,
           caste, religion, restricted, photoHidden, matchScore } = profile
   const lastSeenLabel = formatLastSeen(lastSeenAt, isOnline)
   // Free members only get caste and religion, so show those instead of job and city
   const subtitle = restricted
-    ? [caste, religion].filter(Boolean).join(' • ')
-    : [profession, city].filter(Boolean).join(' • ')
+    ? [caste, religion].filter(Boolean).join(' · ')
+    : [profession, city].filter(Boolean).join(' · ')
 
   const handleConnect = () => connect.mutate(id, {
-    onSuccess: (m) => toast.success(m?.status === 'ACCEPTED' ? `It's a match with ${firstName}!` : `Request sent to ${firstName}`),
-    onError: (e) => toast.error(e.message || 'Could not send request'),
+    onSuccess: (m) => toast.success(m?.status === 'ACCEPTED' ? `It's a match with ${firstName}` : `Interest sent to ${firstName}`),
+    onError: (e) => toast.error(e.message || 'Could not send interest'),
   })
 
-  const handleShortlist = () => {
+  const handleShortlist = (e) => {
+    e?.preventDefault()
     if (liked) return
     setLiked(true)
     shortlist.mutate(id, {
-      onSuccess: () => toast.success(`${firstName} shortlisted`),
-      onError: (e) => { setLiked(false); toast.error(e.message || 'Could not shortlist') },
+      onSuccess: () => toast.success(`${firstName} added to your shortlist`),
+      onError: (err) => { setLiked(false); toast.error(err.message || 'Could not shortlist') },
     })
   }
 
-  const matchBadge = matchScore != null && (
-    <div className={`absolute top-4 left-4 px-2.5 py-1 rounded-full text-[11px] font-black backdrop-blur-md flex items-center gap-1 ${
-      matchScore >= 75 ? 'bg-primary/90 text-white' : matchScore >= 50 ? 'bg-white/95 text-primary' : 'bg-white/85 text-on-surface-variant'
-    }`}>
-      <span className="material-symbols-outlined fill-icon text-[13px]">favorite</span>
-      {matchScore}% match
-    </div>
-  )
-  // Shown instead of the photo when the member keeps photos private until connected
-  const privatePhoto = photoHidden && (
-    <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/20 backdrop-blur-[2px] text-white text-center px-4">
-      <span className="material-symbols-outlined fill-icon text-3xl">lock</span>
-      <span className="text-xs font-bold">Photo visible after they accept</span>
-    </div>
-  )
-
-  // Serve the right Cloudinary size; fall back to original URL for non-Cloudinary sources
   const imgSrc    = cloudinaryUrl(photoUrl || AVATAR_PLACEHOLDER, 'w_600,q_auto,f_auto')
   const imgSrcSet = cloudinarySrcSet(photoUrl)
 
-  if (variant === 'compact') {
-    return (
-      <motion.div
-        whileHover={{ y: -4, boxShadow: '0 18px 44px rgba(46,6,20,0.12)' }}
-        className="group relative bg-white rounded-[28px] overflow-hidden border border-outline-variant/60 shadow-card cursor-pointer"
-      >
-        <Link to={`/profile/${id}`}>
-          <div className="aspect-[4/5] relative overflow-hidden">
-            <img
-              src={imgSrc}
-              srcSet={imgSrcSet}
-              sizes="(max-width: 768px) 100vw, 300px"
-              alt={firstName}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              loading="lazy"
-              decoding="async"
-              onError={showPlaceholderOnError}
-            />
-            {privatePhoto}
-            {matchBadge}
-            {isVerified && (
-              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1">
-                <VerifiedBadge />
-                <span className="text-[10px] font-bold text-on-surface tracking-wider">VERIFIED</span>
-              </div>
-            )}
-            <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
-              <div className="flex items-center gap-2 mb-0.5">
-                <h3 className="font-display text-white text-[24px] font-bold leading-tight">{firstName}, {age}</h3>
-                {isOnline && <span className="w-2 h-2 rounded-full bg-green-400 flex-shrink-0" />}
-              </div>
-              {subtitle && <p className="text-white/80 text-sm mt-0.5">{subtitle}</p>}
-              {lastSeenLabel && !isOnline && (
-                <p className="text-white/60 text-[11px] mt-0.5">{lastSeenLabel}</p>
-              )}
-            </div>
-          </div>
-        </Link>
-        <div className="p-3 flex gap-2">
-          <button
-            onClick={handleConnect}
-            disabled={connect.isPending}
-            className="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-bold hover:brightness-110 active:scale-95 transition-all disabled:opacity-60"
-          >
-            Connect
-          </button>
-          <button
-            onClick={handleShortlist}
-            aria-label={`Shortlist ${firstName}`}
-            className={`w-11 h-11 rounded-xl border flex items-center justify-center transition-colors ${
-              liked ? 'bg-orange-50 border-primary text-primary' : 'border-outline-variant text-slate-400 hover:bg-orange-50 hover:text-primary'
-            }`}
-          >
-            <span className="material-symbols-outlined text-[20px]"
-              style={liked ? { fontVariationSettings: "'FILL' 1" } : {}}>
-              favorite
-            </span>
-          </button>
-        </div>
-      </motion.div>
-    )
-  }
-
-  // Full grid variant (discover page)
   return (
-    <motion.div
-      whileHover={{ y: -4, boxShadow: '0 18px 44px rgba(46,6,20,0.12)' }}
-      className="group relative bg-white rounded-[24px] overflow-hidden border border-outline-variant/60 shadow-card cursor-pointer"
-    >
-      <Link to={`/profile/${id}`}>
-        <div className="relative aspect-[3/4] overflow-hidden">
-          <img
+    <article className="group h-full flex flex-col bg-white rounded-2xl border border-outline-variant/70 overflow-hidden transition-shadow duration-300 hover:shadow-card-hover">
+      <Link to={`/profile/${id}`} className="block flex-1">
+        <div className="relative aspect-[4/5] bg-surface-container overflow-hidden">
+          {photoUrl ? <img
             src={imgSrc}
             srcSet={imgSrcSet}
-            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            sizes={variant === 'compact' ? '(max-width: 768px) 100vw, 260px' : '(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw'}
             alt={firstName}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02]"
             loading="lazy"
             decoding="async"
             onError={showPlaceholderOnError}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-70" />
-          {privatePhoto}
-          {matchBadge}
-          <button
-            onClick={(e) => { e.preventDefault(); handleShortlist() }}
-            aria-label={`Shortlist ${firstName}`}
-            className="absolute top-4 right-4 bg-white/20 backdrop-blur-md rounded-full p-2 text-white hover:bg-white hover:text-primary transition-colors"
-          >
-            <span className="material-symbols-outlined text-[20px]"
-              style={liked ? { fontVariationSettings: "'FILL' 1" } : {}}>
-              favorite
-            </span>
-          </button>
-          <div className="absolute bottom-4 left-4 right-4 text-white">
-            <div className="flex items-center gap-2 mb-1">
-              <h4 className="font-display text-[26px] font-bold leading-none">{firstName}, {age}</h4>
-              {isVerified && <VerifiedBadge size="lg" />}
+          /> : (
+            // No photo (or a private one): a quiet monogram instead of a stock silhouette
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-surface-container-low to-surface-container">
+              <span className="font-display text-[72px] leading-none text-primary/25 select-none">{firstName?.[0]}</span>
             </div>
-            {subtitle && (
-              <div className="flex items-center gap-1.5 text-white/90 text-sm font-semibold">
-                <span className="material-symbols-outlined text-sm">{restricted ? 'diversity_3' : 'work'}</span>
-                {restricted ? subtitle : profession}
-              </div>
-            )}
-            {lastSeenLabel && (
-              <p className="flex items-center gap-1.5 text-white/70 text-[11px] mt-1">
-                {isOnline && <span className="w-2 h-2 rounded-full bg-green-400" />}
-                {isOnline ? 'Online now' : `Last seen ${lastSeenLabel}`}
-              </p>
-            )}
+          )}
+          {photoHidden && (
+            <div className="absolute inset-x-0 bottom-0 m-3 flex items-center justify-center gap-1.5 rounded-lg bg-white/90 backdrop-blur px-3 py-2 text-[12px] text-on-surface-variant">
+              <span className="material-symbols-outlined text-[16px]">lock</span>
+              Photo shared after they accept
+            </div>
+          )}
+          {matchScore != null && (
+            <span className={`absolute top-3 left-3 rounded-md px-2 py-1 text-[11px] font-semibold tracking-wide backdrop-blur ${
+              matchScore >= 75 ? 'bg-primary text-white' : 'bg-white/90 text-on-surface'
+            }`}>
+              {matchScore}% match
+            </span>
+          )}
+          {variant !== 'compact' && (
+            <button onClick={handleShortlist} aria-label={`Shortlist ${firstName}`}
+              className={`absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center backdrop-blur transition-colors ${
+                liked ? 'bg-white text-primary' : 'bg-white/80 text-on-surface-variant hover:text-primary'
+              }`}>
+              <span className={`material-symbols-outlined text-[20px] ${liked ? 'fill-icon' : ''}`}>favorite</span>
+            </button>
+          )}
+        </div>
+
+        <div className="px-4 pt-3.5 pb-4">
+          <div className="flex items-center gap-1.5">
+            <h3 className="font-display text-[22px] font-semibold leading-tight text-on-surface truncate">
+              {firstName}, {age}
+            </h3>
+            {isVerified && <VerifiedBadge />}
           </div>
+          {subtitle && <p className="text-[13px] text-on-surface-variant truncate mt-0.5">{subtitle}</p>}
+          {/* Always reserve the line so cards in a row stay aligned */}
+          <p className="flex items-center gap-1.5 text-[12px] text-on-surface-variant/80 mt-2 h-4">
+            {isOnline && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />}
+            {isOnline ? 'Online now' : lastSeenLabel ? `Active ${lastSeenLabel}` : ''}
+          </p>
         </div>
       </Link>
-      <div className="px-4 py-3.5 flex justify-between items-center gap-3 bg-white">
-        {restricted ? (
-          <Link to="/premium" className="flex items-center gap-1.5 text-primary text-sm font-bold hover:underline">
-            <span className="material-symbols-outlined text-lg">lock</span>
-            See full profile
-          </Link>
-        ) : (
-          <div className="flex items-center gap-1 min-w-0 text-on-surface-variant text-sm font-semibold">
-            <span className="material-symbols-outlined text-primary text-lg flex-shrink-0">location_on</span>
-            <span className="truncate">{city || 'India'}</span>
-          </div>
-        )}
-        {interests[0] && <InterestTag label={interests[0]} color="secondary" />}
-      </div>
-    </motion.div>
+
+      {variant === 'compact' && (
+        <div className="px-4 pb-4 flex gap-2">
+          <button onClick={handleConnect} disabled={connect.isPending}
+            className="flex-1 h-10 rounded-lg border border-primary text-primary text-[13px] font-semibold hover:bg-primary hover:text-white transition-colors disabled:opacity-60">
+            Send interest
+          </button>
+          <button onClick={handleShortlist} aria-label={`Shortlist ${firstName}`}
+            className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-colors ${
+              liked ? 'border-primary text-primary' : 'border-outline-variant text-on-surface-variant hover:text-primary hover:border-primary/40'
+            }`}>
+            <span className={`material-symbols-outlined text-[20px] ${liked ? 'fill-icon' : ''}`}>favorite</span>
+          </button>
+        </div>
+      )}
+      {variant !== 'compact' && restricted && (
+        <Link to="/premium" className="block border-t border-outline-variant/60 px-4 py-2.5 text-[12px] font-medium text-primary hover:bg-surface-container-low">
+          See full profile with Premium
+        </Link>
+      )}
+    </article>
   )
 })
 

@@ -81,7 +81,7 @@ export default function HomePage() {
             </motion.span>
             <motion.h1
               variants={fadeUp}
-              className="text-[52px] md:text-[68px] font-black leading-[1.05] tracking-tight text-on-surface mb-6"
+              className="text-[52px] md:text-[68px] font-semibold leading-[1.05] tracking-tight text-on-surface mb-6"
             >
               Your Journey to{' '}
               <span className="text-gradient">Forever</span>{' '}
@@ -95,7 +95,7 @@ export default function HomePage() {
             {/* Search card */}
             <motion.div
               variants={fadeUp}
-              className="bg-white/90 backdrop-blur-xl p-7 rounded-[32px] shadow-2xl border border-orange-100/50"
+              className="bg-white/90 backdrop-blur-xl p-7 rounded-2xl shadow-2xl border border-orange-100/50"
             >
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
                 <div className="space-y-1.5">
@@ -103,7 +103,7 @@ export default function HomePage() {
                   <select
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
-                    className="w-full bg-surface-container-low border-none rounded-2xl px-4 py-3.5 focus:ring-2 focus:ring-primary/30 text-on-surface font-medium transition-all"
+                    className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-primary/30 text-on-surface font-medium transition-all"
                   >
                     <option>Man</option>
                     <option>Woman</option>
@@ -114,7 +114,7 @@ export default function HomePage() {
                   <select
                     value={lookingFor}
                     onChange={(e) => setLookingFor(e.target.value)}
-                    className="w-full bg-surface-container-low border-none rounded-2xl px-4 py-3.5 focus:ring-2 focus:ring-primary/30 text-on-surface font-medium transition-all"
+                    className="w-full bg-surface-container-low border-none rounded-xl px-4 py-3.5 focus:ring-2 focus:ring-primary/30 text-on-surface font-medium transition-all"
                   >
                     <option>Woman</option>
                     <option>Man</option>
@@ -127,21 +127,21 @@ export default function HomePage() {
                       type="number"
                       value={ageMin}
                       onChange={(e) => setAgeMin(e.target.value)}
-                      className="w-full bg-surface-container-low border-none rounded-2xl px-3 py-3.5 focus:ring-2 focus:ring-primary/30 font-medium text-on-surface transition-all"
+                      className="w-full bg-surface-container-low border-none rounded-xl px-3 py-3.5 focus:ring-2 focus:ring-primary/30 font-medium text-on-surface transition-all"
                     />
                     <span className="text-slate-400 font-medium flex-shrink-0">to</span>
                     <input
                       type="number"
                       value={ageMax}
                       onChange={(e) => setAgeMax(e.target.value)}
-                      className="w-full bg-surface-container-low border-none rounded-2xl px-3 py-3.5 focus:ring-2 focus:ring-primary/30 font-medium text-on-surface transition-all"
+                      className="w-full bg-surface-container-low border-none rounded-xl px-3 py-3.5 focus:ring-2 focus:ring-primary/30 font-medium text-on-surface transition-all"
                     />
                   </div>
                 </div>
               </div>
               <button
                 onClick={handleSearch}
-                className="w-full bg-gradient-to-r from-primary to-primary-container text-white font-bold text-lg py-4 rounded-2xl shadow-btn-primary hover:shadow-btn-primary-hover hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2"
+                className="w-full bg-gradient-to-r from-primary to-primary-container text-white font-bold text-lg py-4 rounded-xl active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2"
               >
                 <span className="material-symbols-outlined">search</span>
                 Find My Soulmate
@@ -156,7 +156,7 @@ export default function HomePage() {
         <div className="page-container">
           <div className="text-center mb-16">
             <span className="text-primary font-bold tracking-widest uppercase text-xs mb-3 block">Simple Process</span>
-            <h2 className="text-headline-lg text-on-surface font-black mb-4">How SoulSync Works</h2>
+            <h2 className="text-headline-lg text-on-surface font-semibold mb-4">How SoulSync Works</h2>
             <p className="text-on-surface-variant max-w-md mx-auto">Three simple steps to your beautiful beginning.</p>
           </div>
           <motion.div
@@ -170,13 +170,12 @@ export default function HomePage() {
               <motion.div
                 key={title}
                 variants={fadeUp}
-                whileHover={{ y: -6 }}
-                className="group relative p-8 rounded-32 bg-surface-container border border-slate-100 hover:bg-orange-50/60 hover:border-orange-100 transition-all duration-500 cursor-pointer"
+                className="group relative p-8 rounded-2xl bg-surface-container border border-slate-100 hover:bg-orange-50/60 hover:border-orange-100 transition-all duration-500 cursor-pointer"
               >
-                <div className="absolute top-6 right-8 text-6xl font-black text-slate-100 group-hover:text-orange-100 transition-colors select-none">
+                <div className="absolute top-6 right-8 text-6xl font-semibold text-slate-100 group-hover:text-orange-100 transition-colors select-none">
                   0{i + 1}
                 </div>
-                <div className={`w-16 h-16 ${bg} text-white rounded-2xl flex items-center justify-center mb-7 shadow-inner`}>
+                <div className={`w-16 h-16 ${bg} text-white rounded-xl flex items-center justify-center mb-7 shadow-inner`}>
                   <span
                     className="material-symbols-outlined text-3xl"
                     style={icon === 'favorite' ? { fontVariationSettings: "'FILL' 1" } : {}}
@@ -199,7 +198,7 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row justify-between items-end mb-14 gap-6">
             <div>
               <span className="text-primary font-bold tracking-widest uppercase text-xs mb-3 block">Our Wall of Joy</span>
-              <h2 className="text-headline-lg text-on-surface font-black">SoulSync Success Stories</h2>
+              <h2 className="text-headline-lg text-on-surface font-semibold">SoulSync Success Stories</h2>
             </div>
           </div>
 
@@ -213,14 +212,13 @@ export default function HomePage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}
-                    whileHover={{ y: -6 }}
-                    className="bg-white rounded-[24px] overflow-hidden shadow-card hover:shadow-card-hover transition-all group"
+                    className="bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all group"
                   >
                     <div className="h-[280px] overflow-hidden">
                       <img
                         src={story.photoUrl}
                         alt={story.coupleNames}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
                         loading="lazy"
                       />
                     </div>
@@ -251,7 +249,7 @@ export default function HomePage() {
         >
           <div className="absolute top-0 left-0 w-72 h-72 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
           <div className="absolute bottom-0 right-0 w-96 h-96 bg-orange-400/20 rounded-full blur-3xl translate-x-1/4 translate-y-1/4 pointer-events-none" />
-          <h2 className="text-display-xl font-black mb-7 relative z-10 leading-tight">
+          <h2 className="text-display-xl font-semibold mb-7 relative z-10 leading-tight">
             Ready to find your <br className="hidden md:block" /> perfect harmony?
           </h2>
           <p className="text-lg mb-12 opacity-90 relative z-10 max-w-xl mx-auto leading-relaxed">
@@ -259,17 +257,15 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-5 justify-center items-center relative z-10">
             <motion.button
-              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/register')}
-              className="bg-white text-primary font-bold px-10 py-4 rounded-2xl hover:shadow-2xl transition-all"
+              className="bg-white text-primary font-bold px-10 py-4 rounded-xl hover:shadow-2xl transition-all"
             >
               Get Started Free
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="bg-transparent border-2 border-white/30 text-white font-bold px-10 py-4 rounded-2xl hover:bg-white/10 transition-all"
+              className="bg-transparent border-2 border-white/30 text-white font-bold px-10 py-4 rounded-xl hover:bg-white/10 transition-all"
             >
               Talk to a Consultant
             </motion.button>

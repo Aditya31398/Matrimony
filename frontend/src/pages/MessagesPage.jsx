@@ -79,16 +79,16 @@ export default function MessagesPage() {
       className="max-w-[1280px] w-full mx-auto p-4 sm:p-6 flex gap-6 h-[calc(100vh-140px)] pb-28 md:pb-6"
     >
       {/* ── Sidebar ─────────────────────────────────────────────────── */}
-      <aside className={`w-full md:w-[300px] bg-white rounded-[24px] shadow-card border border-outline-variant/30 flex-col overflow-hidden flex-shrink-0 ${
+      <aside className={`w-full md:w-[300px] bg-white rounded-2xl shadow-card border border-outline-variant/30 flex-col overflow-hidden flex-shrink-0 ${
         activeId ? 'hidden md:flex' : 'flex'
       }`}>
         <div className="p-5 border-b border-surface-variant/50">
-          <h2 className="text-xl font-black text-on-surface mb-4">Messages</h2>
+          <h2 className="text-xl font-semibold text-on-surface mb-4">Messages</h2>
           <div className="relative">
             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
             <input type="text" placeholder="Search conversations…" value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-surface pl-11 pr-4 py-3 rounded-[16px] border-none focus:ring-2 focus:ring-primary-container/50 text-sm text-on-surface placeholder:text-on-surface-variant/60 transition-all outline-none"
+              className="w-full bg-surface pl-11 pr-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-primary-container/50 text-sm text-on-surface placeholder:text-on-surface-variant/60 transition-all outline-none"
             />
           </div>
         </div>
@@ -128,7 +128,7 @@ export default function MessagesPage() {
       </aside>
 
       {/* ── Chat window ─────────────────────────────────────────────── */}
-      <section className={`flex-1 bg-white rounded-[24px] shadow-card border border-outline-variant/30 flex-col overflow-hidden min-w-0 ${
+      <section className={`flex-1 bg-white rounded-2xl shadow-card border border-outline-variant/30 flex-col overflow-hidden min-w-0 ${
         activeId ? 'flex' : 'hidden md:flex'
       }`}>
         {!activeId ? (
@@ -157,7 +157,7 @@ export default function MessagesPage() {
                   )}
                 </div>
                 <div className="min-w-0">
-                  <h1 className="text-lg font-black text-on-surface truncate">{activeProfile?.firstName ?? 'Chat'}</h1>
+                  <h1 className="text-lg font-semibold text-on-surface truncate">{activeProfile?.firstName ?? 'Chat'}</h1>
                   {activeLastSeen && (
                     <p className={`text-sm font-medium flex items-center gap-1 ${activeIsOnline ? 'text-green-600' : 'text-on-surface-variant'}`}>
                       {activeIsOnline && <span className="w-2 h-2 bg-green-500 rounded-full inline-block" />}
@@ -168,7 +168,7 @@ export default function MessagesPage() {
               </div>
               {activeProfile?.id && (
                 <Link to={`/profile/${activeProfile.id}`}
-                  className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-[16px] border border-outline-variant/50 text-sm font-bold text-on-surface hover:bg-surface transition-colors flex-shrink-0">
+                  className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border border-outline-variant/50 text-sm font-bold text-on-surface hover:bg-surface transition-colors flex-shrink-0">
                   <span className="material-symbols-outlined text-[18px]">account_circle</span>
                   <span className="hidden sm:inline">View Profile</span>
                 </Link>
@@ -187,12 +187,12 @@ export default function MessagesPage() {
                 <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
                   {icebreakers.map((ib) => (
                     <button key={ib.id} onClick={() => setText(ib.prompt)}
-                      className={`flex-shrink-0 max-w-[260px] text-left p-3.5 rounded-[14px] transition-all hover:-translate-y-0.5 ${
+                      className={`flex-shrink-0 max-w-[260px] text-left p-3.5 rounded-xl transition-all ${
                         ib.featured
                           ? 'bg-primary text-white shadow-md hover:shadow-lg'
                           : 'bg-surface border border-outline-variant/40 text-on-surface hover:border-primary/50'
                       }`}>
-                      <span className={`block text-[10px] font-black tracking-wider uppercase mb-1 ${ib.featured ? 'opacity-90' : 'text-primary/80'}`}>
+                      <span className={`block text-[10px] font-semibold tracking-wider uppercase mb-1 ${ib.featured ? 'opacity-90' : 'text-primary/80'}`}>
                         {ib.topic}
                       </span>
                       <p className="text-[13px] leading-snug">{ib.prompt}</p>
@@ -223,8 +223,8 @@ export default function MessagesPage() {
                       <div
                         className={`px-5 py-3.5 text-[15px] leading-relaxed shadow-sm whitespace-pre-wrap break-words ${
                           msg.isOwn
-                            ? 'rounded-[24px] rounded-br-[4px] text-white'
-                            : 'rounded-[24px] rounded-bl-[4px] bg-surface text-on-surface'
+                            ? 'rounded-2xl rounded-br-[4px] text-white'
+                            : 'rounded-2xl rounded-bl-[4px] bg-surface text-on-surface'
                         }`}
                         style={msg.isOwn ? { background: 'var(--gradient-primary)' } : {}}>
                         {msg.content}
@@ -247,24 +247,24 @@ export default function MessagesPage() {
             {/* Input — chatting is a premium feature */}
             <div className="p-4 sm:p-5 bg-white/95 backdrop-blur border-t border-surface-variant/50">
               {isPremium ? (
-                <div className="flex items-end gap-2 bg-surface rounded-[24px] p-2 pl-4 border border-outline-variant/30 focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary-container/20 transition-all">
+                <div className="flex items-end gap-2 bg-surface rounded-2xl p-2 pl-4 border border-outline-variant/30 focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary-container/20 transition-all">
                   <textarea rows={1} value={text} onChange={(e) => setText(e.target.value)} onKeyDown={handleKey}
                     placeholder="Type your message…" maxLength={2000}
                     className="flex-1 bg-transparent border-none focus:ring-0 resize-none max-h-[120px] min-h-[40px] py-2.5 px-1 text-on-surface placeholder:text-on-surface-variant/60 outline-none text-sm"
                   />
                   <button onClick={handleSend} disabled={!text.trim() || sendMsg.isPending} aria-label="Send"
-                    className="p-3 bg-primary text-white rounded-full hover:bg-primary/90 hover:scale-105 transition-all shadow-md flex items-center justify-center w-11 h-11 mr-0.5 mb-0.5 disabled:opacity-60 active:scale-95">
+                    className="p-3 bg-primary text-white rounded-full hover:bg-primary/90 transition-all shadow-md flex items-center justify-center w-11 h-11 mr-0.5 mb-0.5 disabled:opacity-60 active:scale-[0.98]">
                     <span className="material-symbols-outlined text-[18px]">send</span>
                   </button>
                 </div>
               ) : (
-                <div className="flex flex-col sm:flex-row items-center gap-3 rounded-[20px] bg-orange-50 border border-orange-200 p-4">
+                <div className="flex flex-col sm:flex-row items-center gap-3 rounded-xl bg-orange-50 border border-orange-200 p-4">
                   <span className="material-symbols-outlined text-primary fill-icon">lock</span>
                   <p className="flex-1 text-sm text-on-surface text-center sm:text-left">
                     <strong>Replying is a Premium feature.</strong> Upgrade to chat with {activeProfile?.firstName ?? 'members'}.
                   </p>
                   <Link to="/premium"
-                    className="px-4 py-2 rounded-xl text-white text-sm font-bold shadow-btn-primary active:scale-95 transition-all"
+                    className="px-4 py-2 rounded-xl text-white text-sm font-bold active:scale-[0.98] transition-all"
                     style={{ background: 'var(--gradient-primary)' }}>
                     Upgrade
                   </Link>

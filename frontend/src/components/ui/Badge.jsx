@@ -3,7 +3,7 @@ export function VerifiedBadge({ size = 'sm' }) {
   return (
     <span
       className={`material-symbols-outlined text-primary ${cls}`}
-      style={{ fontVariationSettings: "'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24" }}
+      style={{ fontVariationSettings: "'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}
     >
       verified
     </span>

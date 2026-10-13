@@ -8,7 +8,7 @@ import path from 'node:path'
  * a few extra glyphs from ordinary words like "home" are harmless.
  */
 const FONT_URL =
-  'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0'
+  'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0..1,0'
 
 function collectIcons(srcDir, valid) {
   const used = new Set()

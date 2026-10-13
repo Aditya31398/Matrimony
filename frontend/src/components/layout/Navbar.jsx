@@ -68,7 +68,7 @@ export default function Navbar() {
           {isLoggedIn ? (
             <button
               onClick={handleLogout}
-              className="hidden sm:flex text-primary border-2 border-primary/30 px-5 py-2.5 rounded-full text-sm font-bold hover:bg-primary/5 active:scale-95 transition-all duration-200"
+              className="hidden sm:flex text-[13px] font-medium text-on-surface-variant hover:text-primary px-3 py-2 transition-colors"
             >
               {t('nav.signOut')}
             </button>
@@ -76,13 +76,13 @@ export default function Navbar() {
             <>
               <button
                 onClick={() => navigate('/register')}
-                className="hidden sm:flex bg-gradient-to-r from-primary to-primary-container text-on-primary px-6 py-2.5 rounded-full text-sm font-bold shadow-btn-primary hover:shadow-btn-primary-hover hover:-translate-y-0.5 active:scale-95 transition-all duration-200"
+                className="hidden sm:flex bg-gradient-to-r from-primary to-primary-container text-on-primary px-6 py-2.5 rounded-full text-sm font-bold active:scale-[0.98] transition-all duration-200"
               >
                 {t('nav.getStarted')}
               </button>
               <button
                 onClick={() => navigate('/login')}
-                className="hidden sm:flex text-primary border-2 border-primary/30 px-5 py-2.5 rounded-full text-sm font-bold hover:bg-primary/5 active:scale-95 transition-all duration-200"
+                className="hidden sm:flex text-primary border-2 border-primary/30 px-5 py-2.5 rounded-full text-sm font-bold hover:bg-primary/5 active:scale-[0.98] transition-all duration-200"
               >
                 {t('nav.signIn')}
               </button>
@@ -126,7 +126,7 @@ export default function Navbar() {
               {isLoggedIn ? (
                 <button
                   onClick={handleLogout}
-                  className="flex-1 border-2 border-primary/30 text-primary py-3 rounded-xl text-sm font-bold hover:bg-primary/5 active:scale-95 transition-all"
+                  className="flex-1 border-2 border-primary/30 text-primary py-3 rounded-xl text-sm font-bold hover:bg-primary/5 active:scale-[0.98] transition-all"
                 >
                   {t('nav.signOut')}
                 </button>
@@ -134,13 +134,13 @@ export default function Navbar() {
                 <>
                   <button
                     onClick={() => { navigate('/register'); setMenuOpen(false) }}
-                    className="flex-1 bg-gradient-to-r from-primary to-primary-container text-on-primary py-3 rounded-xl text-sm font-bold shadow-btn-primary active:scale-95 transition-all"
+                    className="flex-1 bg-gradient-to-r from-primary to-primary-container text-on-primary py-3 rounded-xl text-sm font-bold active:scale-[0.98] transition-all"
                   >
                     {t('nav.getStarted')}
                   </button>
                   <button
                     onClick={() => { navigate('/login'); setMenuOpen(false) }}
-                    className="flex-1 border-2 border-primary/30 text-primary py-3 rounded-xl text-sm font-bold hover:bg-primary/5 active:scale-95 transition-all"
+                    className="flex-1 border-2 border-primary/30 text-primary py-3 rounded-xl text-sm font-bold hover:bg-primary/5 active:scale-[0.98] transition-all"
                   >
                     {t('nav.signIn')}
                   </button>

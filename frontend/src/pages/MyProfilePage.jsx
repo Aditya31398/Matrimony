@@ -1,23 +1,35 @@
-import { motion } from 'framer-motion'
-import { useMyProfile } from '../hooks/useProfiles'
-import { VerifiedBadge, PremiumBadge } from '../components/ui/Badge'
-import { useAuth } from '../context/AuthContext'
-import { useNavigate, Link } from 'react-router-dom'
 import { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
-import CompletenessRing from '../components/ui/CompletenessRing'
+import { useMyProfile } from '../hooks/useProfiles'
 import { useBlockedMembers, useBlockToggle } from '../hooks/useFeatures'
+import { useAuth } from '../context/AuthContext'
+import { VerifiedBadge, PremiumBadge } from '../components/ui/Badge'
+import CompletenessRing from '../components/ui/CompletenessRing'
 import { shareWithFamily } from '../utils/share'
-import { AVATAR_PLACEHOLDER, showPlaceholderOnError } from '../utils/placeholder'
+import { showPlaceholderOnError } from '../utils/placeholder'
 import { nakshatraName, moonSign } from '../utils/astrology'
 
-const INFO_FIELDS = [
-  ['Religion', 'religion'], ['Caste', 'caste'], ['Height', 'height'],
-  ['Mother Tongue', 'motherTongue'], ['Dietary Pref', 'dietaryPreference'],
-  ['Education', 'education'], ['Phone', 'phone'],
-  ['Birth Star', 'nakshatra'], ['Moon Sign', 'rashi'],
-  ['Looking For', 'lookingForGender'], ['Age Range', null],
+const DETAIL_FIELDS = [
+  ['Religion', 'religion'], ['Caste', 'caste'], ['Mother tongue', 'motherTongue'],
+  ['Education', 'education'], ['Profession', 'profession'], ['Height', 'height'],
+  ['Diet', 'dietaryPreference'], ['Phone', 'phone'], ['Birth star', 'nakshatra'], ['Moon sign', 'rashi'],
 ]
+
+function Section({ title, action, children }) {
+  return (
+    <section className="py-8 border-t border-outline-variant/70">
+      <div className="flex items-baseline justify-between mb-5">
+        <h2 className="text-[26px] leading-tight text-on-surface">{title}</h2>
+        {action}
+      </div>
+      {children}
+    </section>
+  )
+}
+
+const formatDate = (iso) => new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
 
 export default function MyProfilePage() {
   const { data: profile, isLoading } = useMyProfile()
@@ -27,191 +39,165 @@ export default function MyProfilePage() {
   const { logout } = useAuth()
   const navigate = useNavigate()
 
-  const handleLogout = () => {
-    logout()
-    navigate('/')
-  }
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-14 h-14 border-4 border-orange-100 border-t-orange-500 rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-outline-variant border-t-primary rounded-full animate-spin" />
       </div>
     )
   }
 
   if (!profile) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-on-surface-variant">
-        <span className="material-symbols-outlined text-6xl opacity-30">person_off</span>
-        <p className="text-xl font-bold">Profile not found</p>
-        <p className="text-sm">Please log in to view your profile.</p>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-2 text-center px-6">
+        <p className="font-display text-[30px] text-on-surface">Profile unavailable</p>
+        <p className="text-[14px] text-on-surface-variant">Please sign in again to view your profile.</p>
       </div>
     )
   }
 
+  const value = (key) => key === 'nakshatra' ? nakshatraName(profile.nakshatra)
+    : key === 'rashi' ? moonSign(profile)
+    : profile[key]
+  const facts = [profile.age && `${profile.age} years`, profile.profession, profile.city].filter(Boolean)
+  const preferences = [
+    profile.lookingForGender && `Looking for a ${profile.lookingForGender.toLowerCase()}`,
+    profile.ageMin && profile.ageMax && `aged ${profile.ageMin}–${profile.ageMax}`,
+  ].filter(Boolean).join(', ')
+  const tags = [...(profile.interests ?? []), ...(profile.lifestyle ?? [])]
+  const editLink = <Link to="/edit-profile" className="text-[13px] font-medium text-primary hover:underline underline-offset-4">Edit</Link>
+
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pb-32">
-      <main className="max-w-[900px] mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-black text-on-surface">My Profile</h1>
-          <div className="flex items-center gap-3">
-            <Link to="/edit-profile"
-              className="flex items-center gap-2 text-sm font-bold text-primary hover:bg-orange-50 transition-colors px-4 py-2 rounded-full border-2 border-orange-200">
-              <span className="material-symbols-outlined text-lg">edit</span>
-              Edit Profile
-            </Link>
-            <button onClick={handleLogout}
-              className="flex items-center gap-2 text-sm font-bold text-on-surface-variant hover:text-red-500 transition-colors px-4 py-2 rounded-full hover:bg-red-50">
-              <span className="material-symbols-outlined text-lg">logout</span>
-              Sign Out
+    <motion.main initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}
+      className="max-w-[1200px] mx-auto px-4 sm:px-6 pt-10 pb-32">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-8 lg:gap-14">
+        {/* Left: photo and account tools */}
+        <div className="lg:sticky lg:top-24 self-start space-y-4">
+          <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-surface-container">
+            {profile.photoUrl ? (
+              <img src={profile.photoUrl} onError={showPlaceholderOnError} alt={profile.firstName} className="w-full h-full object-cover" />
+            ) : (
+              <Link to="/edit-profile" className="w-full h-full flex flex-col items-center justify-center gap-2 text-on-surface-variant">
+                <span className="font-display text-[120px] leading-none text-primary/20">{profile.firstName?.[0]}</span>
+                <span className="text-[13px] font-medium text-primary">Add a photo</span>
+              </Link>
+            )}
+            {profile.photoPrivate && (
+              <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-md bg-white/90 backdrop-blur px-2 py-1 text-[11px] font-medium text-on-surface">
+                <span className="material-symbols-outlined text-[14px]">lock</span> Photos private
+              </span>
+            )}
+          </div>
+
+          <CompletenessRing profile={profile} />
+
+          <div className="rounded-2xl border border-outline-variant/70 bg-white divide-y divide-outline-variant/60">
+            <button onClick={() => shareWithFamily(profile.id, profile.firstName, true)}
+              className="w-full flex items-center justify-between px-5 py-3.5 text-[14px] text-on-surface hover:bg-surface-container-low rounded-t-2xl">
+              Share with family
+              <span className="material-symbols-outlined text-[18px] text-on-surface-variant">ios_share</span>
+            </button>
+            <button onClick={() => setShowBlocked((v) => !v)}
+              className="w-full flex items-center justify-between px-5 py-3.5 text-[14px] text-on-surface hover:bg-surface-container-low">
+              Blocked members
+              <span className="material-symbols-outlined text-[18px] text-on-surface-variant">{showBlocked ? 'expand_less' : 'expand_more'}</span>
+            </button>
+            {showBlocked && (
+              <div className="px-5 py-3 space-y-2">
+                {blocked.length === 0
+                  ? <p className="text-[13px] text-on-surface-variant">You haven't blocked anyone.</p>
+                  : blocked.map((b) => (
+                    <div key={b.id} className="flex items-center justify-between text-[13px]">
+                      <span className="text-on-surface">{b.firstName} {b.lastName}</span>
+                      <button disabled={blockToggle.isPending}
+                        onClick={() => blockToggle.mutate({ profileId: b.id, block: false }, {
+                          onSuccess: () => toast.success(`${b.firstName} unblocked`),
+                        })}
+                        className="font-medium text-primary hover:underline underline-offset-4">Unblock</button>
+                    </div>
+                  ))}
+              </div>
+            )}
+            <button onClick={() => { logout(); navigate('/') }}
+              className="w-full text-left px-5 py-3.5 text-[14px] text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-b-2xl">
+              Sign out
             </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-          {/* Photo */}
-          <div className="md:col-span-2">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-              className="relative rounded-[32px] overflow-hidden aspect-[4/5] shadow-card">
-              <img src={profile.photoUrl || AVATAR_PLACEHOLDER} onError={showPlaceholderOnError}
-                alt={profile.firstName} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-6 text-white">
-                {profile.isPremium && <div className="mb-2"><PremiumBadge /></div>}
-                <h2 className="text-2xl font-black leading-tight">
-                  {profile.firstName} {profile.lastName}, {profile.age}
-                </h2>
-                <div className="flex items-center gap-1 mt-1 text-sm opacity-90">
-                  <span className="material-symbols-outlined text-[16px]">location_on</span>
-                  {profile.city}, India
-                </div>
-              </div>
-              {profile.photoPrivate && (
-                <span className="absolute top-4 left-4 flex items-center gap-1 bg-black/50 text-white text-[11px] font-bold px-3 py-1 rounded-full">
-                  <span className="material-symbols-outlined fill-icon text-[14px]">lock</span>Photos private
-                </span>
+        {/* Right: how others see you */}
+        <div>
+          <header className="pb-8">
+            <p className="text-[12px] uppercase tracking-[0.14em] text-on-surface-variant mb-3">Your profile</p>
+            <div className="flex flex-wrap items-center gap-2 mb-3">
+              {profile.isPremium && <PremiumBadge />}
+              {profile.isVerified && (
+                <span className="inline-flex items-center gap-1 text-[12px] font-medium text-on-surface-variant"><VerifiedBadge /> Verified</span>
               )}
-            </motion.div>
-
-            <div className="mt-5 space-y-4">
-              <CompletenessRing profile={profile} />
-
-              <button onClick={() => shareWithFamily(profile.id, profile.firstName, true)}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-green-50 border border-green-200 text-green-800 text-sm font-bold hover:bg-green-100 transition-colors">
-                <span className="material-symbols-outlined text-[20px]">family_restroom</span>
-                Share my profile with family
-              </button>
-
-              <div className="bg-white rounded-[24px] border border-slate-100 shadow-card">
-                <button onClick={() => setShowBlocked((v) => !v)}
-                  className="w-full flex items-center justify-between px-5 py-4 text-sm font-bold text-on-surface">
-                  <span className="flex items-center gap-2"><span className="material-symbols-outlined text-[20px]">block</span>Blocked members</span>
-                  <span className="material-symbols-outlined">{showBlocked ? 'expand_less' : 'expand_more'}</span>
-                </button>
-                {showBlocked && (
-                  <div className="px-5 pb-4 space-y-2">
-                    {blocked.length === 0
-                      ? <p className="text-sm text-on-surface-variant">You haven't blocked anyone.</p>
-                      : blocked.map((b) => (
-                        <div key={b.id} className="flex items-center justify-between text-sm">
-                          <span className="font-semibold text-on-surface">{b.firstName} {b.lastName}{b.age ? `, ${b.age}` : ''}</span>
-                          <button disabled={blockToggle.isPending}
-                            onClick={() => blockToggle.mutate({ profileId: b.id, block: false }, {
-                              onSuccess: () => toast.success(`${b.firstName} unblocked`),
-                            })}
-                            className="text-primary font-bold hover:underline">Unblock</button>
-                        </div>
-                      ))}
-                  </div>
-                )}
-              </div>
             </div>
-          </div>
-
-          {/* Info */}
-          <div className="md:col-span-3 space-y-5">
-            {/* Membership */}
-            <div className={`rounded-[28px] p-5 flex items-center gap-4 ${profile.isPremium ? 'bg-green-50 border border-green-200' : 'bg-primary-fixed border border-primary/10'}`}>
-              <span className={`material-symbols-outlined fill-icon text-3xl ${profile.isPremium ? 'text-green-700' : 'text-primary'}`}>workspace_premium</span>
-              <div className="flex-1">
-                <p className="font-black text-on-surface">{profile.isPremium ? 'Premium member' : 'Free member'}</p>
-                <p className="text-sm text-on-surface-variant">
-                  {profile.isPremium && profile.premiumUntil
-                    ? `Active until ${new Date(profile.premiumUntil).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}`
-                    : 'Upgrade to see full profiles, chat and check astro matches.'}
-                </p>
-              </div>
-              <Link to="/premium" className="text-sm font-bold text-primary hover:underline whitespace-nowrap">
-                {profile.isPremium ? 'Extend' : 'Upgrade'}
+            <h1 className="text-[44px] sm:text-[56px] leading-[1.02] text-on-surface">{profile.firstName} {profile.lastName}</h1>
+            <p className="text-[16px] text-on-surface-variant mt-3">{facts.join('  ·  ')}</p>
+            <div className="flex flex-wrap gap-2.5 mt-7">
+              <Link to="/edit-profile" className="h-11 px-6 inline-flex items-center rounded-lg bg-primary text-white text-[14px] font-semibold hover:bg-primary/90 transition-colors">
+                Edit profile
+              </Link>
+              <Link to={`/profile/${profile.id}`} className="h-11 px-5 inline-flex items-center rounded-lg border border-outline-variant bg-white text-[14px] font-medium text-on-surface hover:border-on-surface/30 transition-colors">
+                Preview as others see it
               </Link>
             </div>
+          </header>
 
-            {/* Basic Info */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }}
-              className="bg-white rounded-[28px] p-6 shadow-card border border-slate-100">
-              <div className="flex items-center gap-2 mb-4">
-                <h3 className="font-display text-2xl font-bold text-on-surface">Basic Info</h3>
-                {profile.isVerified && <VerifiedBadge size="lg" />}
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                {INFO_FIELDS.map(([label, key]) => {
-                  const value = key === null
-                    ? (profile.ageMin && profile.ageMax ? `${profile.ageMin} – ${profile.ageMax} yrs` : '—')
-                    : (key === 'nakshatra' ? nakshatraName(profile.nakshatra) : key === 'rashi' ? moonSign(profile) : profile[key]) ?? '—'
-                  return (
-                    <div key={label} className="flex flex-col gap-1">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{label}</span>
-                      <span className="font-semibold text-on-surface text-sm capitalize">{value}</span>
-                    </div>
-                  )
-                })}
-              </div>
-            </motion.div>
+          <Section title="Membership">
+            {profile.isPremium && profile.premiumUntil ? (
+              <p className="text-[15px] text-on-surface">
+                Premium until <strong className="font-semibold">{formatDate(profile.premiumUntil)}</strong>.{' '}
+                <Link to="/premium" className="text-primary hover:underline underline-offset-4">Extend</Link>
+              </p>
+            ) : (
+              <p className="text-[15px] text-on-surface-variant">
+                Free membership.{' '}
+                <Link to="/premium" className="text-primary font-medium hover:underline underline-offset-4">Upgrade to Premium</Link>{' '}
+                to see full profiles, chat and check horoscope matches.
+              </p>
+            )}
+          </Section>
 
-            {/* Bio */}
-            {profile.bio && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.4 }}
-                className="bg-white rounded-[28px] p-6 shadow-card border border-slate-100">
-                <h3 className="text-lg font-black text-on-surface mb-3">My Story</h3>
-                {profile.bio.split('\n\n').map((para, i) => (
-                  <p key={i} className="text-on-surface-variant leading-relaxed text-sm mb-3 last:mb-0">{para}</p>
+          <Section title="About me" action={editLink}>
+            {profile.bio
+              ? profile.bio.split('\n\n').map((para, i) => (
+                <p key={i} className="text-[16px] leading-[1.75] text-on-surface/85 mb-4 last:mb-0 max-w-prose">{para}</p>
+              ))
+              : <p className="text-[15px] text-on-surface-variant">Tell people a little about yourself — it's the first thing they read.</p>}
+          </Section>
+
+          <Section title="Details" action={editLink}>
+            <dl className="grid grid-cols-2 gap-x-8 gap-y-5">
+              {DETAIL_FIELDS.map(([label, key]) => (
+                <div key={key}>
+                  <dt className="text-[12px] uppercase tracking-[0.1em] text-on-surface-variant">{label}</dt>
+                  <dd className="text-[15px] text-on-surface mt-1">{value(key) ?? '—'}</dd>
+                </div>
+              ))}
+            </dl>
+          </Section>
+
+          {tags.length > 0 && (
+            <Section title="Interests & lifestyle" action={editLink}>
+              <div className="flex flex-wrap gap-2">
+                {tags.map((t) => (
+                  <span key={t} className="rounded-full border border-outline-variant px-3.5 py-1.5 text-[13px] text-on-surface">{t}</span>
                 ))}
-              </motion.div>
-            )}
+              </div>
+            </Section>
+          )}
 
-            {/* Interests */}
-            {(profile.interests ?? []).length > 0 && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.4 }}
-                className="bg-tertiary-fixed rounded-[28px] p-6">
-                <h3 className="text-base font-black text-on-tertiary-fixed mb-3 flex items-center gap-2">
-                  <span className="material-symbols-outlined text-lg">palette</span> Interests
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {profile.interests.map((tag) => (
-                    <span key={tag} className="bg-white/40 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-bold text-on-tertiary-container">{tag}</span>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
-            {/* Lifestyle */}
-            {(profile.lifestyle ?? []).length > 0 && (
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.4 }}
-                className="bg-secondary-fixed rounded-[28px] p-6">
-                <h3 className="text-base font-black text-on-secondary-fixed-variant mb-3 flex items-center gap-2">
-                  <span className="material-symbols-outlined text-lg">fitness_center</span> Lifestyle
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {profile.lifestyle.map((tag) => (
-                    <span key={tag} className="bg-white/40 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-bold text-on-secondary-container">{tag}</span>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </div>
+          {preferences && (
+            <Section title="Partner preferences" action={editLink}>
+              <p className="text-[15px] text-on-surface">{preferences}.</p>
+            </Section>
+          )}
         </div>
-      </main>
-    </motion.div>
+      </div>
+    </motion.main>
   )
 }

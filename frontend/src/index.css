@@ -4,8 +4,8 @@
 
 :root {
   /* Brand gradient used on primary buttons and accents */
-  --gradient-primary: linear-gradient(135deg, #6A1834 0%, #9E3654 100%);
-  --gradient-gold: linear-gradient(135deg, #B8893B 0%, #E2C27D 100%);
+  --gradient-primary: #7A1F3D;
+  --gradient-gold: #C9A45C;
   /* Brand colors — overridden at runtime by TenantContext */
   --color-primary: #7A1F3D;
   --color-primary-container: #A8445E;
@@ -94,13 +94,13 @@
   }
 
   .material-symbols-outlined {
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
     vertical-align: middle;
     user-select: none;
   }
 
   .fill-icon {
-    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
   }
 }
 

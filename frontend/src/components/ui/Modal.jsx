@@ -18,9 +18,9 @@ export default function Modal({ open, onClose, title, children }) {
           onPointerDown={(e) => e.target === e.currentTarget && onClose()}>
           <motion.div role="dialog" aria-modal="true" aria-label={title}
             initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }}
-            className="w-full sm:max-w-md bg-white rounded-t-[28px] sm:rounded-[28px] p-6 pb-8 shadow-float max-h-[90vh] overflow-y-auto">
+            className="w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl p-6 pb-8 shadow-float max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-black text-on-surface">{title}</h2>
+              <h2 className="text-lg font-semibold text-on-surface">{title}</h2>
               <button onClick={onClose} aria-label="Close" className="p-1.5 rounded-full hover:bg-surface text-on-surface-variant">
                 <span className="material-symbols-outlined">close</span>
               </button>

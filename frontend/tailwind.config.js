@@ -109,8 +109,9 @@ export default {
         base: '8px',
       },
       boxShadow: {
-        card: '0 1px 2px rgba(46,6,20,0.04), 0 8px 24px rgba(46,6,20,0.05)',
-        'card-hover': '0 2px 4px rgba(46,6,20,0.05), 0 18px 44px rgba(46,6,20,0.10)',
+        // Hairline-first: surfaces rely on borders, shadows stay barely there
+        card: '0 1px 2px rgba(31,26,28,0.04)',
+        'card-hover': '0 6px 20px rgba(31,26,28,0.06)',
         nav: '0 1px 0 rgba(46,6,20,0.06)',
         float: 'var(--shadow-float)',
         'btn-primary': 'var(--shadow-btn-primary)',

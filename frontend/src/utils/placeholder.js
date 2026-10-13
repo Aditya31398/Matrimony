@@ -3,9 +3,9 @@ export const AVATAR_PLACEHOLDER =
   'data:image/svg+xml;utf8,' +
   encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 150">' +
-      '<rect width="120" height="150" fill="#F0E9E0"/>' +
-      '<circle cx="60" cy="58" r="26" fill="#DCCFC3"/>' +
-      '<path d="M14 150c4-36 24-52 46-52s42 16 46 52z" fill="#DCCFC3"/>' +
+      '<rect width="120" height="150" fill="#ECEEF2"/>' +
+      '<circle cx="60" cy="58" r="26" fill="#D3D8E1"/>' +
+      '<path d="M14 150c4-36 24-52 46-52s42 16 46 52z" fill="#D3D8E1"/>' +
     '</svg>'
   )
 

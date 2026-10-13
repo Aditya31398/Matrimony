@@ -33,8 +33,8 @@ export default function CompletenessRing({ profile, compact = false }) {
     <div className="bg-white rounded-2xl border border-outline-variant/70 p-5 flex items-center gap-5">
       <div className="relative w-16 h-16 flex-shrink-0">
         <svg viewBox="0 0 36 36" className="w-16 h-16 -rotate-90">
-          <circle cx="18" cy="18" r="16" fill="none" stroke="#F0E9E0" strokeWidth="2" />
-          <circle cx="18" cy="18" r="16" fill="none" stroke="#7A1F3D" strokeWidth="2" strokeLinecap="round"
+          <circle cx="18" cy="18" r="16" fill="none" stroke="#ECEEF2" strokeWidth="2" />
+          <circle cx="18" cy="18" r="16" fill="none" stroke="#1F2A44" strokeWidth="2" strokeLinecap="round"
             strokeDasharray={`${percent} 100`} pathLength="100" style={{ transition: 'stroke-dasharray 600ms ease' }} />
         </svg>
         <span className="absolute inset-0 flex items-center justify-center font-display text-[18px] text-on-surface">{percent}%</span>

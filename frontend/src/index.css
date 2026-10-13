@@ -4,59 +4,59 @@
 
 :root {
   /* Brand gradient used on primary buttons and accents */
-  --gradient-primary: #7A1F3D;
-  --gradient-gold: #C9A45C;
+  --gradient-primary: #1F2A44;
+  --gradient-gold: #C6A15B;
   /* Brand colors — overridden at runtime by TenantContext */
-  --color-primary: #7A1F3D;
-  --color-primary-container: #A8445E;
+  --color-primary: #1F2A44;
+  --color-primary-container: #3A4A6B;
   --color-on-primary: #ffffff;
-  --color-on-primary-container: #3E0A1C;
-  --color-primary-fixed: #F6E6EA;
-  --color-primary-fixed-dim: #E8C6CF;
-  --color-on-primary-fixed: #2E0614;
-  --color-on-primary-fixed-variant: #5E1730;
-  --color-inverse-primary: #E8C6CF;
-  --color-secondary: #9A7330;
-  --color-secondary-container: #D9B878;
+  --color-on-primary-container: #0E1526;
+  --color-primary-fixed: #E8ECF4;
+  --color-primary-fixed-dim: #C9D1E2;
+  --color-on-primary-fixed: #0E1526;
+  --color-on-primary-fixed-variant: #2E3B5A;
+  --color-inverse-primary: #C9D1E2;
+  --color-secondary: #A8873F;
+  --color-secondary-container: #E6CF9C;
   --color-on-secondary: #ffffff;
-  --color-on-secondary-container: #4A3510;
-  --color-secondary-fixed: #F5ECDA;
-  --color-secondary-fixed-dim: #E8D3A8;
-  --color-on-secondary-fixed: #2B1E05;
-  --color-on-secondary-fixed-variant: #6B4F1E;
-  --color-tertiary: #6E4A63;
-  --color-tertiary-container: #B593AA;
+  --color-on-secondary-container: #3D2E0C;
+  --color-secondary-fixed: #F6EEDC;
+  --color-secondary-fixed-dim: #EAD9B3;
+  --color-on-secondary-fixed: #2B2008;
+  --color-on-secondary-fixed-variant: #6E5520;
+  --color-tertiary: #4A5872;
+  --color-tertiary-container: #9AA6BD;
   --color-on-tertiary: #ffffff;
-  --color-on-tertiary-container: #3A2233;
-  --color-tertiary-fixed: #F2E8EF;
-  --color-tertiary-fixed-dim: #E0CCDA;
-  --color-on-tertiary-fixed: #2A1424;
-  --color-on-tertiary-fixed-variant: #57384E;
-  --color-surface: #FAF7F2;
-  --color-surface-dim: #E9E3DA;
-  --color-surface-bright: #FFFDFA;
+  --color-on-tertiary-container: #1E2636;
+  --color-tertiary-fixed: #EEF1F6;
+  --color-tertiary-fixed-dim: #D7DDE8;
+  --color-on-tertiary-fixed: #141B28;
+  --color-on-tertiary-fixed-variant: #3A465C;
+  --color-surface: #FAFAFB;
+  --color-surface-dim: #E2E5EB;
+  --color-surface-bright: #FFFFFF;
   --color-surface-container-lowest: #FFFFFF;
-  --color-surface-container-low: #F6F1EA;
-  --color-surface-container: #F0E9E0;
-  --color-surface-container-high: #E9E1D6;
-  --color-surface-container-highest: #E2D9CC;
-  --color-surface-variant: #ECE3D7;
-  --color-on-surface: #1F1A1C;
-  --color-on-surface-variant: #5F5357;
-  --color-inverse-surface: #2F2A2C;
-  --color-inverse-on-surface: #F6F1EA;
-  --color-outline: #9A8B84;
-  --color-outline-variant: #E3D6CC;
-  --color-surface-tint: #7A1F3D;
-  --color-background: #FAF7F2;
-  --color-on-background: #1F1A1C;
+  --color-surface-container-low: #F4F5F8;
+  --color-surface-container: #ECEEF2;
+  --color-surface-container-high: #E4E7EC;
+  --color-surface-container-highest: #DCE0E7;
+  --color-surface-variant: #E6E9EF;
+  --color-on-surface: #1A1D24;
+  --color-on-surface-variant: #5A6170;
+  --color-inverse-surface: #2A2E37;
+  --color-inverse-on-surface: #F4F5F8;
+  --color-outline: #8A90A0;
+  --color-outline-variant: #E2E5EB;
+  --color-surface-tint: #1F2A44;
+  --color-background: #FAFAFB;
+  --color-on-background: #1A1D24;
   --color-error: #ba1a1a;
   --color-on-error: #ffffff;
   --color-error-container: #ffdad6;
   --color-on-error-container: #93000a;
-  --shadow-btn-primary: 0 8px 24px rgba(122,31,61,0.22);
-  --shadow-btn-primary-hover: 0 12px 32px rgba(122,31,61,0.30);
-  --shadow-float: 0 24px 60px rgba(46,6,20,0.12);
+  --shadow-btn-primary: 0 8px 24px rgba(31,42,68,0.18);
+  --shadow-btn-primary-hover: 0 12px 32px rgba(31,42,68,0.24);
+  --shadow-float: 0 24px 60px rgba(17,24,39,0.12);
 }
 
 @layer base {
@@ -84,12 +84,12 @@
   }
 
   ::selection {
-    background-color: #F6E6EA;
-    color: #2E0614;
+    background-color: #E8ECF4;
+    color: #0E1526;
   }
 
   :focus-visible {
-    outline: 2px solid #B8893B;
+    outline: 2px solid #C6A15B;
     outline-offset: 2px;
   }
 
@@ -129,7 +129,7 @@
   }
 
   .gradient-sunset {
-    background: linear-gradient(135deg, #7A1F3D 0%, #B5627A 50%, #F2E8EF 100%);
+    background: linear-gradient(135deg, #1F2A44 0%, #4A5872 50%, #EEF1F6 100%);
   }
 
   .blob {
@@ -170,7 +170,7 @@
   }
 
   .shimmer {
-    background: linear-gradient(90deg, #F6F1EA 25%, #ECE3D7 50%, #F6F1EA 75%);
+    background: linear-gradient(90deg, #F4F5F8 25%, #E9ECF1 50%, #F4F5F8 75%);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
   }

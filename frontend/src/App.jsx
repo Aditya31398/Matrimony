@@ -51,7 +51,7 @@ export default function App() {
             toastOptions={{
               duration: 3000,
               style: { borderRadius: '16px', fontWeight: 600, fontSize: '14px' },
-              success: { iconTheme: { primary: '#7A1F3D', secondary: '#fff' } },
+              success: { iconTheme: { primary: '#1F2A44', secondary: '#fff' } },
             }}
           />
           <Navbar />

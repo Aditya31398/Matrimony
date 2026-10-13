@@ -82,7 +82,7 @@ export default function DiscoverPage() {
               aria-pressed={activeChip === value}
               className={`flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[13px] font-medium whitespace-nowrap border transition-colors ${
                 activeChip === value
-                  ? 'bg-on-surface text-white border-on-surface'
+                  ? 'bg-primary text-white border-primary'
                   : 'bg-white text-on-surface-variant border-outline-variant hover:text-on-surface hover:border-on-surface/30'
               }`}>
               <span className="material-symbols-outlined text-[17px]">{icon}</span>
@@ -114,7 +114,7 @@ export default function DiscoverPage() {
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gold-400">Premium</p>
             <p className="font-display text-[22px] leading-snug mt-0.5">See full profiles, chat freely and check horoscope compatibility</p>
           </div>
-          <span className="text-[13px] font-semibold text-[#2B1E05] bg-[#C9A45C] rounded-lg px-4 py-2 self-start sm:self-auto">View plans</span>
+          <span className="text-[13px] font-semibold text-primary bg-gold-500 rounded-lg px-4 py-2 self-start sm:self-auto">View plans</span>
         </Link>
       )}
 

@@ -37,7 +37,7 @@ export default function Navbar() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      className="sticky top-0 z-50 w-full bg-[#FFFDFA]/85 backdrop-blur-xl border-b border-outline-variant/70"
+      className="sticky top-0 z-50 w-full bg-white/85 backdrop-blur-xl border-b border-outline-variant/70"
     >
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
         <Link to="/" className="font-display text-[30px] leading-none font-bold tracking-tight text-primary select-none">

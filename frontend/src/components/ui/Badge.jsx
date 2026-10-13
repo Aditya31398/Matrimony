@@ -12,7 +12,7 @@ export function VerifiedBadge({ size = 'sm' }) {
 
 export function PremiumBadge() {
   return (
-    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-bold tracking-[0.12em] uppercase text-[#2B1E05]"
+    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-bold tracking-[0.12em] uppercase text-primary"
       style={{ background: 'var(--gradient-gold)' }}>
       <span className="material-symbols-outlined fill-icon text-[13px]">workspace_premium</span>
       Premium

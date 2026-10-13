@@ -57,7 +57,7 @@ export default function PremiumPage() {
         name: brand,
         description: `Premium · ${order.planLabel}`,
         prefill: { name: order.name, email: order.email, contact: order.phone },
-        theme: { color: '#7A1F3D' },
+        theme: { color: '#1F2A44' },
         handler: async (resp) => {
           try {
             const result = await paymentService.verify({

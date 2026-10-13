@@ -9,17 +9,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Warm champagne/blush scale; replaces Tailwind's bright orange used for tints and borders
+        // Soft gold tints; replaces Tailwind's bright orange used for tints and borders
         orange: {
-          50: '#FBF6F1', 100: '#F4E9DE', 200: '#E9D6C3', 300: '#DDBF9F', 400: '#C99A6B',
-          500: '#B8893B', 600: '#9A6F2C', 700: '#7C5822', 800: '#5E4219', 900: '#402D11',
+          50: '#FBF8F1', 100: '#F5EEDC', 200: '#EADDBF', 300: '#DCC798', 400: '#D4B57A',
+          500: '#C6A15B', 600: '#9C7C3A', 700: '#7C622C', 800: '#5C4920', 900: '#3D3015',
         },
-        gold: { 400: '#D4B06A', 500: '#B8893B', 600: '#9A6F2C' },
-        // Warm greys so neutral text/borders sit naturally on the ivory background
-        slate: {
-          50: '#F8F5F1', 100: '#F0EBE5', 200: '#E3DBD2', 300: '#CFC4B9', 400: '#A89C93',
-          500: '#857971', 600: '#645A54', 700: '#4A423E', 800: '#312B29', 900: '#1F1A1C',
-        },
+        gold: { 400: '#D4B57A', 500: '#C6A15B', 600: '#9C7C3A' },
         primary: themeColor('--color-primary'),
         'primary-container': themeColor('--color-primary-container'),
         'on-primary': themeColor('--color-on-primary'),
@@ -110,8 +105,8 @@ export default {
       },
       boxShadow: {
         // Hairline-first: surfaces rely on borders, shadows stay barely there
-        card: '0 1px 2px rgba(31,26,28,0.04)',
-        'card-hover': '0 6px 20px rgba(31,26,28,0.06)',
+        card: '0 1px 2px rgba(17,24,39,0.04)',
+        'card-hover': '0 6px 20px rgba(17,24,39,0.07)',
         nav: '0 1px 0 rgba(46,6,20,0.06)',
         float: 'var(--shadow-float)',
         'btn-primary': 'var(--shadow-btn-primary)',

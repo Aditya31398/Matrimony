@@ -137,7 +137,8 @@ export default function EditProfilePage() {
         matchingTradition: form.matchingTradition || 'AUTO',
         papaPoints: form.papaPoints === '' ? undefined : Number(form.papaPoints),
       })
-      queryClient.invalidateQueries({ queryKey: ['my-profile'] })
+      // Match %, picks, Discover and horoscope results all depend on your own details
+      queryClient.invalidateQueries()
       toast.success('Profile updated!')
       navigate('/my-profile')
     } catch (e) {

@@ -16,6 +16,7 @@ import com.soulsync.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
@@ -169,6 +170,8 @@ public class ProfileService {
                 .toList();
     }
 
+    /** Evicts the cached "looking for" filter so Discover reflects the change straight away. */
+    @CacheEvict(value = "genderFilter", key = "#id")
     @Transactional
     public ProfileDTO update(Long id, ProfileUpdateDTO req) {
         Profile profile = profileRepo.findById(id)

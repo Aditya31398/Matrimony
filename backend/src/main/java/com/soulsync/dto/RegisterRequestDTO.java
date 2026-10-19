@@ -1,5 +1,8 @@
 package com.soulsync.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.soulsync.astrology.StarFieldDeserializers;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -49,10 +52,13 @@ public class RegisterRequestDTO {
     private String height;
     private String motherTongue;
     private String dietaryPreference;
-    private String horoscope;
     private String caste;
-    private String nakshatra;
-    private String rashi;
+
+    // Vedic matching fields (optional at registration)
+    @JsonDeserialize(using = StarFieldDeserializers.Nakshatra.class)
+    private Integer nakshatra;  // 1–27
+    @JsonDeserialize(using = StarFieldDeserializers.Rashi.class)
+    private Integer rashi;      // 1–12
     private Boolean isManglik;
     private String matchingTradition;   // ASHTAKOOTA | DASHAKOOTA | null
     private Integer papaPoints;

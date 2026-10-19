@@ -4,7 +4,9 @@ import ProfileCard from '../components/ui/ProfileCard'
 import InterestCard from '../components/ui/InterestCard'
 import { NewBadge } from '../components/ui/Badge'
 import { SkeletonProfileCard, SkeletonInterestCard } from '../components/ui/SkeletonCard'
-import { useTopPicks, useViewers } from '../hooks/useProfiles'
+import { useViewers, useMyProfile } from '../hooks/useProfiles'
+import { useDailyPicks } from '../hooks/useFeatures'
+import CompletenessRing from '../components/ui/CompletenessRing'
 import { useInterested, useMatches } from '../hooks/useMatches'
 import { useConversations } from '../hooks/useMessages'
 import { AVATAR_PLACEHOLDER, showPlaceholderOnError } from '../utils/placeholder'
@@ -29,7 +31,8 @@ const fadeUp = {
 }
 
 export default function DashboardPage() {
-  const { data: topPicks = [], isLoading: picksLoading } = useTopPicks()
+  const { data: topPicks = [], isLoading: picksLoading } = useDailyPicks()
+  const { data: me } = useMyProfile()
   const { data: interestedList = [], isLoading: intLoading } = useInterested()
   const { data: convList = [], isLoading: convLoading } = useConversations()
   const { data: matches = [] } = useMatches()
@@ -43,25 +46,36 @@ export default function DashboardPage() {
       className="max-w-[1280px] mx-auto px-6 py-8 pb-32"
     >
       {/* Header */}
-      <header className="mb-12">
-        <h1 className="text-display-xl font-black text-on-surface mb-2">Find your SoulSync</h1>
+      <header className="mb-10">
+        <h1 className="text-display-xl font-black text-on-surface mb-2">
+          {me?.firstName ? `Hi ${me.firstName}` : 'Find your SoulSync'}
+        </h1>
         <p className="text-body-lg text-on-surface-variant">Here are your personalized matches for today.</p>
       </header>
+
+      {me && (
+        <div className="mb-12 max-w-2xl">
+          <CompletenessRing profile={me} compact />
+        </div>
+      )}
 
       {/* ── Top Picks ───────────────────────────────────────────────── */}
       <section className="mb-16">
         <div className="flex justify-between items-end mb-6">
-          <h2 className="text-headline-lg font-black text-on-surface">Top Picks for You</h2>
+          <div>
+            <h2 className="text-headline-lg font-black text-on-surface">Today's Top 5</h2>
+            <p className="text-sm text-on-surface-variant">Best matches for your preferences · refreshes every day</p>
+          </div>
           <Link to="/discover" className="text-sm font-bold text-primary hover:underline">View All</Link>
         </div>
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
           variants={stagger}
           initial="hidden"
           animate="show"
         >
           {picksLoading
-            ? [...Array(4)].map((_, i) => (
+            ? [...Array(5)].map((_, i) => (
                 <motion.div key={i} variants={fadeUp}><SkeletonProfileCard /></motion.div>
               ))
             : topPicks.length === 0

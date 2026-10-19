@@ -226,7 +226,7 @@ export default function MessagesPage() {
                             ? 'rounded-[24px] rounded-br-[4px] text-white'
                             : 'rounded-[24px] rounded-bl-[4px] bg-surface text-on-surface'
                         }`}
-                        style={msg.isOwn ? { background: 'linear-gradient(135deg, #ae3115, #ff6b4a)' } : {}}>
+                        style={msg.isOwn ? { background: 'var(--gradient-primary)' } : {}}>
                         {msg.content}
                       </div>
                       <div className="flex items-center gap-1 mx-2">
@@ -265,7 +265,7 @@ export default function MessagesPage() {
                   </p>
                   <Link to="/premium"
                     className="px-4 py-2 rounded-xl text-white text-sm font-bold shadow-btn-primary active:scale-95 transition-all"
-                    style={{ background: 'linear-gradient(135deg, #ae3115, #ff6b4a)' }}>
+                    style={{ background: 'var(--gradient-primary)' }}>
                     Upgrade
                   </Link>
                 </div>

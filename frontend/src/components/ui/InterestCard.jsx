@@ -37,7 +37,11 @@ export default function InterestCard({ match }) {
           </h4>
           {isVerified && <VerifiedBadge />}
         </div>
-        <p className="text-on-surface-variant text-sm mb-3 truncate">{subtitle || '\u00a0'}</p>
+        <p className="text-on-surface-variant text-sm truncate">{subtitle || '\u00a0'}</p>
+        {match.note && (
+          <p className="text-xs text-on-surface italic bg-orange-50 rounded-xl px-3 py-2 my-2 line-clamp-3">“{match.note}”</p>
+        )}
+        <div className="mb-3" />
         <div className="flex gap-2">
           <button
             onClick={() => accept.mutate(id, {

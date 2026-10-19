@@ -57,7 +57,7 @@ export default function PremiumPage() {
         name: brand,
         description: `Premium · ${order.planLabel}`,
         prefill: { name: order.name, email: order.email, contact: order.phone },
-        theme: { color: '#ae3115' },
+        theme: { color: '#5B2A4E' },
         handler: async (resp) => {
           try {
             const result = await paymentService.verify({
@@ -158,7 +158,7 @@ export default function PremiumPage() {
 
           <button onClick={handlePay} disabled={paying || !configured}
             className="w-full max-w-md mx-auto flex py-4 rounded-2xl text-white font-bold text-lg items-center justify-center gap-2 shadow-btn-primary hover:shadow-btn-primary-hover active:scale-95 transition-all disabled:opacity-60"
-            style={{ background: 'linear-gradient(135deg, #ae3115, #ff6b4a)' }}>
+            style={{ background: 'var(--gradient-primary)' }}>
             {paying
               ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               : <><span className="material-symbols-outlined">lock</span>Pay securely with Razorpay</>}

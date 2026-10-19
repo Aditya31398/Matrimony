@@ -1,5 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useAuth } from '../../context/AuthContext'
 
 const navItems = [
   { to: '/discover', icon: 'explore', label: 'Feed' },
@@ -10,6 +11,9 @@ const navItems = [
 
 export default function BottomNav() {
   const location = useLocation()
+  const { isLoggedIn } = useAuth()
+  // Every tab needs an account, so signed-out visitors don't get the bar
+  if (!isLoggedIn) return null
 
   return (
     <motion.nav

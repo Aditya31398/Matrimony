@@ -10,8 +10,3 @@ export const paymentService = {
   verify: ({ orderId, paymentId, signature }) =>
     api.post('/payments/verify', { orderId, paymentId, signature }).then((r) => r.data),
 }
-
-export const astroService = {
-  match: (profileId) =>
-    api.get(`/astro/match/${profileId}`).then((r) => r.data),
-}

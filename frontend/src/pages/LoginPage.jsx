@@ -100,7 +100,7 @@ export default function LoginPage() {
 
       <div className="max-w-md w-full relative z-10">
         <div className="text-center mb-10">
-          <Link to="/" className="text-3xl font-black tracking-tighter text-primary inline-block mb-6">SoulSync</Link>
+          <Link to="/" className="font-display text-[40px] leading-none font-bold text-primary inline-block mb-6">SoulSync</Link>
           <h1 className="text-3xl font-black text-on-surface mb-2">Welcome back</h1>
           <p className="text-on-surface-variant">Sign in to continue your journey</p>
         </div>
@@ -163,7 +163,7 @@ export default function LoginPage() {
                 />
                 <button type="button" onClick={handleVerifyOtp} disabled={verifying || otp.length !== 6}
                   className="w-full py-3 rounded-xl text-white font-bold flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-60"
-                  style={{ background: 'linear-gradient(135deg, #ae3115, #ff6b4a)' }}>
+                  style={{ background: 'var(--gradient-primary)' }}>
                   {verifying
                     ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     : 'Verify & Sign In'}
@@ -180,7 +180,7 @@ export default function LoginPage() {
             type="submit"
             disabled={loading}
             className="w-full py-4 rounded-2xl text-white font-bold text-lg flex items-center justify-center gap-2 shadow-btn-primary hover:shadow-btn-primary-hover hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-60"
-            style={{ background: 'linear-gradient(135deg, #ae3115, #ff6b4a)' }}
+            style={{ background: 'var(--gradient-primary)' }}
           >
             {loading
               ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

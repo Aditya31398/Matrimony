@@ -5,8 +5,10 @@ import StarRating from '../components/ui/StarRating'
 import { useStories } from '../hooks/useStories'
 import { SkeletonStoryCard } from '../components/ui/SkeletonCard'
 
-const HERO_IMG =
-  'https://images.unsplash.com/photo-1529634597503-139d3726fed5?w=1400&q=85'
+const HERO_BASE = 'https://images.unsplash.com/photo-1529634597503-139d3726fed5?auto=format&q=70'
+const HERO_IMG = `${HERO_BASE}&w=1400`
+// Phones download a ~640px image instead of the 1400px desktop one
+const HERO_SRCSET = [640, 1024, 1400].map((w) => `${HERO_BASE}&w=${w} ${w}w`).join(', ')
 
 const HOW_IT_WORKS = [
   {
@@ -58,7 +60,8 @@ export default function HomePage() {
       <section className="relative min-h-[90vh] flex items-center overflow-hidden pt-8">
         {/* Background image */}
         <div className="absolute inset-0 z-0">
-          <img src={HERO_IMG} alt="Couple" className="w-full h-full object-cover" />
+          <img src={HERO_IMG} srcSet={HERO_SRCSET} sizes="100vw" alt="Couple"
+            fetchPriority="high" decoding="async" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-white via-white/85 to-white/20" />
         </div>
 

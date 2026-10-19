@@ -1,6 +1,7 @@
 package com.soulsync.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import net.coobird.thumbnailator.Thumbnails;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,10 +12,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -28,6 +36,10 @@ public class UploadController {
     private static final long MAX_SIZE = 5 * 1024 * 1024; // 5 MB
     private static final Set<String> ALLOWED_MIME_TYPES =
             Set.of("image/jpeg", "image/png", "image/webp");
+    /** Longest edge stored; enough for a full-screen profile photo on a retina phone. */
+    private static final int MAX_DIMENSION = 1400;
+    /** Below this size a reasonably sized photo is stored as uploaded. */
+    private static final int KEEP_ORIGINAL_BYTES = 400 * 1024;
 
     private final Path uploadRoot;
     private final TaskExecutor uploadExecutor;
@@ -69,9 +81,11 @@ public class UploadController {
                     .body(Map.of("message", "File content does not match an allowed image format")));
         }
 
+        // Large JPEG/PNG photos are re-encoded as a smaller JPEG (WebP has no built-in decoder)
+        boolean shrink = needsShrinking(bytes, contentType);
         Long profileId = (Long) request.getAttribute("profileId");
         String relativePath = "photos/" + (profileId != null ? profileId : "unknown")
-                + "/" + UUID.randomUUID() + extensionFor(contentType);
+                + "/" + UUID.randomUUID() + (shrink ? ".jpg" : extensionFor(contentType));
         // Resolve the public URL on the request thread (request context is unavailable in the pool)
         String url = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/uploads/" + relativePath)
@@ -83,7 +97,7 @@ public class UploadController {
             try {
                 Path target = uploadRoot.resolve(relativePath);
                 Files.createDirectories(target.getParent());
-                Files.write(target, bytes);
+                Files.write(target, shrink ? shrink(bytes) : bytes);
                 log.info("Photo uploaded for profile {}", profileId);
                 return ResponseEntity.ok(Map.<String, String>of("url", url));
             } catch (IOException e) {
@@ -92,6 +106,40 @@ public class UploadController {
                         .body(Map.of("message", "Upload failed, please try again"));
             }
         }, uploadExecutor);
+    }
+
+    static boolean needsShrinking(byte[] bytes, String contentType) {
+        if (contentType.equalsIgnoreCase("image/webp")) return false;
+        if (bytes.length > KEEP_ORIGINAL_BYTES) return true;
+        // Read only the header to get dimensions; decoding the whole image here isn't needed
+        try (ImageInputStream in = ImageIO.createImageInputStream(new ByteArrayInputStream(bytes))) {
+            Iterator<ImageReader> readers = ImageIO.getImageReaders(in);
+            if (!readers.hasNext()) return false;
+            ImageReader reader = readers.next();
+            try {
+                reader.setInput(in);
+                return Math.max(reader.getWidth(0), reader.getHeight(0)) > MAX_DIMENSION;
+            } finally {
+                reader.dispose();
+            }
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    /** Fit within MAX_DIMENSION as a quality-82 JPEG; keeps the original if anything goes wrong. */
+    static byte[] shrink(byte[] bytes) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            Thumbnails.of(new ByteArrayInputStream(bytes))
+                    .size(MAX_DIMENSION, MAX_DIMENSION)
+                    .outputFormat("jpg")
+                    .outputQuality(0.82)
+                    .toOutputStream(out);
+            return out.toByteArray();
+        } catch (IOException | RuntimeException e) {
+            log.warn("Could not resize photo, storing original: {}", e.getMessage());
+            return bytes;
+        }
     }
 
     private static String extensionFor(String contentType) {

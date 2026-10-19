@@ -24,7 +24,6 @@ public class ProfileDTO {
     private String motherTongue;
     private String dietaryPreference;
     private String education;
-    private String horoscope;
     private String bio;
     private String photoUrl;
     private List<String> photos;
@@ -37,14 +36,20 @@ public class ProfileDTO {
     private Integer ageMin;
     private Integer ageMax;
     private String phone;
-    private String nakshatra;
-    private String rashi;
+    private Integer nakshatra;
+    private Integer rashi;
     private Boolean isManglik;
     private String matchingTradition;
     private Integer papaPoints;
     private LocalDateTime premiumUntil;
     /** True when details were withheld because the viewer isn't premium */
     private boolean restricted;
+    /** Own profile only: whether photos are hidden until connected */
+    private Boolean photoPrivate;
+    /** True when the member keeps photos private and the viewer isn't connected */
+    private boolean photoHidden;
+    /** The viewer has blocked this member */
+    private boolean blockedByMe;
 
     public static ProfileDTO from(Profile p) {
         return ProfileDTO.builder()
@@ -61,7 +66,6 @@ public class ProfileDTO {
                 .motherTongue(p.getMotherTongue())
                 .dietaryPreference(p.getDietaryPreference())
                 .education(p.getEducation())
-                .horoscope(p.getHoroscope())
                 .bio(p.getBio())
                 .photoUrl(p.getPhotoUrl())
                 .photos(splitTags(p.getPhotos()))

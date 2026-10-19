@@ -28,6 +28,10 @@ public class ProfileSummaryDTO {
     private LocalDateTime lastSeenAt;
     /** True when details were withheld because the viewer isn't premium */
     private boolean restricted;
+    /** True when the member keeps photos private and the viewer isn't connected */
+    private boolean photoHidden;
+    /** Preference-based compatibility with the viewer, 0–100 (null when not enough data) */
+    private Integer matchScore;
 
     public static ProfileSummaryDTO from(Profile p) {
         boolean online = p.getLastSeenAt() != null &&

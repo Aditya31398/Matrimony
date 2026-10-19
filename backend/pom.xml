@@ -88,6 +88,13 @@
       <scope>runtime</scope>
     </dependency>
 
+    <!-- Photo resizing (applies EXIF orientation, so phone photos stay upright) -->
+    <dependency>
+      <groupId>net.coobird</groupId>
+      <artifactId>thumbnailator</artifactId>
+      <version>0.4.20</version>
+    </dependency>
+
     <!-- WebSocket / STOMP -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

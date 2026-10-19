@@ -29,4 +29,20 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
           AND m.status = 'ACCEPTED'
     """)
     List<Match> findAcceptedMatches(@Param("profile") Profile profile);
+
+    /** Ids of everyone the profile is connected with (accepted either way). */
+    @Query("""
+        SELECT CASE WHEN m.senderProfile.id = :id THEN m.receiverProfile.id ELSE m.senderProfile.id END
+        FROM Match m
+        WHERE (m.senderProfile.id = :id OR m.receiverProfile.id = :id) AND m.status = 'ACCEPTED'
+    """)
+    List<Long> findConnectedIds(@Param("id") Long profileId);
+
+    /** Ids the profile has any request/match history with (not counting private shortlists). */
+    @Query("""
+        SELECT CASE WHEN m.senderProfile.id = :id THEN m.receiverProfile.id ELSE m.senderProfile.id END
+        FROM Match m
+        WHERE (m.senderProfile.id = :id OR m.receiverProfile.id = :id) AND m.status <> 'SHORTLISTED'
+    """)
+    List<Long> findInteractedIds(@Param("id") Long profileId);
 }

@@ -68,6 +68,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/upload/**").permitAll()
                 // Uploaded photos are served publicly so <img> tags can load them
                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+                // Family share links are opened without an account (token-protected)
+                .requestMatchers(HttpMethod.GET, "/api/public/share/**").permitAll()
                 // Razorpay server-to-server callback (verified by HMAC signature)
                 .requestMatchers(HttpMethod.POST, "/api/payments/webhook").permitAll()
                 // Public success stories (landing page)

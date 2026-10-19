@@ -12,7 +12,7 @@
     "notifications": "सूचनाएं"
   },
   "footer": {
-    "tagline": "© 2024 {{name}}. {{tagline}}.",
+    "tagline": "© {{year}} {{name}}. {{tagline}}.",
     "privacy": "गोपनीयता नीति",
     "terms": "सेवा की शर्तें",
     "safety": "सुरक्षा गाइड",

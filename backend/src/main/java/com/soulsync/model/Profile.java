@@ -71,9 +71,9 @@ public class Profile {
     @Column(length = 120)
     private String education;
 
-    @Column(length = 80)
-    private String horoscope;
-
+    // Vedic astrology — used by the horoscope matching engine
+    private Integer nakshatra;   // 1–27 (Ashwini to Revati)
+    private Integer rashi;       // 1–12 (Aries to Pisces); if null, derived from nakshatra
     private Boolean isManglik;
 
     // Optional family tradition override: ASHTAKOOTA | DASHAKOOTA; null = decide from language
@@ -85,14 +85,6 @@ public class Profile {
 
     @Column(length = 20)
     private String phone;
-
-    /** Birth star — one of Astrology.NAKSHATRAS; used for Guna Milan */
-    @Column(length = 30)
-    private String nakshatra;
-
-    /** Moon sign — one of Astrology.RASHIS */
-    @Column(length = 20)
-    private String rashi;
 
     @Column(columnDefinition = "TEXT")
     private String bio;
@@ -110,6 +102,10 @@ public class Profile {
     private Boolean isPremium = false;
 
     private LocalDateTime premiumUntil;
+
+    /** When true, photos are shown only to members this profile has connected with */
+    @Builder.Default
+    private Boolean photoPrivate = false;
 
     // Interests stored as comma-separated for simplicity; a join-table can replace this
     @Column(columnDefinition = "TEXT")

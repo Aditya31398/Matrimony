@@ -1,6 +1,7 @@
 package com.soulsync.service;
 
 import com.soulsync.dto.ProfileDTO;
+import com.soulsync.dto.ProfileFilter;
 import com.soulsync.dto.ProfileSummaryDTO;
 import com.soulsync.dto.ProfileUpdateDTO;
 import com.soulsync.dto.RegisterRequestDTO;
@@ -8,12 +9,15 @@ import com.soulsync.exception.ResourceNotFoundException;
 import com.soulsync.model.Profile;
 import com.soulsync.model.ProfileView;
 import com.soulsync.model.User;
+import com.soulsync.repository.BlockRepository;
+import com.soulsync.repository.MatchRepository;
 import com.soulsync.repository.ProfileRepository;
 import com.soulsync.repository.ProfileViewRepository;
 import com.soulsync.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +30,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.springframework.data.domain.Page;
 
 @Slf4j
@@ -39,37 +46,101 @@ public class ProfileService {
     private final UserRepository userRepo;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final ViewerContextService viewerContextService;
+    private final ProfileCardMapper cardMapper;
+    private final MatchScoreService matchScoreService;
+    private final MatchRepository matchRepo;
+    private final BlockRepository blockRepo;
 
     // Self-injection via @Lazy proxy so @Cacheable on resolveGenderFilter goes through AOP
     @Autowired @Lazy
     private ProfileService self;
 
+    /**
+     * Discover search. Filters on details free members can't see (mother tongue, location,
+     * education, diet, Manglik) only apply for premium viewers; free members keep age,
+     * religion, caste, photo and the quick views.
+     */
     @Transactional(readOnly = true)
-    public Page<ProfileSummaryDTO> getAll(int page, int size, String education, String gender,
-                                          boolean verified, String sort, String city,
-                                          String interest, Long excludeId) {
-        Sort jpaSort = "recent".equalsIgnoreCase(sort)
+    public Page<ProfileSummaryDTO> getAll(DiscoverQuery q, Long viewerId) {
+        Sort jpaSort = "recent".equalsIgnoreCase(q.sort())
                 ? Sort.by("createdAt").descending()
                 : Sort.by("isPremium").descending().and(Sort.by("createdAt").descending());
-        Pageable pageable = PageRequest.of(page, size, jpaSort);
-        String edu = normalizeEducation(education);
-        String gen = (gender == null || gender.isBlank())
-                ? self.resolveGenderFilter(excludeId)
-                : gender;
-        String normalizedInterest = (interest == null || interest.isBlank()) ? null : interest.trim();
-        String normalizedCity = (city == null || city.isBlank()) ? null : city.trim();
-        boolean premium = isPremium(excludeId);
-        return profileRepo.findWithFilters(excludeId, edu, gen, verified, normalizedCity, normalizedInterest, pageable)
-                .map(p -> ProfileSummaryDTO.from(p, premium));
+        ViewerContext ctx = viewerContextService.forProfile(viewerId);
+        boolean premium = ctx.premium();
+        LocalDate today = LocalDate.now();
+
+        ProfileFilter filter = new ProfileFilter(
+                blankToNull(q.gender()) != null ? q.gender() : self.resolveGenderFilter(viewerId),
+                q.verified(),
+                blankToNull(q.city()),
+                blankToNull(q.interest()),
+                premium ? normalizeEducation(q.education()) : null,
+                q.ageMin() == null ? null : today.minusYears(q.ageMin()),
+                q.ageMax() == null ? null : today.minusYears(q.ageMax() + 1L),
+                blankToNull(q.religion()),
+                blankToNull(q.caste()),
+                premium ? blankToNull(q.motherTongue()) : null,
+                premium ? blankToNull(q.location()) : null,
+                premium ? blankToNull(q.diet()) : null,
+                premium ? q.manglik() : null,
+                q.withPhoto());
+        return profileRepo.findWithFilters(excluded(ctx), filter, PageRequest.of(q.page(), q.size(), jpaSort))
+                .map(p -> cardMapper.summary(p, ctx));
     }
+
+    public record DiscoverQuery(int page, int size, String sort, String gender, boolean verified,
+                                String city, String interest, String education,
+                                Integer ageMin, Integer ageMax, String religion, String caste,
+                                String motherTongue, String location, String diet, Boolean manglik,
+                                boolean withPhoto) {}
 
     /** Free members see only photo, name, age, caste and religion of other profiles. */
     @Transactional(readOnly = true)
     public ProfileDTO getById(Long id, Long viewerId) {
         Profile profile = profileRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Profile", id));
-        boolean fullAccess = id.equals(viewerId) || isPremium(viewerId);
-        return fullAccess ? ProfileDTO.from(profile) : ProfileDTO.limited(profile);
+        // Someone who blocked you simply doesn't exist for you
+        if (blockRepo.existsByBlockerIdAndBlockedId(id, viewerId)) throw new ResourceNotFoundException("Profile", id);
+        ProfileDTO dto = cardMapper.detail(profile, viewerContextService.forProfile(viewerId));
+        dto.setBlockedByMe(blockRepo.existsByBlockerIdAndBlockedId(viewerId, id));
+        return dto;
+    }
+
+    /** Match % with a breakdown; free members get the score but not premium-only details. */
+    @Transactional(readOnly = true)
+    public MatchScoreService.Score getMatchScore(Long viewerId, Long id) {
+        Profile profile = profileRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Profile", id));
+        ViewerContext ctx = viewerContextService.forProfile(viewerId);
+        if (ctx.isHidden(id)) throw new ResourceNotFoundException("Profile", id);
+        return matchScoreService.score(ctx, profile);
+    }
+
+    /**
+     * Five strong matches per day. The best-scoring candidates the member hasn't already
+     * requested or answered are shuffled with a per-day seed, so the set rotates daily.
+     */
+    @Transactional(readOnly = true)
+    public List<ProfileSummaryDTO> getDailyPicks(Long viewerId) {
+        ViewerContext ctx = viewerContextService.forProfile(viewerId);
+        Set<Long> skip = new HashSet<>(excluded(ctx));
+        skip.addAll(matchRepo.findInteractedIds(viewerId));
+        String gender = self.resolveGenderFilter(viewerId);
+        long daySeed = LocalDate.now().toEpochDay() * 31 + viewerId;
+
+        return profileRepo.findWithFilters(skip, ProfileFilter.ofGender(gender),
+                        PageRequest.of(0, 200, Sort.by("createdAt").descending()))
+                .stream()
+                .map(p -> cardMapper.summary(p, ctx))
+                .sorted(Comparator.comparing((ProfileSummaryDTO d) -> d.getMatchScore() == null ? -1 : d.getMatchScore())
+                        .reversed())
+                .limit(15)
+                .sorted(Comparator.comparingLong(d -> Long.hashCode(d.getId() * 2654435761L ^ daySeed)))
+                .limit(5)
+                .sorted(Comparator.comparing((ProfileSummaryDTO d) -> d.getMatchScore() == null ? -1 : d.getMatchScore())
+                        .reversed())
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -78,25 +149,20 @@ public class ProfileService {
         return profileRepo.findById(profileId).map(Profile::hasActivePremium).orElse(false);
     }
 
-    @Cacheable(value = "topPicks", key = "#excludeId")
     @Transactional(readOnly = true)
     public List<ProfileSummaryDTO> getTopPicks(Long excludeId) {
         Pageable pageable = PageRequest.of(0, 8, Sort.by("isPremium").descending().and(Sort.by("createdAt").descending()));
-        String genderFilter = self.resolveGenderFilter(excludeId);
-        boolean premium = isPremium(excludeId);
-        return (excludeId != null
-                ? profileRepo.findTopPicks(excludeId, genderFilter, pageable)
-                : profileRepo.findTopPicks(genderFilter, pageable))
+        ViewerContext ctx = viewerContextService.forProfile(excludeId);
+        return profileRepo.findTopPicks(excluded(ctx), self.resolveGenderFilter(excludeId), pageable)
                 .stream()
-                .map(p -> ProfileSummaryDTO.from(p, premium))
+                .map(p -> cardMapper.summary(p, ctx))
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public ProfileDTO getMe(Long profileId) {
-        return profileRepo.findById(profileId)
-                .map(ProfileDTO::from)
-                .orElseThrow(() -> new ResourceNotFoundException("Profile", profileId));
+        ViewerContext ctx = viewerContextService.forProfile(profileId);
+        return cardMapper.detail(ctx.viewer(), ctx);
     }
 
     @Transactional
@@ -117,13 +183,16 @@ public class ProfileService {
         Profile profile = profileRepo.findById(profileId)
                 .orElseThrow(() -> new ResourceNotFoundException("Profile", profileId));
         Pageable pageable = PageRequest.of(0, 20, Sort.by("viewedAt").descending());
-        boolean premium = profile.hasActivePremium();
+        ViewerContext ctx = viewerContextService.forProfile(profileId);
         return profileViewRepo.findViewers(profile, pageable)
                 .stream()
-                .map(v -> ProfileSummaryDTO.from(v.getViewer(), premium))
+                .filter(v -> !ctx.isHidden(v.getViewer().getId()))
+                .map(v -> cardMapper.summary(v.getViewer(), ctx))
                 .toList();
     }
 
+    /** Evicts the cached "looking for" filter so Discover reflects the change straight away. */
+    @CacheEvict(value = "genderFilter", key = "#id")
     @Transactional
     public ProfileDTO update(Long id, ProfileUpdateDTO req) {
         Profile profile = profileRepo.findById(id)
@@ -138,14 +207,8 @@ public class ProfileService {
         if (req.getHeight() != null)            profile.setHeight(req.getHeight());
         if (req.getMotherTongue() != null)      profile.setMotherTongue(req.getMotherTongue());
         if (req.getDietaryPreference() != null) profile.setDietaryPreference(req.getDietaryPreference());
-        if (req.getHoroscope() != null)         profile.setHoroscope(req.getHoroscope());
         if (req.getPhone() != null)             profile.setPhone(blankToNull(req.getPhone()));
-        if (req.getNakshatra() != null)         profile.setNakshatra(blankToNull(req.getNakshatra()));
-        if (req.getRashi() != null)             profile.setRashi(blankToNull(req.getRashi()));
-        if (req.getIsManglik() != null)         profile.setIsManglik(req.getIsManglik());
-        if (req.getMatchingTradition() != null) profile.setMatchingTradition(normalizeTradition(req.getMatchingTradition()));
-        if (req.getPapaPoints() != null)        profile.setPapaPoints(req.getPapaPoints());
-        validateStars(profile.getNakshatra(), profile.getRashi());
+        if (req.getPhotoPrivate() != null)      profile.setPhotoPrivate(req.getPhotoPrivate());
         if (req.getEducation() != null)         profile.setEducation(req.getEducation());
         if (req.getBio() != null)               profile.setBio(req.getBio());
         if (req.getLookingForGender() != null)  profile.setLookingForGender(req.getLookingForGender());
@@ -160,16 +223,22 @@ public class ProfileService {
         }
         if (req.getInterests() != null)  profile.setInterests(joinTags(req.getInterests()));
         if (req.getLifestyle() != null)  profile.setLifestyle(joinTags(req.getLifestyle()));
-        return ProfileDTO.from(profileRepo.save(profile));
+        if (req.getNakshatra() != null)  profile.setNakshatra(req.getNakshatra());
+        if (req.getRashi() != null)      profile.setRashi(req.getRashi());
+        if (req.getIsManglik() != null)  profile.setIsManglik(req.getIsManglik());
+        if (req.getMatchingTradition() != null) profile.setMatchingTradition(normalizeTradition(req.getMatchingTradition()));
+        if (req.getPapaPoints() != null) profile.setPapaPoints(req.getPapaPoints());
+        profileRepo.save(profile);
+        return getMe(id);
     }
 
     @Transactional(readOnly = true)
     public List<ProfileSummaryDTO> search(String city, String education, String gender, int page, int size,
                                           Long viewerId) {
         Pageable pageable = PageRequest.of(page, size);
-        boolean premium = isPremium(viewerId);
-        return profileRepo.search(city, education, gender, pageable)
-                .map(p -> ProfileSummaryDTO.from(p, premium))
+        ViewerContext ctx = viewerContextService.forProfile(viewerId);
+        return profileRepo.search(excluded(ctx), city, education, gender, pageable)
+                .map(p -> cardMapper.summary(p, ctx))
                 .toList();
     }
 
@@ -183,7 +252,6 @@ public class ProfileService {
         if (req.getPassword() == null || req.getPassword().isBlank()) {
             throw new IllegalArgumentException("Password is required");
         }
-        validateStars(blankToNull(req.getNakshatra()), blankToNull(req.getRashi()));
         User user = User.builder()
                 .email(req.getEmail())
                 .passwordHash(passwordEncoder.encode(req.getPassword()))
@@ -205,13 +273,7 @@ public class ProfileService {
                 .height(req.getHeight())
                 .motherTongue(req.getMotherTongue())
                 .dietaryPreference(req.getDietaryPreference())
-                .horoscope(req.getHoroscope())
                 .phone(blankToNull(req.getPhone()))
-                .nakshatra(blankToNull(req.getNakshatra()))
-                .rashi(blankToNull(req.getRashi()))
-                .isManglik(req.getIsManglik())
-                .matchingTradition(normalizeTradition(req.getMatchingTradition()))
-                .papaPoints(req.getPapaPoints())
                 .education(req.getEducation())
                 .bio(req.getBio())
                 .lookingForGender(req.getLookingForGender())
@@ -223,6 +285,11 @@ public class ProfileService {
                 .isPremium(false)
                 .interests(joinTags(req.getInterests()))
                 .lifestyle(joinTags(req.getLifestyle()))
+                .nakshatra(req.getNakshatra())
+                .rashi(req.getRashi())
+                .isManglik(req.getIsManglik())
+                .matchingTradition(normalizeTradition(req.getMatchingTradition()))
+                .papaPoints(req.getPapaPoints())
                 .lookingFor(req.getPartnerDescription())
                 .build();
 
@@ -278,17 +345,11 @@ public class ProfileService {
         };
     }
 
-    /** Star and rashi are optional, but must be real names and agree with each other. */
-    private void validateStars(String nakshatra, String rashi) {
-        if (nakshatra != null && !AstrologyService.isValidNakshatra(nakshatra)) {
-            throw new IllegalArgumentException("Unknown star (nakshatra)");
-        }
-        if (rashi != null && !AstrologyService.isValidRashi(rashi)) {
-            throw new IllegalArgumentException("Unknown rashi");
-        }
-        if (nakshatra != null && rashi != null && !AstrologyService.isConsistent(nakshatra, rashi)) {
-            throw new IllegalArgumentException(nakshatra + " does not fall in " + rashi + " rashi");
-        }
+    /** The viewer plus everyone blocked either way — never empty, as JPQL NOT IN requires. */
+    private static Set<Long> excluded(ViewerContext ctx) {
+        Set<Long> ids = new HashSet<>(ctx.hiddenIds());
+        ids.add(ctx.viewerId());
+        return ids;
     }
 
     private static String blankToNull(String s) {
@@ -304,7 +365,7 @@ public class ProfileService {
         if (tags == null || tags.isEmpty()) return null;
         return String.join(",", tags);
     }
-    /** "AUTO"/blank means decide from language (null); otherwise upper-cased tradition name. */
+    /** "AUTO"/blank → null (decide from language); otherwise upper-cased tradition name. */
     private static String normalizeTradition(String t) {
         if (t == null || t.isBlank() || "AUTO".equalsIgnoreCase(t)) return null;
         return t.trim().toUpperCase();

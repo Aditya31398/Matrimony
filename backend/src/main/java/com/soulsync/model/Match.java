@@ -43,6 +43,10 @@ public class Match {
     @Builder.Default
     private Status status = Status.PENDING;
 
+    /** Optional personal message sent with a connect request */
+    @Column(length = 300)
+    private String note;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

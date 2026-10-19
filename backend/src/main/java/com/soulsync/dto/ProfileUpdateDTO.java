@@ -1,5 +1,8 @@
 package com.soulsync.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.soulsync.astrology.StarFieldDeserializers;
+
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
@@ -40,26 +43,10 @@ public class ProfileUpdateDTO {
     @Size(max = 50, message = "Dietary preference must be at most 50 characters")
     private String dietaryPreference;
 
-    @Size(max = 50, message = "Horoscope must be at most 50 characters")
-    private String horoscope;
-
     @Size(max = 20, message = "Phone must be at most 20 characters")
     private String phone;
 
-    @Size(max = 30, message = "Star must be at most 30 characters")
-    private String nakshatra;
-
-    @Size(max = 20, message = "Rashi must be at most 20 characters")
-    private String rashi;
-
-    private Boolean isManglik;
-
-    @jakarta.validation.constraints.Pattern(regexp = "ASHTAKOOTA|DASHAKOOTA|AUTO",
-            message = "Matching tradition must be ASHTAKOOTA, DASHAKOOTA or AUTO")
-    private String matchingTradition;
-
-    @Min(value = 0) @Max(value = 50)
-    private Integer papaPoints;
+    private Boolean photoPrivate;
 
     @Size(max = 100, message = "Education must be at most 100 characters")
     private String education;
@@ -89,4 +76,22 @@ public class ProfileUpdateDTO {
     @Min(value = 18, message = "Maximum age must be at least 18")
     @Max(value = 99, message = "Maximum age must be at most 99")
     private Integer ageMax;
+
+    @Min(value = 1) @Max(value = 27)
+    @JsonDeserialize(using = StarFieldDeserializers.Nakshatra.class)
+    private Integer nakshatra;
+
+    @Min(value = 1) @Max(value = 12)
+    @JsonDeserialize(using = StarFieldDeserializers.Rashi.class)
+    private Integer rashi;
+
+    private Boolean isManglik;
+
+    @jakarta.validation.constraints.Pattern(regexp = "ASHTAKOOTA|DASHAKOOTA|AUTO",
+            message = "Matching tradition must be ASHTAKOOTA, DASHAKOOTA or AUTO")
+    private String matchingTradition;
+
+    @Min(value = 0) @Max(value = 50)
+    private Integer papaPoints;
+
 }

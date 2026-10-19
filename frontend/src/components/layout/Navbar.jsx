@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../../context/AuthContext'
 import { useTenant } from '../../context/TenantContext'
 import toast from 'react-hot-toast'
+import NotificationBell from './NotificationBell'
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -36,10 +37,10 @@ export default function Navbar() {
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4, ease: 'easeOut' }}
-      className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-xl border-b border-primary/10 shadow-nav"
+      className="sticky top-0 z-50 w-full bg-[#FFFDFC]/85 backdrop-blur-xl border-b border-outline-variant/70"
     >
-      <div className="max-w-[1280px] mx-auto px-6 py-4 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-black tracking-tighter text-primary select-none">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <Link to="/" className="font-display text-[30px] leading-none font-bold tracking-tight text-primary select-none">
           {name}
         </Link>
 
@@ -49,10 +50,10 @@ export default function Navbar() {
               key={to + label}
               to={to}
               className={({ isActive }) =>
-                `text-sm font-medium transition-all duration-300 pb-0.5 ${
+                `text-[13px] font-semibold tracking-wide transition-colors duration-300 py-1 border-b-2 ${
                   isActive
-                    ? 'text-primary border-b-2 border-primary font-bold'
-                    : 'text-slate-600 hover:text-primary'
+                    ? 'text-primary border-gold-500'
+                    : 'text-on-surface-variant border-transparent hover:text-primary'
                 }`
               }
             >
@@ -62,9 +63,7 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="hidden md:flex p-2 rounded-full hover:bg-primary/5 transition-all duration-300 active:scale-95">
-            <span className="material-symbols-outlined text-slate-600">notifications</span>
-          </button>
+          {isLoggedIn && <NotificationBell />}
 
           {isLoggedIn ? (
             <button

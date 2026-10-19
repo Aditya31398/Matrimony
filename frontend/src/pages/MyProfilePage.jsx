@@ -3,19 +3,27 @@ import { useMyProfile } from '../hooks/useProfiles'
 import { VerifiedBadge, PremiumBadge } from '../components/ui/Badge'
 import { useAuth } from '../context/AuthContext'
 import { useNavigate, Link } from 'react-router-dom'
-import { rashiLabel } from '../utils/astro'
+import { useState } from 'react'
+import toast from 'react-hot-toast'
+import CompletenessRing from '../components/ui/CompletenessRing'
+import { useBlockedMembers, useBlockToggle } from '../hooks/useFeatures'
+import { shareWithFamily } from '../utils/share'
 import { AVATAR_PLACEHOLDER, showPlaceholderOnError } from '../utils/placeholder'
+import { nakshatraName, moonSign } from '../utils/astrology'
 
 const INFO_FIELDS = [
   ['Religion', 'religion'], ['Caste', 'caste'], ['Height', 'height'],
   ['Mother Tongue', 'motherTongue'], ['Dietary Pref', 'dietaryPreference'],
   ['Education', 'education'], ['Phone', 'phone'],
-  ['Star (Nakshatra)', 'nakshatra'], ['Rashi', 'rashi'],
+  ['Birth Star', 'nakshatra'], ['Moon Sign', 'rashi'],
   ['Looking For', 'lookingForGender'], ['Age Range', null],
 ]
 
 export default function MyProfilePage() {
   const { data: profile, isLoading } = useMyProfile()
+  const [showBlocked, setShowBlocked] = useState(false)
+  const { data: blocked = [] } = useBlockedMembers(showBlocked)
+  const blockToggle = useBlockToggle()
   const { logout } = useAuth()
   const navigate = useNavigate()
 
@@ -79,7 +87,46 @@ export default function MyProfilePage() {
                   {profile.city}, India
                 </div>
               </div>
+              {profile.photoPrivate && (
+                <span className="absolute top-4 left-4 flex items-center gap-1 bg-black/50 text-white text-[11px] font-bold px-3 py-1 rounded-full">
+                  <span className="material-symbols-outlined fill-icon text-[14px]">lock</span>Photos private
+                </span>
+              )}
             </motion.div>
+
+            <div className="mt-5 space-y-4">
+              <CompletenessRing profile={profile} />
+
+              <button onClick={() => shareWithFamily(profile.id, profile.firstName, true)}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-2xl bg-green-50 border border-green-200 text-green-800 text-sm font-bold hover:bg-green-100 transition-colors">
+                <span className="material-symbols-outlined text-[20px]">family_restroom</span>
+                Share my profile with family
+              </button>
+
+              <div className="bg-white rounded-[24px] border border-slate-100 shadow-card">
+                <button onClick={() => setShowBlocked((v) => !v)}
+                  className="w-full flex items-center justify-between px-5 py-4 text-sm font-bold text-on-surface">
+                  <span className="flex items-center gap-2"><span className="material-symbols-outlined text-[20px]">block</span>Blocked members</span>
+                  <span className="material-symbols-outlined">{showBlocked ? 'expand_less' : 'expand_more'}</span>
+                </button>
+                {showBlocked && (
+                  <div className="px-5 pb-4 space-y-2">
+                    {blocked.length === 0
+                      ? <p className="text-sm text-on-surface-variant">You haven't blocked anyone.</p>
+                      : blocked.map((b) => (
+                        <div key={b.id} className="flex items-center justify-between text-sm">
+                          <span className="font-semibold text-on-surface">{b.firstName} {b.lastName}{b.age ? `, ${b.age}` : ''}</span>
+                          <button disabled={blockToggle.isPending}
+                            onClick={() => blockToggle.mutate({ profileId: b.id, block: false }, {
+                              onSuccess: () => toast.success(`${b.firstName} unblocked`),
+                            })}
+                            className="text-primary font-bold hover:underline">Unblock</button>
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Info */}
@@ -104,15 +151,14 @@ export default function MyProfilePage() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }}
               className="bg-white rounded-[28px] p-6 shadow-card border border-slate-100">
               <div className="flex items-center gap-2 mb-4">
-                <h3 className="text-lg font-black text-on-surface">Basic Info</h3>
+                <h3 className="font-display text-2xl font-bold text-on-surface">Basic Info</h3>
                 {profile.isVerified && <VerifiedBadge size="lg" />}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 {INFO_FIELDS.map(([label, key]) => {
                   const value = key === null
                     ? (profile.ageMin && profile.ageMax ? `${profile.ageMin} – ${profile.ageMax} yrs` : '—')
-                    : key === 'rashi' && profile.rashi ? rashiLabel(profile.rashi)
-                    : (profile[key] ?? '—')
+                    : (key === 'nakshatra' ? nakshatraName(profile.nakshatra) : key === 'rashi' ? moonSign(profile) : profile[key]) ?? '—'
                   return (
                     <div key={label} className="flex flex-col gap-1">
                       <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{label}</span>

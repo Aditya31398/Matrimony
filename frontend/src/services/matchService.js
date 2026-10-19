@@ -7,8 +7,11 @@ export const matchService = {
   getInterested: () =>
     api.get('/matches/interested').then((r) => r.data),
 
-  sendConnect: (profileId) =>
-    api.post(`/matches/${profileId}/connect`).then((r) => r.data),
+  // Accepts a profile id, or { profileId, note } to include a personal note
+  sendConnect: (arg) => {
+    const { profileId, note } = typeof arg === 'object' ? arg : { profileId: arg }
+    return api.post(`/matches/${profileId}/connect`, note ? { note } : {}).then((r) => r.data)
+  },
 
   shortlist: (profileId) =>
     api.post(`/matches/${profileId}/shortlist`).then((r) => r.data),

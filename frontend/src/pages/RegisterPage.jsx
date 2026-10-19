@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useRegisterProfile } from '../hooks/useProfiles'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
-import { NAKSHATRAS, rashisForNakshatra, rashiLabel } from '../utils/astro'
+import { NAKSHATRA_NAMES, RASHI_NAMES } from '../utils/astrology'
 
 const TOTAL_STEPS = 5
 
@@ -27,6 +27,8 @@ const INTERESTS_OPTIONS = ['Yoga', 'Travel', 'Music', 'Reading', 'Cooking', 'Tec
 const RELIGIONS = ['Hindu', 'Muslim', 'Christian', 'Sikh', 'Jain', 'Buddhist', 'Jewish', 'Other']
 const LANGUAGES = ['Hindi', 'Bengali', 'Telugu', 'Marathi', 'Tamil', 'Gujarati', 'Kannada', 'Malayalam', 'Punjabi', 'Odia', 'Urdu', 'English', 'Other']
 const DIET_OPTIONS = ['Vegetarian', 'Non-Vegetarian', 'Vegan', 'Jain', 'Eggetarian', 'Occasionally Non-Veg']
+const NAKSHATRAS = NAKSHATRA_NAMES.map((n, i) => `${i + 1} — ${n}`)
+const RASHIS = RASHI_NAMES.map((r, i) => `${i + 1} — ${r}`)
 const HEIGHT_OPTIONS = [
   `4'9" (145cm)`, `4'10" (147cm)`, `4'11" (150cm)`,
   `5'0" (152cm)`, `5'1" (155cm)`, `5'2" (157cm)`, `5'3" (160cm)`, `5'4" (163cm)`,
@@ -52,7 +54,7 @@ export default function RegisterPage() {
     firstName: '', lastName: '', gender: '', dateOfBirth: '',
     email: '', password: '', phone: '',
     city: '', state: '', religion: '', caste: '', education: '', profession: '',
-    height: '', motherTongue: '', dietaryPreference: '', nakshatra: '', rashi: '',
+    height: '', motherTongue: '', dietaryPreference: '', nakshatra: '', rashi: '', isManglik: false,
     photos: [],
     interests: [], bio: '',
     lookingForGender: '', ageMin: 22, ageMax: 35, partnerDescription: '',
@@ -94,7 +96,13 @@ export default function RegisterPage() {
     if (!validateStep()) return
     try {
       const email = form.email.trim()
-      await register.mutateAsync({ ...form, email, phone: form.phone.trim() })
+      await register.mutateAsync({
+        ...form,
+        email,
+        phone: form.phone.trim(),
+        nakshatra: form.nakshatra || undefined,
+        rashi: form.rashi || undefined,
+      })
       setRegisteredEmail(email)
     } catch (err) {
       toast.error(err.message || 'Registration failed. Please try again.')
@@ -128,7 +136,7 @@ export default function RegisterPage() {
           <div className="h-2 w-full bg-surface-container rounded-full overflow-hidden">
             <motion.div
               className="h-full rounded-full"
-              style={{ background: 'linear-gradient(90deg, #ae3115, #ff928b)' }}
+              style={{ background: 'var(--gradient-primary)' }}
               initial={{ width: `${((step - 1) / TOTAL_STEPS) * 100}%` }}
               animate={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
               transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -239,30 +247,30 @@ export default function RegisterPage() {
                       {DIET_OPTIONS.map((d) => <option key={d}>{d}</option>)}
                     </select>
                   </Field>
-                  <div />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <Field label="Star (Nakshatra)" icon="auto_awesome">
-                    <select value={form.nakshatra} className={SELECT_CLS}
-                      onChange={(e) => {
-                        const n = e.target.value
-                        set('nakshatra', n)
-                        const options = rashisForNakshatra(n)
-                        // Keep the rashi only if it's still possible for this star
-                        set('rashi', options.length === 1 ? options[0] : (options.includes(form.rashi) ? form.rashi : ''))
-                      }}>
-                      <option value="">Don't know</option>
-                      {NAKSHATRAS.map((n) => <option key={n}>{n}</option>)}
+                  <Field label="Birth Star (Nakshatra)" icon="star">
+                    <select value={form.nakshatra} onChange={(e) => set('nakshatra', e.target.value ? Number(e.target.value) : '')}
+                      className={SELECT_CLS}>
+                      <option value="">Select nakshatra</option>
+                      {NAKSHATRAS.map((n, i) => <option key={i + 1} value={i + 1}>{n}</option>)}
                     </select>
                   </Field>
-                  <Field label="Rashi (Moon sign)" icon="dark_mode">
-                    <select value={form.rashi} onChange={(e) => set('rashi', e.target.value)} className={SELECT_CLS}>
-                      <option value="">Don't know</option>
-                      {rashisForNakshatra(form.nakshatra).map((r) => <option key={r} value={r}>{rashiLabel(r)}</option>)}
+                  <Field label="Moon Sign (Rashi)" icon="nightlight">
+                    <select value={form.rashi} onChange={(e) => set('rashi', e.target.value ? Number(e.target.value) : '')}
+                      className={SELECT_CLS}>
+                      <option value="">Auto (from nakshatra)</option>
+                      {RASHIS.map((r, i) => <option key={i + 1} value={i + 1}>{r}</option>)}
                     </select>
                   </Field>
                 </div>
-                <p className="text-xs font-semibold text-on-surface-variant -mt-2 px-1">Used for astro matching (Guna Milan). You can add these later.</p>
+                <Field label="Manglik" icon="warning">
+                  <select value={form.isManglik ? 'yes' : 'no'} onChange={(e) => set('isManglik', e.target.value === 'yes')}
+                    className={SELECT_CLS}>
+                    <option value="no">Not Manglik</option>
+                    <option value="yes">Manglik</option>
+                  </select>
+                </Field>
               </>
             )}
 
@@ -342,7 +350,7 @@ export default function RegisterPage() {
               )}
               <button type="submit" disabled={register.isPending}
                 className="order-1 md:order-2 w-full md:w-64 font-bold text-lg py-4 px-8 rounded-[24px] text-white shadow-btn-primary hover:shadow-btn-primary-hover hover:-translate-y-0.5 transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-60"
-                style={{ background: 'linear-gradient(135deg, #ff6b4a, #ff928b)' }}>
+                style={{ background: 'var(--gradient-primary)' }}>
                 {register.isPending ? (
                   <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
@@ -512,13 +520,13 @@ function OtpScreen({ email }) {
             value={otp}
             onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
             placeholder="000000"
-            className="w-full text-center text-3xl font-black tracking-[0.5em] bg-white border-2 border-transparent focus:border-primary-container rounded-[24px] px-7 py-5 text-on-surface shadow-card outline-none transition-all placeholder:text-surface-variant placeholder:tracking-[0.3em]"
+            className="w-full text-center text-3xl font-black tracking-[0.5em] bg-white border-2 border-transparent focus:border-primary-container rounded-[24px] px-7 py-5 text-on-surface shadow-card outline-none transition-all placeholder:text-slate-400 placeholder:tracking-[0.3em]"
             autoFocus
           />
 
           <button type="submit" disabled={loading || otp.length !== 6}
             className="w-full py-4 rounded-2xl text-white font-bold text-lg flex items-center justify-center gap-2 shadow-btn-primary hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-60"
-            style={{ background: 'linear-gradient(135deg, #ae3115, #ff6b4a)' }}>
+            style={{ background: 'var(--gradient-primary)' }}>
             {loading
               ? <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               : 'Verify & Continue'}
@@ -555,7 +563,7 @@ function FormInput({ type = 'text', placeholder, value, onChange, maxLength, max
       onChange={(e) => onChange(e.target.value)}
       maxLength={resolvedMax}
       max={max}
-      className="w-full bg-white border-2 border-transparent focus:border-primary-container rounded-[24px] px-7 py-5 text-lg font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none placeholder:text-surface-variant"
+      className="w-full bg-white border-2 border-transparent focus:border-primary-container rounded-[24px] px-7 py-5 text-lg font-medium text-on-surface shadow-card hover:shadow-card-hover transition-all outline-none placeholder:text-slate-400"
     />
   )
 }

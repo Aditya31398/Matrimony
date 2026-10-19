@@ -11,7 +11,7 @@ export default function PremiumLock({ title = 'Premium members only', text, comp
       {text && <p className="text-sm text-on-surface-variant mb-4 max-w-sm mx-auto">{text}</p>}
       <Link to="/premium"
         className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl text-white text-sm font-bold shadow-btn-primary active:scale-95 transition-all"
-        style={{ background: 'linear-gradient(135deg, #ae3115, #ff6b4a)' }}>
+        style={{ background: 'var(--gradient-primary)' }}>
         <span className="material-symbols-outlined text-[18px]">workspace_premium</span>
         Upgrade to Premium
       </Link>
